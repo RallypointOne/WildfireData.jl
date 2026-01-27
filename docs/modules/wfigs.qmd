@@ -89,26 +89,6 @@ geom = GeoJSON.geometry(feature)
 println("Type: $(typeof(geom))")
 ```
 
-## Example: Marshall Fire Perimeter
-
-The [Marshall Fire](https://en.wikipedia.org/wiki/Marshall_Fire) (December 2021) was one of the most destructive wildfires in Colorado history. Here's how to retrieve its perimeter:
-
-```julia
-using WildfireData
-
-# Query the Marshall Fire from historical perimeters
-marshall = WFIGS.download(
-    :perimeters_all_years,
-    where="INCIDENT = 'MARSHALL' AND FIRE_YEAR = '2021'"
-)
-
-# Access the fire details (returns a GeoJSON FeatureCollection)
-fire = marshall[1]
-
-println("Fire: $(fire.INCIDENT)")
-println("Acres: $(fire.GIS_ACRES)")
-println("Year: $(fire.FIRE_YEAR)")
-```
 
 ## API Reference
 
