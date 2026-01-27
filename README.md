@@ -1,7 +1,7 @@
 # WildfireData.jl
 
 [![Build Status](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Docs](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml)
+[![Docs Build](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/docs.yml/badge.svg)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/docs.yml)
 [![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://rallypointone.github.io/WildfireData.jl/)
 
 A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.
