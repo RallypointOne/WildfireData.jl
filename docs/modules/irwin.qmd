@@ -1,0 +1,109 @@
+---
+title: "IRWIN"
+subtitle: "Integrated Reporting of Wildland Fire Information"
+---
+
+## Overview
+
+The IRWIN module provides access to wildfire incident data from the Integrated Reporting of Wildland Fire Information system. This is the authoritative source for federal and some state fire agency incident data.
+
+**Data Source:** [IRWIN/InFORM](https://www.wildfire.gov/application/irwin-integrated-reporting-wildfire-information)
+
+## Available Datasets
+
+| Dataset | Description | Category |
+|---------|-------------|----------|
+| `:fire_occurrence` | InFORM Fire Occurrence Records (2020-present) | incidents |
+| `:usa_current_incidents` | Current US wildfire incidents | incidents |
+| `:usa_current_perimeters` | Current US wildfire perimeters | perimeters |
+
+## Basic Usage
+
+```julia
+using WildfireData.IRWIN
+
+# List all datasets
+IRWIN.datasets()
+
+# Filter by category
+IRWIN.datasets(category=:incidents)
+
+# Get dataset info
+IRWIN.info(:usa_current_incidents)
+```
+
+## Downloading Data
+
+```julia
+# Download current incidents
+data = IRWIN.download(:usa_current_incidents, limit=10)
+
+# Download fire occurrence records for California
+data = IRWIN.download(:fire_occurrence, where="POOState = 'US-CA'", limit=100)
+
+# Download large fires only
+data = IRWIN.download(:usa_current_incidents, where="DailyAcres > 1000", limit=10)
+```
+
+## Querying
+
+```julia
+# Count all current incidents
+n = IRWIN.count(:usa_current_incidents)
+
+# Count fire occurrence records
+n = IRWIN.count(:fire_occurrence)
+n = IRWIN.count(:fire_occurrence, where="POOState = 'US-CA'")
+
+# Get field information
+fields = IRWIN.fields(:usa_current_incidents)
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = IRWIN.download_file(:usa_current_incidents, limit=100)
+
+# Load previously downloaded file
+data = IRWIN.load_file(:usa_current_incidents)
+```
+
+## Working with Results
+
+```julia
+data = IRWIN.download(:usa_current_incidents, limit=5)
+
+# Access incident properties
+for feature in data.features
+    props = feature.properties
+    println("$(props.IncidentName)")
+    println("  Acres: $(props.DailyAcres)")
+    println("  State: $(props.POOState)")
+end
+```
+
+## Key Fields
+
+Common fields in the incident data:
+
+- `IncidentName` - Name of the fire
+- `DailyAcres` - Current size in acres
+- `POOState` - State (e.g., "US-CA")
+- `DiscoveryDate` - When the fire was discovered
+- `FireCause` - Cause of the fire
+- `PercentContained` - Containment percentage
+
+## API Reference
+
+### Functions
+
+- `datasets(; category=nothing)` - List available datasets
+- `info(dataset)` - Print dataset information
+- `download(dataset; where, fields, limit, verbose)` - Download data
+- `download_file(dataset; filename, force, verbose, ...)` - Download and save to file
+- `load_file(dataset; filename)` - Load previously downloaded file
+- `count(dataset; where)` - Get record count
+- `fields(dataset)` - Get field names and types
+- `query_url(dataset; kwargs...)` - Build query URL
+- `dir()` - Get local data directory path

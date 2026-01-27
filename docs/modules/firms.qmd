@@ -1,0 +1,164 @@
+---
+title: "FIRMS"
+subtitle: "Fire Information for Resource Management System"
+---
+
+## Overview
+
+The FIRMS module provides access to NASA's Fire Information for Resource Management System. FIRMS distributes near real-time active fire data from satellite sensors including MODIS, VIIRS, and LANDSAT.
+
+**Data Source:** [NASA FIRMS](https://firms.modaps.eosdis.nasa.gov/)
+
+## API Key Setup
+
+FIRMS requires a free API key (MAP_KEY) from NASA.
+
+1. Register at [NASA Earthdata](https://urs.earthdata.nasa.gov/users/new)
+2. Request a FIRMS MAP_KEY at [FIRMS MAP_KEY Request](https://firms.modaps.eosdis.nasa.gov/api/area/)
+
+```julia
+using WildfireData.FIRMS
+
+# Set via environment variable (recommended)
+ENV["FIRMS_MAP_KEY"] = "your-32-character-key"
+
+# Or set programmatically
+FIRMS.set_map_key!("your-32-character-key")
+
+# Check current key
+FIRMS.get_map_key()
+```
+
+## Available Sources
+
+| Source | Description |
+|--------|-------------|
+| `:MODIS_NRT` | MODIS Near Real-Time |
+| `:MODIS_SP` | MODIS Standard Processing |
+| `:VIIRS_NOAA20_NRT` | VIIRS NOAA-20 Near Real-Time |
+| `:VIIRS_NOAA21_NRT` | VIIRS NOAA-21 Near Real-Time |
+| `:VIIRS_SNPP_NRT` | VIIRS Suomi NPP Near Real-Time |
+| `:VIIRS_NOAA20_SP` | VIIRS NOAA-20 Standard Processing |
+| `:VIIRS_SNPP_SP` | VIIRS Suomi NPP Standard Processing |
+| `:LANDSAT_NRT` | LANDSAT Near Real-Time |
+
+## Basic Usage
+
+```julia
+using WildfireData.FIRMS
+
+# List all sources
+FIRMS.sources()
+
+# Get source info
+FIRMS.info(:VIIRS_NOAA20_NRT)
+```
+
+## Downloading Data
+
+### By Region
+
+```julia
+# Download for a predefined region
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
+
+# Available regions
+FIRMS.regions()  # :usa, :california, :western_us, etc.
+```
+
+### By Bounding Box
+
+```julia
+# Download for custom bounding box (west, south, east, north)
+df = FIRMS.download(:VIIRS_NOAA20_NRT, bbox=(-125, 32, -114, 42), days=1)
+```
+
+### By Country
+
+```julia
+# Download for a country (3-letter ISO code)
+df = FIRMS.download(:VIIRS_NOAA20_NRT, country="USA", days=1)
+```
+
+## Time Range
+
+```julia
+# Last N days (1-10 for NRT, up to 61 for SP)
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=3)
+
+# Specific date range
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california,
+                    date_range=("2024-01-01", "2024-01-07"))
+```
+
+## Working with Results
+
+FIRMS returns a DataFrame:
+
+```julia
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
+
+# View columns
+names(df)
+
+# Filter by confidence
+high_confidence = filter(row -> row.confidence == "h", df)
+
+# Get fire locations
+for row in eachrow(df)
+    println("Lat: $(row.latitude), Lon: $(row.longitude)")
+    println("  Brightness: $(row.bright_ti4)")
+    println("  FRP: $(row.frp)")
+end
+```
+
+## Key Fields
+
+| Field | Description |
+|-------|-------------|
+| `latitude` / `longitude` | Fire location |
+| `bright_ti4` | Brightness temperature (Kelvin) |
+| `bright_ti5` | Brightness temperature (Kelvin) |
+| `frp` | Fire Radiative Power (MW) |
+| `confidence` | Detection confidence (l/n/h for low/nominal/high) |
+| `acq_date` | Acquisition date |
+| `acq_time` | Acquisition time (HHMM) |
+| `satellite` | Satellite name |
+| `daynight` | Day or night detection (D/N) |
+
+## Saving and Loading Files
+
+```julia
+# Download and save to CSV
+path = FIRMS.download_file(:VIIRS_NOAA20_NRT, region=:california, days=1)
+
+# Load previously downloaded file
+df = FIRMS.load_file(:VIIRS_NOAA20_NRT)
+```
+
+## Predefined Regions
+
+```julia
+FIRMS.regions()
+```
+
+| Region | Description |
+|--------|-------------|
+| `:usa` | Continental United States |
+| `:california` | California |
+| `:western_us` | Western United States |
+| `:world` | Global coverage |
+
+## API Reference
+
+### Functions
+
+- `sources()` - List available satellite sources
+- `info(source)` - Print source information
+- `regions()` - List predefined regions
+- `download(source; region, bbox, country, days, date_range)` - Download fire data
+- `download_file(source; filename, ...)` - Download and save to file
+- `load_file(source; filename)` - Load previously downloaded file
+- `get_map_key()` - Get current API key
+- `set_map_key!(key)` - Set API key
+- `dir()` - Get local data directory path

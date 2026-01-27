@@ -1,0 +1,122 @@
+---
+title: "MTBS"
+subtitle: "Monitoring Trends in Burn Severity"
+---
+
+## Overview
+
+The MTBS module provides access to burn severity data from the Monitoring Trends in Burn Severity program. MTBS maps the burn severity and perimeters of large fires across the United States.
+
+**Data Source:** [MTBS](https://www.mtbs.gov/)
+
+## Available Datasets
+
+| Dataset | Description | Category |
+|---------|-------------|----------|
+| `:fire_occurrence` | Fire occurrence points | points |
+| `:burn_boundaries` | Burned area boundaries | polygons |
+
+## Basic Usage
+
+```julia
+using WildfireData.MTBS
+
+# List all datasets
+MTBS.datasets()
+
+# Filter by category
+MTBS.datasets(category=:points)
+
+# Get dataset info
+MTBS.info(:fire_occurrence)
+```
+
+## Downloading Data
+
+```julia
+# Download fire occurrence points
+data = MTBS.download(:fire_occurrence, limit=100)
+
+# Download burn boundaries
+data = MTBS.download(:burn_boundaries, limit=10)
+
+# Download with filter
+data = MTBS.download(:fire_occurrence, where="BurnBndAc > 10000", limit=50)
+```
+
+## Querying
+
+```julia
+# Count records
+n = MTBS.count(:fire_occurrence)
+n = MTBS.count(:burn_boundaries)
+
+# Count with filter
+n = MTBS.count(:fire_occurrence, where="BurnBndAc > 5000")
+
+# Get field information
+fields = MTBS.fields(:fire_occurrence)
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = MTBS.download_file(:fire_occurrence, limit=100)
+
+# Load previously downloaded file
+data = MTBS.load_file(:fire_occurrence)
+```
+
+## Working with Results
+
+```julia
+data = MTBS.download(:fire_occurrence, limit=5)
+
+# Access fire properties
+for feature in data.features
+    props = feature.properties
+    println("$(props.Incid_Name)")
+    println("  Acres: $(props.BurnBndAc)")
+    println("  Year: $(props.Ig_Date)")
+end
+```
+
+## Key Fields
+
+### Fire Occurrence
+
+- `Incid_Name` - Incident name
+- `BurnBndAc` - Burned area in acres
+- `Ig_Date` - Ignition date
+- `Event_ID` - Unique event identifier
+
+### Burn Boundaries
+
+- `Incid_Name` - Incident name
+- `BurnBndAc` - Burned area in acres
+- `Ig_Date` - Ignition date
+- `Event_ID` - Unique event identifier
+
+## Direct Downloads
+
+MTBS also provides direct download links for full datasets:
+
+```julia
+# Get download URLs for shapefiles and geodatabases
+MTBS.download_urls()
+```
+
+## API Reference
+
+### Functions
+
+- `datasets(; category=nothing)` - List available datasets
+- `info(dataset)` - Print dataset information
+- `download(dataset; where, fields, limit, verbose)` - Download data
+- `download_file(dataset; filename, force, verbose, ...)` - Download and save to file
+- `load_file(dataset; filename)` - Load previously downloaded file
+- `count(dataset; where)` - Get record count
+- `fields(dataset)` - Get field names and types
+- `query_url(dataset; kwargs...)` - Build query URL
+- `dir()` - Get local data directory path

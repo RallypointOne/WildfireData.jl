@@ -1,0 +1,151 @@
+---
+title: "FPA-FOD"
+subtitle: "Fire Program Analysis Fire-Occurrence Database"
+---
+
+## Overview
+
+The FPA-FOD module provides access to the Fire Program Analysis Fire-Occurrence Database, a comprehensive SQLite database containing 2.3 million wildfire records from 1992-2020.
+
+**Data Source:** [USDA Forest Service Research Data Archive](https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6)
+
+**DOI:** [10.2737/RDS-2013-0009.6](https://doi.org/10.2737/RDS-2013-0009.6)
+
+## Database Setup
+
+The database must be downloaded before use (~214 MB):
+
+```julia
+using WildfireData.FPA_FOD
+
+# Download the database
+FPA_FOD.download_database()
+
+# Check database status
+FPA_FOD.info()
+```
+
+## Basic Queries
+
+```julia
+# Count total records
+n = FPA_FOD.count()  # ~2.3 million
+
+# Count with filter
+n = FPA_FOD.count(where="STATE = 'CA'")
+n = FPA_FOD.count(where="FIRE_YEAR = 2020")
+n = FPA_FOD.count(where="FIRE_SIZE > 1000")
+```
+
+## Querying Fires
+
+### Using the `fires()` Function
+
+```julia
+# Get California fires from 2020
+fires = FPA_FOD.fires(state="CA", year=2020, limit=100)
+
+# Get large fires
+fires = FPA_FOD.fires(min_size=10000, limit=100)
+
+# Combine filters
+fires = FPA_FOD.fires(state="CA", year=2019, cause="Natural", limit=50)
+```
+
+### Using Raw SQL
+
+```julia
+# Execute any SQL query
+results = FPA_FOD.query("""
+    SELECT FIRE_NAME, FIRE_SIZE, FIRE_YEAR, STATE
+    FROM Fires
+    WHERE FIRE_SIZE > 50000
+    ORDER BY FIRE_SIZE DESC
+    LIMIT 10
+""")
+```
+
+## Convenience Functions
+
+```julia
+# Get largest fires
+largest = FPA_FOD.largest_fires(10)
+largest = FPA_FOD.largest_fires(10, year=2020)
+largest = FPA_FOD.largest_fires(10, state="CA")
+
+# Get summary statistics
+states = FPA_FOD.states()      # Fire counts by state
+causes = FPA_FOD.causes()      # Fire counts by cause
+years = FPA_FOD.years()        # Fire counts by year
+```
+
+## Database Schema
+
+```julia
+# List tables
+FPA_FOD.tables()
+
+# Get schema for the Fires table
+FPA_FOD.schema()
+```
+
+### Key Fields in the Fires Table
+
+| Field | Description |
+|-------|-------------|
+| `FOD_ID` | Unique identifier |
+| `FIRE_NAME` | Name of the fire |
+| `FIRE_YEAR` | Year of discovery (1992-2020) |
+| `DISCOVERY_DATE` | Date of discovery |
+| `FIRE_SIZE` | Size in acres |
+| `FIRE_SIZE_CLASS` | Size class (A-G) |
+| `STATE` | Two-letter state code |
+| `COUNTY` | County name |
+| `LATITUDE` / `LONGITUDE` | Location |
+| `NWCG_CAUSE_CLASSIFICATION` | Human/Natural/Missing |
+| `NWCG_GENERAL_CAUSE` | General cause category |
+
+## Fire Size Classes
+
+| Class | Acres |
+|-------|-------|
+| A | 0 - 0.25 |
+| B | 0.26 - 9.9 |
+| C | 10 - 99.9 |
+| D | 100 - 299.9 |
+| E | 300 - 999.9 |
+| F | 1,000 - 4,999.9 |
+| G | 5,000+ |
+
+## Constants
+
+```julia
+FPA_FOD.YEAR_START  # 1992
+FPA_FOD.YEAR_END    # 2020
+FPA_FOD.SIZE_CLASSES
+FPA_FOD.GENERAL_CAUSES
+FPA_FOD.CAUSE_CLASSIFICATIONS
+```
+
+## API Reference
+
+### Database Functions
+
+- `download_database(; force, verbose)` - Download the SQLite database
+- `db_path()` - Get path to database (or `nothing` if not downloaded)
+- `info()` - Print database information
+- `tables()` - List database tables
+- `schema(table="Fires")` - Get table schema
+
+### Query Functions
+
+- `query(sql; limit)` - Execute SQL query
+- `count(; where)` - Count records
+- `fires(; state, year, cause, min_size, max_size, limit)` - Query fires
+- `largest_fires(n; year, state)` - Get largest fires
+
+### Summary Functions
+
+- `states()` - Fire counts by state
+- `causes()` - Fire counts by cause
+- `years()` - Fire counts by year

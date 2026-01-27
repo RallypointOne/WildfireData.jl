@@ -1,0 +1,106 @@
+---
+title: "WFIGS"
+subtitle: "Wildland Fire Interagency Geospatial Services"
+---
+
+## Overview
+
+The WFIGS module provides access to wildland fire data from the [NIFC Open Data](https://data-nifc.opendata.arcgis.com/) portal. This includes current and historical fire perimeters and incident locations.
+
+**Data Source:** [WFIGS Fire History](https://wfigs-nifc.hub.arcgis.com/pages/wfigs-fire-history)
+
+## Available Datasets
+
+| Dataset | Description | Category |
+|---------|-------------|----------|
+| `:current_perimeters` | Current fire perimeters (updated every 5 min) | perimeters |
+| `:current_locations` | Current fire locations (updated every 5 min) | locations |
+| `:historic_geomac` | Historic GeoMAC perimeters (2000-2018) | history |
+| `:perimeters_all_years` | All historical perimeters | history |
+| `:historic_geomac_YYYY` | Year-specific GeoMAC (2000-2018) | history |
+
+## Basic Usage
+
+```julia
+using WildfireData.WFIGS
+
+# List all datasets
+WFIGS.datasets()
+
+# Filter by category
+WFIGS.datasets(category=:perimeters)
+
+# Get dataset info
+WFIGS.info(:current_perimeters)
+```
+
+## Downloading Data
+
+```julia
+# Download current perimeters (GeoJSON)
+data = WFIGS.download(:current_perimeters, limit=10)
+
+# Download with filter
+data = WFIGS.download(:current_perimeters, where="GISAcres > 1000", limit=10)
+
+# Download specific fields only
+data = WFIGS.download(:current_perimeters, fields="IncidentName,GISAcres", limit=10)
+```
+
+## Querying
+
+```julia
+# Count records
+n = WFIGS.count(:current_perimeters)
+n = WFIGS.count(:current_perimeters, where="GISAcres > 1000")
+
+# Get field information
+fields = WFIGS.fields(:current_perimeters)
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = WFIGS.download_file(:current_perimeters, limit=100)
+
+# Load previously downloaded file
+data = WFIGS.load_file(:current_perimeters)
+
+# Custom filename
+path = WFIGS.download_file(:current_perimeters, filename="my_perimeters.geojson")
+```
+
+## Working with Results
+
+The download functions return a `JSON3.Object` containing a GeoJSON FeatureCollection:
+
+```julia
+data = WFIGS.download(:current_locations, limit=5)
+
+# Access features
+for feature in data.features
+    props = feature.properties
+    println("$(props.IncidentName): $(props.DailyAcres) acres")
+end
+
+# Access geometry
+feature = data.features[1]
+geom = feature.geometry
+println("Type: $(geom.type)")
+println("Coordinates: $(geom.coordinates)")
+```
+
+## API Reference
+
+### Functions
+
+- `datasets(; category=nothing)` - List available datasets
+- `info(dataset)` - Print dataset information
+- `download(dataset; where, fields, limit, verbose)` - Download data
+- `download_file(dataset; filename, force, verbose, ...)` - Download and save to file
+- `load_file(dataset; filename)` - Load previously downloaded file
+- `count(dataset; where)` - Get record count
+- `fields(dataset)` - Get field names and types
+- `query_url(dataset; where, outfields, limit, format)` - Build query URL
+- `dir()` - Get local data directory path

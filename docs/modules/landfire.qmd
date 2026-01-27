@@ -1,0 +1,150 @@
+---
+title: "LANDFIRE"
+subtitle: "Landscape Fire and Resource Management Planning Tools"
+---
+
+## Overview
+
+The LANDFIRE module provides access to the LANDFIRE program's geospatial data products. LANDFIRE provides nationwide, consistent vegetation, fuel, and fire regime data for the United States.
+
+**Data Source:** [LANDFIRE](https://landfire.gov/)
+
+## Available Products
+
+### Fuel Products
+
+| Product | Description |
+|---------|-------------|
+| `:FBFM40` | Scott and Burgan Fire Behavior Fuel Models |
+| `:FBFM13` | Anderson 13 Fire Behavior Fuel Models |
+| `:CBD` | Canopy Bulk Density |
+| `:CBH` | Canopy Base Height |
+| `:CC` | Canopy Cover |
+| `:CH` | Canopy Height |
+
+### Vegetation Products
+
+| Product | Description |
+|---------|-------------|
+| `:EVT` | Existing Vegetation Type |
+| `:EVC` | Existing Vegetation Cover |
+| `:EVH` | Existing Vegetation Height |
+| `:ESP` | Ecological Systems |
+
+### Disturbance Products
+
+| Product | Description |
+|---------|-------------|
+| `:DIST` | Disturbance |
+| `:VDIST` | Vegetation Disturbance |
+| `:HDIST` | Historical Disturbance |
+
+### Topographic Products
+
+| Product | Description |
+|---------|-------------|
+| `:ELEV` | Elevation |
+| `:SLP` | Slope |
+| `:ASP` | Aspect |
+
+### Fire Regime Products
+
+| Product | Description |
+|---------|-------------|
+| `:FRG` | Fire Regime Groups |
+| `:MFRI` | Mean Fire Return Interval |
+| `:PLS` | Percent Low Severity Fire |
+| `:PMS` | Percent Mixed Severity Fire |
+| `:PRS` | Percent Replacement Severity Fire |
+
+## Regions
+
+| Region | Description |
+|--------|-------------|
+| `:conus` | Continental United States |
+| `:alaska` | Alaska |
+| `:hawaii` | Hawaii |
+
+## Versions
+
+LANDFIRE data is versioned by year: `:LF2001`, `:LF2008`, `:LF2010`, `:LF2012`, `:LF2014`, `:LF2016`, `:LF2019`, `:LF2020`, `:LF2022`, `:LF2023`, `:LF2024`
+
+## Basic Usage
+
+```julia
+using WildfireData.LANDFIRE
+
+# List all products
+LANDFIRE.products()
+
+# Filter by category
+LANDFIRE.products(category=:fuel)
+LANDFIRE.products(category=:vegetation)
+
+# Get product info
+LANDFIRE.info(:FBFM40)
+```
+
+## Web Coverage Service (WCS)
+
+Access LANDFIRE data via WCS for streaming or custom area downloads:
+
+```julia
+# Get WCS URL
+url = LANDFIRE.wcs_url(:conus, :LF2024)
+
+# Get WCS GetCapabilities URL
+url = LANDFIRE.wcs_capabilities_url(:conus, :LF2024)
+```
+
+## Web Map Service (WMS)
+
+Access LANDFIRE data via WMS for visualization:
+
+```julia
+# Get WMS URL
+url = LANDFIRE.wms_url(:conus, :LF2024)
+
+# Get WMS GetCapabilities URL
+url = LANDFIRE.wms_capabilities_url(:conus, :LF2024)
+```
+
+## Downloading Full Extent
+
+::: {.callout-warning}
+Full extent downloads are very large (hundreds of MB to several GB). Use WCS for smaller areas when possible.
+:::
+
+```julia
+# Download full extent GeoTIFF
+path = LANDFIRE.download_product(:FBFM40, :conus, :LF2024)
+
+# Force re-download
+path = LANDFIRE.download_product(:FBFM40, :conus, :LF2024, force=true)
+```
+
+## Product Categories
+
+```julia
+# Get all categories
+LANDFIRE.categories()  # [:fuel, :vegetation, :disturbance, :topographic, :fire_regime]
+
+# List products in a category
+LANDFIRE.products(category=:fuel)
+```
+
+## API Reference
+
+### Functions
+
+- `products(; category=nothing)` - List available products
+- `info(product)` - Print product information
+- `categories()` - List product categories
+- `regions()` - List available regions
+- `versions()` - List available versions
+- `wcs_url(region, version)` - Get WCS base URL
+- `wcs_capabilities_url(region, version)` - Get WCS GetCapabilities URL
+- `wms_url(region, version)` - Get WMS base URL
+- `wms_capabilities_url(region, version)` - Get WMS GetCapabilities URL
+- `download_product(product, region, version; force, verbose)` - Download full extent
+- `dir()` - Get local data directory path

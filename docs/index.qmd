@@ -1,0 +1,57 @@
+---
+title: "WildfireData.jl"
+subtitle: "Access wildfire and fire-related geospatial data from Julia"
+---
+
+## Overview
+
+**WildfireData.jl** is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from various U.S. government sources.
+
+## Data Sources
+
+The package includes modules for accessing data from:
+
+| Module | Description | Data Type |
+|--------|-------------|-----------|
+| [WFIGS](modules/wfigs.qmd) | Wildland Fire Interagency Geospatial Services | Current & historical fire perimeters |
+| [IRWIN](modules/irwin.qmd) | Integrated Reporting of Wildland Fire Information | Fire incidents & perimeters |
+| [FPA-FOD](modules/fpa-fod.qmd) | Fire Program Analysis Fire-Occurrence Database | Historical fire records (1992-2020) |
+| [MTBS](modules/mtbs.qmd) | Monitoring Trends in Burn Severity | Burn severity & fire boundaries |
+| [FIRMS](modules/firms.qmd) | Fire Information for Resource Management System | Satellite fire detections |
+| [LANDFIRE](modules/landfire.qmd) | Landscape Fire and Resource Management | Fuel, vegetation, topography |
+
+## Features
+
+- **Unified API**: Consistent interface across different data sources
+- **Multiple formats**: GeoJSON, CSV, SQLite, GeoTIFF support
+- **Query capabilities**: Filter data by location, time, and attributes
+- **Local caching**: Downloaded data is stored locally for reuse
+- **Web services**: Access WCS/WMS endpoints for streaming data
+
+## Quick Example
+
+```julia
+using WildfireData
+using WildfireData.WFIGS
+
+# Get current fire perimeters
+data = WFIGS.download(:current_perimeters, limit=10)
+
+# Access features
+for feature in data.features
+    println(feature.properties.IncidentName)
+end
+```
+
+## Installation
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/joshday/WildfireData.jl")
+```
+
+See the [Getting Started](getting-started.qmd) guide for more details.
+
+## License
+
+This package is open source. The data accessed through this package is provided by various U.S. government agencies and is generally in the public domain.

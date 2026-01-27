@@ -1,0 +1,176 @@
+---
+title: "Getting Started"
+---
+
+## Installation
+
+WildfireData.jl can be installed from GitHub:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/joshday/WildfireData.jl")
+```
+
+## Basic Usage
+
+Load the package and the specific modules you need:
+
+```julia
+using WildfireData
+using WildfireData.WFIGS
+using WildfireData.FIRMS
+```
+
+## Module Overview
+
+### Real-time Fire Data
+
+For current fire incidents and perimeters:
+
+```julia
+using WildfireData.WFIGS
+using WildfireData.IRWIN
+
+# Current fire perimeters from WFIGS
+perimeters = WFIGS.download(:current_perimeters, limit=10)
+
+# Current incidents from IRWIN
+incidents = IRWIN.download(:usa_current_incidents, limit=10)
+```
+
+### Satellite Fire Detections
+
+For near real-time satellite-based fire detections:
+```julia
+using WildfireData.FIRMS
+
+# Requires a free API key from NASA
+# Set via environment variable: ENV["FIRMS_MAP_KEY"] = "your-key"
+# Or: FIRMS.set_map_key!("your-key")
+
+# Download VIIRS fire detections for California
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
+```
+
+### Historical Fire Data
+
+For historical fire records:
+
+```julia
+using WildfireData.FPA_FOD
+
+# Download the database first (~214 MB)
+FPA_FOD.download_database()
+
+# Query fires
+fires = FPA_FOD.fires(state="CA", year=2020, limit=100)
+largest = FPA_FOD.largest_fires(10)
+```
+
+### Burn Severity Data
+
+For burn severity and fire boundaries:
+
+```julia
+using WildfireData.MTBS
+
+# Fire occurrence points
+fires = MTBS.download(:fire_occurrence, limit=100)
+
+# Burn boundaries
+boundaries = MTBS.download(:burn_boundaries, limit=10)
+```
+
+### Landscape Data
+
+For fuel, vegetation, and topographic data:
+
+```julia
+using WildfireData.LANDFIRE
+
+# List available products
+LANDFIRE.products()
+
+# Get WCS URL for streaming access
+url = LANDFIRE.wcs_url(:conus, :LF2024)
+
+# Download full extent (warning: large files)
+# LANDFIRE.download_product(:FBFM40, :conus, :LF2024)
+```
+
+## Data Storage
+
+Downloaded data is stored in a scratch space managed by the Scratch.jl package. You can find the location with:
+
+```julia
+using WildfireData
+WildfireData.dir()  # Returns the base data directory
+```
+
+Each module has its own subdirectory:
+- `WildfireData.dir("WFIGS")`
+- `WildfireData.dir("FIRMS")`
+- etc.
+
+## Common Patterns
+
+### Filtering Data
+
+Most modules support filtering via `where` clauses or keyword arguments:
+
+```julia
+# WFIGS/IRWIN: SQL-like where clause
+data = WFIGS.download(:current_perimeters, where="GISAcres > 1000", limit=10)
+
+# FPA_FOD: Keyword arguments
+fires = FPA_FOD.fires(state="CA", year=2020, min_size=1000)
+
+# FIRMS: Region and time filters
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:western_us, days=3)
+```
+
+### Counting Records
+
+Check how many records match your query before downloading:
+
+```julia
+# Count all current perimeters
+n = WFIGS.count(:current_perimeters)
+
+# Count with filter
+n = WFIGS.count(:current_perimeters, where="GISAcres > 1000")
+```
+
+### Getting Field Information
+
+Discover available fields in a dataset:
+
+```julia
+fields = WFIGS.fields(:current_perimeters)
+for f in fields
+    println("$(f.name): $(f.type)")
+end
+```
+
+### Saving Data Locally
+
+Download data to a local file:
+
+```julia
+# Save as GeoJSON
+path = WFIGS.download_file(:current_perimeters, limit=100)
+
+# Load later
+data = WFIGS.load_file(:current_perimeters)
+```
+
+## Next Steps
+
+Explore the documentation for each module:
+
+- [WFIGS](modules/wfigs.qmd) - Current and historical fire perimeters
+- [IRWIN](modules/irwin.qmd) - Fire incident data
+- [FPA-FOD](modules/fpa-fod.qmd) - Historical fire occurrence database
+- [MTBS](modules/mtbs.qmd) - Burn severity data
+- [FIRMS](modules/firms.qmd) - Satellite fire detections
+- [LANDFIRE](modules/landfire.qmd) - Landscape and fuel data
