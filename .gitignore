@@ -1,3 +1,4 @@
 /Manifest*.toml
 *.claude
 docs/_site
+docs/index_files

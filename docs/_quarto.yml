@@ -1,6 +1,15 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - index.qmd
+    - getting-started.qmd
+    - modules/wfigs.qmd
+    - modules/irwin.qmd
+    - modules/fpa-fod.qmd
+    - modules/mtbs.qmd
+    - modules/firms.qmd
+    - modules/landfire.qmd
 
 website:
   title: "WildfireData.jl"
