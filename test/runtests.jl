@@ -7,6 +7,7 @@ using WildfireData.FIRMS
 using WildfireData.LANDFIRE
 using Test
 using DataFrames
+using GeoJSON
 
 @testset "WildfireData.jl" begin
 
@@ -122,25 +123,21 @@ using DataFrames
 
             @testset "download() with limit" begin
                 data = WFIGS.download(:current_locations, limit=2, verbose=false)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
-                @test haskey(data, :features)
-                @test length(data.features) <= 2
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
 
                 # Check feature structure
-                if length(data.features) > 0
-                    feature = data.features[1]
-                    @test haskey(feature, :type)
-                    @test feature.type == "Feature"
-                    @test haskey(feature, :geometry)
-                    @test haskey(feature, :properties)
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
                 end
             end
 
             @testset "download() with where clause" begin
                 # Download with a filter
                 data = WFIGS.download(:current_perimeters, where="1=1", limit=1, verbose=false)
-                @test haskey(data, :features)
+                @test data isa GeoJSON.FeatureCollection
             end
 
             @testset "download_file() and load_file()" begin
@@ -151,8 +148,7 @@ using DataFrames
 
                 # Load from file
                 data = WFIGS.load_file(:current_locations)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
+                @test data isa GeoJSON.FeatureCollection
 
                 # Clean up
                 rm(filepath)
@@ -272,25 +268,20 @@ using DataFrames
 
             @testset "download() with limit" begin
                 data = IRWIN.download(:usa_current_incidents, limit=2, verbose=false)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
-                @test haskey(data, :features)
-                @test length(data.features) <= 2
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
 
                 # Check feature structure
-                if length(data.features) > 0
-                    feature = data.features[1]
-                    @test haskey(feature, :type)
-                    @test feature.type == "Feature"
-                    @test haskey(feature, :geometry)
-                    @test haskey(feature, :properties)
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
                 end
             end
 
             @testset "download() perimeters" begin
                 data = IRWIN.download(:usa_current_perimeters, limit=1, verbose=false)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
+                @test data isa GeoJSON.FeatureCollection
             end
 
             @testset "download_file() and load_file()" begin
@@ -301,8 +292,7 @@ using DataFrames
 
                 # Load from file
                 data = IRWIN.load_file(:usa_current_incidents)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
+                @test data isa GeoJSON.FeatureCollection
 
                 # Clean up
                 rm(filepath)
@@ -668,36 +658,30 @@ using DataFrames
 
             @testset "download() with limit" begin
                 data = MTBS.download(:fire_occurrence, limit=2, verbose=false)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
-                @test haskey(data, :features)
-                @test length(data.features) <= 2
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
 
                 # Check feature structure
-                if length(data.features) > 0
-                    feature = data.features[1]
-                    @test haskey(feature, :type)
-                    @test feature.type == "Feature"
-                    @test haskey(feature, :geometry)
-                    @test haskey(feature, :properties)
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
                 end
             end
 
             @testset "download() burn boundaries" begin
                 data = MTBS.download(:burn_boundaries, limit=1, verbose=false)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
-                @test haskey(data, :features)
+                @test data isa GeoJSON.FeatureCollection
             end
 
             @testset "download() with where clause" begin
                 data = MTBS.download(:fire_occurrence, where="ACRES > 50000", limit=5, verbose=false)
-                @test haskey(data, :features)
+                @test data isa GeoJSON.FeatureCollection
 
                 # Check that returned fires are actually large
-                if length(data.features) > 0
-                    for feature in data.features
-                        @test feature.properties.ACRES > 50000
+                if length(data) > 0
+                    for feature in data
+                        @test feature.ACRES > 50000
                     end
                 end
             end
@@ -710,8 +694,7 @@ using DataFrames
 
                 # Load from file
                 data = MTBS.load_file(:fire_occurrence)
-                @test haskey(data, :type)
-                @test data.type == "FeatureCollection"
+                @test data isa GeoJSON.FeatureCollection
 
                 # Clean up
                 rm(filepath)
@@ -719,18 +702,18 @@ using DataFrames
 
             @testset "fires() convenience function" begin
                 data = MTBS.fires(limit=5)
-                @test haskey(data, :features)
-                @test length(data.features) <= 5
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 5
 
                 # Test with min_acres filter (more reliable than year filter)
                 data_large = MTBS.fires(min_acres=100000, limit=5)
-                @test haskey(data_large, :features)
+                @test data_large isa GeoJSON.FeatureCollection
             end
 
             @testset "boundaries() convenience function" begin
                 data = MTBS.boundaries(limit=3)
-                @test haskey(data, :features)
-                @test length(data.features) <= 3
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 3
             end
 
             @testset "largest_fires()" begin
@@ -740,7 +723,7 @@ using DataFrames
 
                 if length(lf) > 1
                     # Check sorted by size descending
-                    sizes = [f.properties.ACRES for f in lf]
+                    sizes = [f.ACRES for f in lf]
                     @test issorted(sizes, rev=true)
                 end
             end

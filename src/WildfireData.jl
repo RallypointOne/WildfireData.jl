@@ -3,6 +3,7 @@ module WildfireData
 using Scratch
 using HTTP
 using JSON3
+using GeoJSON
 
 export WFIGS, IRWIN, FPA_FOD, MTBS, FIRMS, LANDFIRE
 
@@ -90,7 +91,7 @@ end
 """
     _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String; kwargs...)
 
-Download a dataset and return it as parsed GeoJSON. Used internally by submodules.
+Download a dataset and return it as a GeoJSON FeatureCollection. Used internally by submodules.
 """
 function _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String;
                    where::String="1=1", fields::String="*", limit::Union{Int,Nothing}=nothing, verbose::Bool=true)
@@ -110,20 +111,22 @@ function _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, mo
         error("Failed to download dataset. HTTP status: $(response.status)\nResponse: $(String(response.body))")
     end
 
-    verbose && println("Parsing JSON...")
-    data = JSON3.read(response.body)
+    verbose && println("Parsing GeoJSON...")
+    body = String(response.body)
 
-    # Check for ArcGIS error response
-    if haskey(data, :error)
-        error("ArcGIS API error: $(data.error)")
+    # First check for ArcGIS error response using JSON3
+    json_data = JSON3.read(body)
+    if haskey(json_data, :error)
+        error("ArcGIS API error: $(json_data.error)")
     end
 
-    if haskey(data, :features)
-        n = length(data.features)
-        verbose && println("Downloaded $n features")
-        if haskey(data, :properties) && haskey(data.properties, :exceededTransferLimit) && data.properties.exceededTransferLimit
-            verbose && println("⚠ Warning: Transfer limit exceeded. Use `limit` parameter or refine `where` clause to get all data.")
-        end
+    # Parse as GeoJSON
+    data = GeoJSON.read(body)
+
+    n = length(data)
+    verbose && println("Downloaded $n features")
+    if haskey(json_data, :properties) && haskey(json_data.properties, :exceededTransferLimit) && json_data.properties.exceededTransferLimit
+        verbose && println("⚠ Warning: Transfer limit exceeded. Use `limit` parameter or refine `where` clause to get all data.")
     end
 
     return data
@@ -178,7 +181,7 @@ function _load_file(data_dir::String, dataset::Symbol; filename::Union{String,No
         error("File not found: $filepath. Download the dataset first.")
     end
 
-    return JSON3.read(read(filepath, String))
+    return GeoJSON.read(filepath)
 end
 
 """

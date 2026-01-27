@@ -73,22 +73,41 @@ path = WFIGS.download_file(:current_perimeters, filename="my_perimeters.geojson"
 
 ## Working with Results
 
-The download functions return a `JSON3.Object` containing a GeoJSON FeatureCollection:
+The download functions return a `GeoJSON.FeatureCollection`:
 
 ```julia
 data = WFIGS.download(:current_locations, limit=5)
 
-# Access features
-for feature in data.features
-    props = feature.properties
-    println("$(props.IncidentName): $(props.DailyAcres) acres")
+# Access features (iterate directly over the collection)
+for feature in data
+    println("$(feature.IncidentName): $(feature.DailyAcres) acres")
 end
 
 # Access geometry
-feature = data.features[1]
-geom = feature.geometry
-println("Type: $(geom.type)")
-println("Coordinates: $(geom.coordinates)")
+feature = data[1]
+geom = GeoJSON.geometry(feature)
+println("Type: $(typeof(geom))")
+```
+
+## Example: Marshall Fire Perimeter
+
+The [Marshall Fire](https://en.wikipedia.org/wiki/Marshall_Fire) (December 2021) was one of the most destructive wildfires in Colorado history. Here's how to retrieve its perimeter:
+
+```julia
+using WildfireData
+
+# Query the Marshall Fire from historical perimeters
+marshall = WFIGS.download(
+    :perimeters_all_years,
+    where="INCIDENT = 'MARSHALL' AND FIRE_YEAR = '2021'"
+)
+
+# Access the fire details (returns a GeoJSON FeatureCollection)
+fire = marshall[1]
+
+println("Fire: $(fire.INCIDENT)")
+println("Acres: $(fire.GIS_ACRES)")
+println("Year: $(fire.FIRE_YEAR)")
 ```
 
 ## API Reference

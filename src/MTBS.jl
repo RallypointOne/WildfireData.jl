@@ -3,6 +3,7 @@ module MTBS
 using ..WildfireData
 using HTTP
 using JSON3
+using GeoJSON
 using Downloads
 
 export datasets, download, info, download_shapefile
@@ -194,20 +195,22 @@ function download(dataset::Symbol; where::String="1=1", fields::String="*",
         error("Failed to download dataset. HTTP status: $(response.status)\nResponse: $(String(response.body))")
     end
 
-    verbose && println("Parsing JSON...")
-    data = JSON3.read(response.body)
+    verbose && println("Parsing GeoJSON...")
+    body = String(response.body)
 
-    # Check for ArcGIS error response
-    if haskey(data, :error)
-        error("ArcGIS API error: $(data.error)")
+    # First check for ArcGIS error response using JSON3
+    json_data = JSON3.read(body)
+    if haskey(json_data, :error)
+        error("ArcGIS API error: $(json_data.error)")
     end
 
-    if haskey(data, :features)
-        n = length(data.features)
-        verbose && println("Downloaded $n features")
-        if haskey(data, :properties) && haskey(data.properties, :exceededTransferLimit) && data.properties.exceededTransferLimit
-            verbose && println("⚠ Warning: Transfer limit exceeded (max 2000 records). Use `limit` parameter or refine `where` clause.")
-        end
+    # Parse as GeoJSON
+    data = GeoJSON.read(body)
+
+    n = length(data)
+    verbose && println("Downloaded $n features")
+    if haskey(json_data, :properties) && haskey(json_data.properties, :exceededTransferLimit) && json_data.properties.exceededTransferLimit
+        verbose && println("⚠ Warning: Transfer limit exceeded (max 2000 records). Use `limit` parameter or refine `where` clause.")
     end
 
     return data
@@ -283,7 +286,7 @@ function load_file(dataset::Symbol; filename::Union{String,Nothing}=nothing)
         error("File not found: $filepath. Download the dataset first.")
     end
 
-    return JSON3.read(read(filepath, String))
+    return GeoJSON.read(filepath)
 end
 
 """
@@ -524,13 +527,13 @@ function largest_fires(n::Int=100; year::Union{Int,Nothing}=nothing)
     # and sort client-side
     data = download(:fire_occurrence; where=where_clause, limit=min(n * 2, 2000), verbose=false)
 
-    if haskey(data, :features) && length(data.features) > 0
+    if length(data) > 0
         # Sort by ACRES descending and take top n
-        sorted_features = sort(collect(data.features), by=f -> -get(f.properties, :ACRES, 0))
+        sorted_features = sort(collect(data), by=f -> -something(f.ACRES, 0))
         return sorted_features[1:min(n, length(sorted_features))]
     end
 
-    return data.features
+    return collect(data)
 end
 
 end # module
