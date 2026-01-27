@@ -45,12 +45,13 @@ website:
   sidebar:
     style: docked
     search: true
+    collapse-level: 0
     contents:
-      - section: "Overview"
+      - section: "**Overview**"
         contents:
           - index.qmd
           - getting-started.qmd
-      - section: "Data Modules"
+      - section: "**Data Modules**"
         contents:
           - modules/wfigs.qmd
           - modules/irwin.qmd
