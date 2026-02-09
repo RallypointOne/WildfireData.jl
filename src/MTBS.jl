@@ -1,12 +1,9 @@
 module MTBS
 
-using ..WildfireData
-using HTTP
-using JSON3
-using GeoJSON
+using ..WildfireData: WildfireData, AbstractDataset,
+    _download, _download_file, _load_file, _count, _fields
 using Downloads
 
-export datasets, download, info, download_shapefile
 
 #-----------------------------------------------------------------------------# Data Directory
 dir() = WildfireData.dir("MTBS")
@@ -58,25 +55,31 @@ const DOWNLOADS = Dict(
 #-----------------------------------------------------------------------------# Dataset Definitions
 
 """
-    MTBSDataset
+    MTBSDataset <: AbstractDataset
 
 Metadata for an MTBS MapServer layer.
 """
-struct MTBSDataset
+struct MTBSDataset <: AbstractDataset
+    base_url::String
     layer::Int
     name::String
     description::String
     geometry_type::Symbol  # :point or :polygon
 end
 
+WildfireData.base_query_url(d::MTBSDataset) = "$(d.base_url)/$(d.layer)/query"
+WildfireData.base_layer_url(d::MTBSDataset) = "$(d.base_url)/$(d.layer)"
+
 const DATASETS = Dict{Symbol, MTBSDataset}(
     :fire_occurrence => MTBSDataset(
+        MAPSERVER_BASE,
         LAYER_FIRE_OCCURRENCE,
         "Fire Occurrence Locations (All Years)",
         "Point locations of all inventoried MTBS fires from 1984 to present. Includes fire name, date, acres, and burn severity assessment data.",
         :point
     ),
     :burn_boundaries => MTBSDataset(
+        MAPSERVER_BASE,
         LAYER_BURN_BOUNDARIES,
         "Burned Area Boundaries (All Years)",
         "Polygon boundaries of burned areas from 1984 to present. Includes fire perimeters with burn severity thresholds.",
@@ -87,26 +90,13 @@ const DATASETS = Dict{Symbol, MTBSDataset}(
 #-----------------------------------------------------------------------------# URL Builder
 
 """
-    query_url(dataset::Symbol; where="1=1", outfields="*", limit=nothing, format="geojson")
+    query_url(dataset::Symbol; kwargs...)
 
 Build a MapServer query URL for the dataset.
 """
-function query_url(dataset::Symbol; where::String="1=1", outfields::String="*",
-                   limit::Union{Int,Nothing}=nothing, format::String="geojson")
+function query_url(dataset::Symbol; kwargs...)
     haskey(DATASETS, dataset) || error("Unknown dataset: $dataset. Use `MTBS.datasets()` to list available datasets.")
-
-    d = DATASETS[dataset]
-    url = "$MAPSERVER_BASE/$(d.layer)/query"
-    params = [
-        "where" => HTTP.escapeuri(where),
-        "outFields" => outfields,
-        "f" => format,
-        "outSR" => "4326",
-    ]
-    if !isnothing(limit)
-        push!(params, "resultRecordCount" => string(limit))
-    end
-    return url * "?" * join(["$k=$v" for (k, v) in params], "&")
+    WildfireData.query_url(DATASETS[dataset]; kwargs...)
 end
 
 #-----------------------------------------------------------------------------# API Functions
@@ -177,44 +167,7 @@ data = MTBS.download(:burn_boundaries, where="ACRES > 10000", limit=50)
 data = MTBS.download(:fire_occurrence, where="YEAR = 2020", limit=100)
 ```
 """
-function download(dataset::Symbol; where::String="1=1", fields::String="*",
-                  limit::Union{Int,Nothing}=nothing, verbose::Bool=true)
-    if !haskey(DATASETS, dataset)
-        error("Unknown dataset: $dataset. Use `MTBS.datasets()` to list available datasets.")
-    end
-
-    d = DATASETS[dataset]
-    url = query_url(dataset; where=where, outfields=fields, limit=limit)
-
-    verbose && println("Downloading: $(d.name)")
-    verbose && println("URL: $url")
-
-    response = HTTP.get(url; status_exception=false)
-
-    if response.status != 200
-        error("Failed to download dataset. HTTP status: $(response.status)\nResponse: $(String(response.body))")
-    end
-
-    verbose && println("Parsing GeoJSON...")
-    body = String(response.body)
-
-    # First check for ArcGIS error response using JSON3
-    json_data = JSON3.read(body)
-    if haskey(json_data, :error)
-        error("ArcGIS API error: $(json_data.error)")
-    end
-
-    # Parse as GeoJSON
-    data = GeoJSON.read(body)
-
-    n = length(data)
-    verbose && println("Downloaded $n features")
-    if haskey(json_data, :properties) && haskey(json_data.properties, :exceededTransferLimit) && json_data.properties.exceededTransferLimit
-        verbose && println("⚠ Warning: Transfer limit exceeded (max 2000 records). Use `limit` parameter or refine `where` clause.")
-    end
-
-    return data
-end
+download(dataset::Symbol; kwargs...) = _download(DATASETS, dataset, "MTBS"; kwargs...)
 
 """
     download_file(dataset::Symbol; filename=nothing, force=false, verbose=true, kwargs...)
@@ -236,34 +189,7 @@ The path to the downloaded file.
 path = MTBS.download_file(:fire_occurrence, limit=1000)
 ```
 """
-function download_file(dataset::Symbol; filename::Union{String,Nothing}=nothing,
-                       force::Bool=false, verbose::Bool=true, kwargs...)
-    if !haskey(DATASETS, dataset)
-        error("Unknown dataset: $dataset. Use `MTBS.datasets()` to list available datasets.")
-    end
-
-    mkpath(dir())
-
-    if isnothing(filename)
-        filename = string(dataset) * ".geojson"
-    end
-    filepath = joinpath(dir(), filename)
-
-    if isfile(filepath) && !force
-        verbose && println("File already exists: $filepath")
-        verbose && println("Use `force=true` to overwrite.")
-        return filepath
-    end
-
-    data = download(dataset; verbose=verbose, kwargs...)
-
-    open(filepath, "w") do io
-        JSON3.write(io, data)
-    end
-    verbose && println("Saved to: $filepath")
-
-    return filepath
-end
+download_file(dataset::Symbol; kwargs...) = _download_file(DATASETS, dataset, "MTBS", dir(); kwargs...)
 
 """
     load_file(dataset::Symbol; filename=nothing)
@@ -276,18 +202,7 @@ MTBS.download_file(:fire_occurrence, limit=100)  # download first
 data = MTBS.load_file(:fire_occurrence)
 ```
 """
-function load_file(dataset::Symbol; filename::Union{String,Nothing}=nothing)
-    if isnothing(filename)
-        filename = string(dataset) * ".geojson"
-    end
-    filepath = joinpath(dir(), filename)
-
-    if !isfile(filepath)
-        error("File not found: $filepath. Download the dataset first.")
-    end
-
-    return GeoJSON.read(filepath)
-end
+load_file(dataset::Symbol; kwargs...) = _load_file(dir(), dataset; kwargs...)
 
 """
     count(dataset::Symbol; where="1=1")
@@ -301,28 +216,7 @@ MTBS.count(:burn_boundaries, where="YEAR = 2020")  # 2020 fires
 MTBS.count(:fire_occurrence, where="ACRES > 10000")  # large fires
 ```
 """
-function count(dataset::Symbol; where::String="1=1")
-    if !haskey(DATASETS, dataset)
-        error("Unknown dataset: $dataset. Use `MTBS.datasets()` to list available datasets.")
-    end
-
-    d = DATASETS[dataset]
-    url = "$MAPSERVER_BASE/$(d.layer)/query"
-    params = [
-        "where" => HTTP.escapeuri(where),
-        "returnCountOnly" => "true",
-        "f" => "json",
-    ]
-    full_url = url * "?" * join(["$k=$v" for (k, v) in params], "&")
-
-    response = HTTP.get(full_url; status_exception=false)
-    if response.status != 200
-        error("Failed to get count. HTTP status: $(response.status)")
-    end
-
-    data = JSON3.read(response.body)
-    return data.count
-end
+count(dataset::Symbol; kwargs...) = _count(DATASETS, dataset, "MTBS"; kwargs...)
 
 """
     fields(dataset::Symbol)
@@ -335,27 +229,7 @@ MTBS.fields(:fire_occurrence)
 MTBS.fields(:burn_boundaries)
 ```
 """
-function fields(dataset::Symbol)
-    if !haskey(DATASETS, dataset)
-        error("Unknown dataset: $dataset. Use `MTBS.datasets()` to list available datasets.")
-    end
-
-    d = DATASETS[dataset]
-    url = "$MAPSERVER_BASE/$(d.layer)?f=json"
-
-    response = HTTP.get(url; status_exception=false)
-    if response.status != 200
-        error("Failed to get field info. HTTP status: $(response.status)")
-    end
-
-    data = JSON3.read(response.body)
-
-    if haskey(data, :fields)
-        return [(name=f.name, type=f.type, alias=get(f, :alias, f.name)) for f in data.fields]
-    else
-        error("Could not retrieve field information for this dataset.")
-    end
-end
+fields(dataset::Symbol) = _fields(DATASETS, dataset, "MTBS")
 
 #-----------------------------------------------------------------------------# Direct Download Functions
 
@@ -464,7 +338,8 @@ function fires(; year::Union{Int,Nothing}=nothing,
     !isnothing(year) && push!(conditions, "YEAR = $year")
     !isnothing(min_acres) && push!(conditions, "ACRES >= $min_acres")
     !isnothing(max_acres) && push!(conditions, "ACRES <= $max_acres")
-    !isnothing(fire_type) && push!(conditions, "FIRE_TYPE = '$fire_type'")
+    !isnothing(fire_type) && push!(conditions, "FIRE_TYPE = '$(replace(fire_type, "'" => "''"))'")
+
 
     where_clause = isempty(conditions) ? "1=1" : join(conditions, " AND ")
 

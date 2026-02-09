@@ -75,11 +75,10 @@ data = IRWIN.load_file(:usa_current_incidents)
 data = IRWIN.download(:usa_current_incidents, limit=5)
 
 # Access incident properties
-for feature in data.features
-    props = feature.properties
-    println("$(props.IncidentName)")
-    println("  Acres: $(props.DailyAcres)")
-    println("  State: $(props.POOState)")
+for feature in data
+    println("$(feature.IncidentName)")
+    println("  Acres: $(feature.DailyAcres)")
+    println("  State: $(feature.POOState)")
 end
 ```
 

@@ -11,21 +11,18 @@ The MTBS module provides access to burn severity data from the Monitoring Trends
 
 ## Available Datasets
 
-| Dataset | Description | Category |
+| Dataset | Description | Geometry |
 |---------|-------------|----------|
-| `:fire_occurrence` | Fire occurrence points | points |
-| `:burn_boundaries` | Burned area boundaries | polygons |
+| `:fire_occurrence` | Fire occurrence points (1984-present) | point |
+| `:burn_boundaries` | Burned area boundaries (1984-present) | polygon |
 
 ## Basic Usage
 
 ```julia
-using WildfireData.MTBS
+using WildfireData
 
 # List all datasets
 MTBS.datasets()
-
-# Filter by category
-MTBS.datasets(category=:points)
 
 # Get dataset info
 MTBS.info(:fire_occurrence)
@@ -41,7 +38,7 @@ data = MTBS.download(:fire_occurrence, limit=100)
 data = MTBS.download(:burn_boundaries, limit=10)
 
 # Download with filter
-data = MTBS.download(:fire_occurrence, where="BurnBndAc > 10000", limit=50)
+data = MTBS.download(:fire_occurrence, where="ACRES > 10000", limit=50)
 ```
 
 ## Querying
@@ -52,10 +49,26 @@ n = MTBS.count(:fire_occurrence)
 n = MTBS.count(:burn_boundaries)
 
 # Count with filter
-n = MTBS.count(:fire_occurrence, where="BurnBndAc > 5000")
+n = MTBS.count(:fire_occurrence, where="ACRES > 5000")
 
 # Get field information
 fields = MTBS.fields(:fire_occurrence)
+```
+
+## Convenience Functions
+
+```julia
+# Query fire occurrence with filters
+data = MTBS.fires(year=2020, limit=100)
+data = MTBS.fires(min_acres=50000, fire_type="Wildfire", limit=100)
+
+# Query burn boundaries with filters
+data = MTBS.boundaries(year=2020, limit=50)
+data = MTBS.boundaries(min_acres=100000, limit=50)
+
+# Get largest fires (sorted client-side)
+largest = MTBS.largest_fires(10)
+largest = MTBS.largest_fires(10, year=2020)
 ```
 
 ## Saving and Loading Files
@@ -73,45 +86,37 @@ data = MTBS.load_file(:fire_occurrence)
 ```julia
 data = MTBS.download(:fire_occurrence, limit=5)
 
-# Access fire properties
-for feature in data.features
-    props = feature.properties
-    println("$(props.Incid_Name)")
-    println("  Acres: $(props.BurnBndAc)")
-    println("  Year: $(props.Ig_Date)")
+# Iterate directly over the FeatureCollection
+for feature in data
+    println("$(feature.FIRE_NAME): $(feature.ACRES) acres")
 end
 ```
 
-## Key Fields
-
-### Fire Occurrence
-
-- `Incid_Name` - Incident name
-- `BurnBndAc` - Burned area in acres
-- `Ig_Date` - Ignition date
-- `Event_ID` - Unique event identifier
-
-### Burn Boundaries
-
-- `Incid_Name` - Incident name
-- `BurnBndAc` - Burned area in acres
-- `Ig_Date` - Ignition date
-- `Event_ID` - Unique event identifier
-
 ## Direct Downloads
 
-MTBS also provides direct download links for full datasets:
+MTBS also provides direct download links for full shapefiles and geodatabases:
 
 ```julia
-# Get download URLs for shapefiles and geodatabases
-MTBS.download_urls()
+# List available downloads
+MTBS.available_downloads()
+
+# Download a shapefile or geodatabase
+path = MTBS.download_shapefile(:fire_occurrence_shp)
+path = MTBS.download_shapefile(:burn_boundaries_gdb)
 ```
+
+| Key | Description |
+|-----|-------------|
+| `:burn_boundaries_shp` | Burn area boundaries shapefile (~374 MB) |
+| `:burn_boundaries_gdb` | Burn area boundaries geodatabase (~158 MB) |
+| `:fire_occurrence_shp` | Fire occurrence points shapefile (~3 MB) |
+| `:fire_occurrence_gdb` | Fire occurrence points geodatabase (~2 MB) |
 
 ## API Reference
 
 ### Functions
 
-- `datasets(; category=nothing)` - List available datasets
+- `datasets()` - List available datasets
 - `info(dataset)` - Print dataset information
 - `download(dataset; where, fields, limit, verbose)` - Download data
 - `download_file(dataset; filename, force, verbose, ...)` - Download and save to file
@@ -119,4 +124,9 @@ MTBS.download_urls()
 - `count(dataset; where)` - Get record count
 - `fields(dataset)` - Get field names and types
 - `query_url(dataset; kwargs...)` - Build query URL
+- `fires(; year, min_acres, max_acres, fire_type, limit)` - Query fire occurrence
+- `boundaries(; year, min_acres, max_acres, limit)` - Query burn boundaries
+- `largest_fires(n; year)` - Get largest fires by acreage
+- `available_downloads()` - List direct download options
+- `download_shapefile(key; force, verbose)` - Download shapefile/geodatabase
 - `dir()` - Get local data directory path

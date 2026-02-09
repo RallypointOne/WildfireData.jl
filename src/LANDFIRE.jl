@@ -4,7 +4,6 @@ using ..WildfireData
 using Downloads
 using HTTP
 
-export products, versions, download_product, wcs_url, wms_url, info
 
 #-----------------------------------------------------------------------------# Data Directory
 dir() = WildfireData.dir("LANDFIRE")

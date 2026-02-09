@@ -17,7 +17,7 @@ FIRMS requires a free API key (MAP_KEY) from NASA.
 2. Request a FIRMS MAP_KEY at [FIRMS MAP_KEY Request](https://firms.modaps.eosdis.nasa.gov/api/area/)
 
 ```julia
-using WildfireData.FIRMS
+using WildfireData
 
 # Set via environment variable (recommended)
 ENV["FIRMS_MAP_KEY"] = "your-32-character-key"
@@ -45,13 +45,16 @@ FIRMS.get_map_key()
 ## Basic Usage
 
 ```julia
-using WildfireData.FIRMS
+using WildfireData
 
 # List all sources
 FIRMS.sources()
 
-# Get source info
-FIRMS.info(:VIIRS_NOAA20_NRT)
+# Filter by type
+FIRMS.sources(type=:NRT)
+
+# Print general info
+FIRMS.info()
 ```
 
 ## Downloading Data
@@ -63,32 +66,24 @@ FIRMS.info(:VIIRS_NOAA20_NRT)
 df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
 
 # Available regions
-FIRMS.regions()  # :usa, :california, :western_us, etc.
+FIRMS.regions()  # :conus, :california, :western_us, etc.
 ```
 
 ### By Bounding Box
 
 ```julia
-# Download for custom bounding box (west, south, east, north)
-df = FIRMS.download(:VIIRS_NOAA20_NRT, bbox=(-125, 32, -114, 42), days=1)
+# Download for custom bounding box ("west,south,east,north")
+df = FIRMS.download(:VIIRS_NOAA20_NRT, area="-125,32,-114,42", days=1)
 ```
 
-### By Country
+### Historical Data
 
 ```julia
-# Download for a country (3-letter ISO code)
-df = FIRMS.download(:VIIRS_NOAA20_NRT, country="USA", days=1)
-```
-
-## Time Range
-
-```julia
-# Last N days (1-10 for NRT, up to 61 for SP)
+# Last N days (1-10)
 df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=3)
 
-# Specific date range
-df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california,
-                    date_range=("2024-01-01", "2024-01-07"))
+# Specific date
+df = FIRMS.download(:VIIRS_SNPP_SP, region=:western_us, days=1, date="2023-08-15")
 ```
 
 ## Working with Results
@@ -107,7 +102,6 @@ high_confidence = filter(row -> row.confidence == "h", df)
 # Get fire locations
 for row in eachrow(df)
     println("Lat: $(row.latitude), Lon: $(row.longitude)")
-    println("  Brightness: $(row.bright_ti4)")
     println("  FRP: $(row.frp)")
 end
 ```
@@ -126,14 +120,28 @@ end
 | `satellite` | Satellite name |
 | `daynight` | Day or night detection (D/N) |
 
+## Convenience Functions
+
+```julia
+# Get recent fires with optional confidence filtering
+df = FIRMS.recent_fires(region=:california, days=2)
+df = FIRMS.recent_fires(source=:MODIS_NRT, region=:conus, min_confidence=80)
+
+# Group detections by date
+by_date = FIRMS.hotspots_by_date(region=:western_us, days=5)
+
+# Check data availability
+avail = FIRMS.data_availability(:VIIRS_NOAA20_NRT)
+```
+
 ## Saving and Loading Files
 
 ```julia
 # Download and save to CSV
 path = FIRMS.download_file(:VIIRS_NOAA20_NRT, region=:california, days=1)
 
-# Load previously downloaded file
-df = FIRMS.load_file(:VIIRS_NOAA20_NRT)
+# Load previously downloaded file (pass the filename as a String)
+df = FIRMS.load_file("VIIRS_NOAA20_NRT_20240115.csv")
 ```
 
 ## Predefined Regions
@@ -144,21 +152,32 @@ FIRMS.regions()
 
 | Region | Description |
 |--------|-------------|
-| `:usa` | Continental United States |
+| `:world` | Global coverage |
+| `:conus` | Continental United States |
+| `:alaska` | Alaska |
 | `:california` | California |
 | `:western_us` | Western United States |
-| `:world` | Global coverage |
+| `:eastern_us` | Eastern United States |
+| `:canada` | Canada |
+| `:australia` | Australia |
+| `:europe` | Europe |
+| `:amazon` | Amazon basin |
+| `:africa` | Africa |
 
 ## API Reference
 
 ### Functions
 
-- `sources()` - List available satellite sources
-- `info(source)` - Print source information
+- `sources(; type=nothing)` - List available satellite sources
+- `info()` - Print FIRMS API information
 - `regions()` - List predefined regions
-- `download(source; region, bbox, country, days, date_range)` - Download fire data
-- `download_file(source; filename, ...)` - Download and save to file
-- `load_file(source; filename)` - Load previously downloaded file
+- `download(source; area, region, days, date, verbose)` - Download fire data
+- `download_file(source; filename, force, verbose, ...)` - Download and save to file
+- `load_file(filename)` - Load previously downloaded CSV file
+- `query_url(source, area, days; date)` - Build API query URL
+- `data_availability(source)` - Check data availability
+- `recent_fires(; source, region, days, min_confidence)` - Get recent detections
+- `hotspots_by_date(; source, region, days)` - Group detections by date
 - `get_map_key()` - Get current API key
 - `set_map_key!(key)` - Set API key
 - `dir()` - Get local data directory path

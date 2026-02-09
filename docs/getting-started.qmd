@@ -8,17 +8,18 @@ WildfireData.jl can be installed from GitHub:
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/joshday/WildfireData.jl")
+Pkg.add(url="https://github.com/RallypointOne/WildfireData.jl")
 ```
 
 ## Basic Usage
 
-Load the package and the specific modules you need:
+Load the package — all submodules are available immediately:
 
 ```julia
 using WildfireData
-using WildfireData.WFIGS
-using WildfireData.FIRMS
+
+WFIGS.datasets()
+FIRMS.sources()
 ```
 
 ## Module Overview
@@ -28,8 +29,7 @@ using WildfireData.FIRMS
 For current fire incidents and perimeters:
 
 ```julia
-using WildfireData.WFIGS
-using WildfireData.IRWIN
+using WildfireData
 
 # Current fire perimeters from WFIGS
 perimeters = WFIGS.download(:current_perimeters, limit=10)
@@ -42,7 +42,7 @@ incidents = IRWIN.download(:usa_current_incidents, limit=10)
 
 For near real-time satellite-based fire detections:
 ```julia
-using WildfireData.FIRMS
+using WildfireData
 
 # Requires a free API key from NASA
 # Set via environment variable: ENV["FIRMS_MAP_KEY"] = "your-key"
@@ -57,7 +57,7 @@ df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
 For historical fire records:
 
 ```julia
-using WildfireData.FPA_FOD
+using WildfireData
 
 # Download the database first (~214 MB)
 FPA_FOD.download_database()
@@ -72,7 +72,7 @@ largest = FPA_FOD.largest_fires(10)
 For burn severity and fire boundaries:
 
 ```julia
-using WildfireData.MTBS
+using WildfireData
 
 # Fire occurrence points
 fires = MTBS.download(:fire_occurrence, limit=100)
@@ -86,7 +86,7 @@ boundaries = MTBS.download(:burn_boundaries, limit=10)
 For fuel, vegetation, and topographic data:
 
 ```julia
-using WildfireData.LANDFIRE
+using WildfireData
 
 # List available products
 LANDFIRE.products()

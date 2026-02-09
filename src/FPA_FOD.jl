@@ -4,8 +4,8 @@ using ..WildfireData
 using SQLite
 using DBInterface
 using Downloads
+using ZipFile
 
-export download_database, db_path, query, info, count, states, causes, years
 
 #-----------------------------------------------------------------------------# Data Directory
 dir() = WildfireData.dir("FPA_FOD")
@@ -104,31 +104,23 @@ function download_database(; force::Bool=false, verbose::Bool=true)
 
     verbose && println("Extracting...")
 
-    # Extract the zip file
-    run(`unzip -o -d $(dir()) $zippath`)
-
-    # Find and rename the extracted sqlite file
-    extracted_files = filter(f -> endswith(f, ".sqlite"), readdir(dir(), join=true))
-    if isempty(extracted_files)
-        # Check in Data subdirectory
-        datadir = joinpath(dir(), "Data")
-        if isdir(datadir)
-            extracted_files = filter(f -> endswith(f, ".sqlite"), readdir(datadir, join=true))
+    # Extract the sqlite file from the zip archive
+    reader = ZipFile.Reader(zippath)
+    try
+        for f in reader.files
+            if endswith(f.name, ".sqlite")
+                open(dbpath, "w") do io
+                    write(io, read(f))
+                end
+                break
+            end
         end
-    end
-
-    if !isempty(extracted_files)
-        # Move to expected location if needed
-        src = first(extracted_files)
-        if src != dbpath
-            mv(src, dbpath; force=true)
-        end
+    finally
+        close(reader)
     end
 
     # Clean up
     rm(zippath; force=true)
-    datadir = joinpath(dir(), "Data")
-    isdir(datadir) && rm(datadir; recursive=true, force=true)
 
     verbose && println("Database saved to: $dbpath")
     return dbpath
@@ -207,8 +199,11 @@ end
 Get the schema (column names and types) for a table.
 """
 function schema(table::String="Fires")
+    if !all(c -> isletter(c) || c == '_', table)
+        error("Invalid table name: $table")
+    end
     with_db() do db
-        result = DBInterface.execute(db, "PRAGMA table_info($table)")
+        result = DBInterface.execute(db, "PRAGMA table_info(\"$table\")")
         return [(name=row.name, type=row.type, notnull=row.notnull == 1) for row in result]
     end
 end
@@ -350,24 +345,45 @@ function fires(; state::Union{String,Nothing}=nothing,
                max_size::Union{Real,Nothing}=nothing,
                limit::Int=1000)
     conditions = String[]
+    params = Any[]
 
-    !isnothing(state) && push!(conditions, "STATE = '$state'")
-    !isnothing(year) && push!(conditions, "FIRE_YEAR = $year")
-    !isnothing(cause) && push!(conditions, "NWCG_GENERAL_CAUSE = '$cause'")
-    !isnothing(min_size) && push!(conditions, "FIRE_SIZE >= $min_size")
-    !isnothing(max_size) && push!(conditions, "FIRE_SIZE <= $max_size")
+    if !isnothing(state)
+        push!(conditions, "STATE = ?")
+        push!(params, state)
+    end
+    if !isnothing(year)
+        push!(conditions, "FIRE_YEAR = ?")
+        push!(params, year)
+    end
+    if !isnothing(cause)
+        push!(conditions, "NWCG_GENERAL_CAUSE = ?")
+        push!(params, cause)
+    end
+    if !isnothing(min_size)
+        push!(conditions, "FIRE_SIZE >= ?")
+        push!(params, min_size)
+    end
+    if !isnothing(max_size)
+        push!(conditions, "FIRE_SIZE <= ?")
+        push!(params, max_size)
+    end
 
     where_clause = isempty(conditions) ? "1=1" : join(conditions, " AND ")
 
-    query("""
-        SELECT FOD_ID, FIRE_NAME, FIRE_YEAR, DISCOVERY_DATE, CONT_DATE,
-               FIRE_SIZE, FIRE_SIZE_CLASS, NWCG_CAUSE_CLASSIFICATION, NWCG_GENERAL_CAUSE,
-               STATE, COUNTY, LATITUDE, LONGITUDE
-        FROM Fires
-        WHERE $where_clause
-        ORDER BY FIRE_SIZE DESC
-        LIMIT $limit
-    """)
+    with_db() do db
+        sql = """
+            SELECT FOD_ID, FIRE_NAME, FIRE_YEAR, DISCOVERY_DATE, CONT_DATE,
+                   FIRE_SIZE, FIRE_SIZE_CLASS, NWCG_CAUSE_CLASSIFICATION, NWCG_GENERAL_CAUSE,
+                   STATE, COUNTY, LATITUDE, LONGITUDE
+            FROM Fires
+            WHERE $where_clause
+            ORDER BY FIRE_SIZE DESC
+            LIMIT ?
+        """
+        push!(params, limit)
+        result = DBInterface.execute(db, sql, params)
+        return [NamedTuple(row) for row in result]
+    end
 end
 
 """
@@ -384,19 +400,32 @@ FPA_FOD.largest_fires(10, state="CA")  # top 10 in California
 """
 function largest_fires(n::Int=100; year::Union{Int,Nothing}=nothing, state::Union{String,Nothing}=nothing)
     conditions = String[]
-    !isnothing(year) && push!(conditions, "FIRE_YEAR = $year")
-    !isnothing(state) && push!(conditions, "STATE = '$state'")
+    params = Any[]
+
+    if !isnothing(year)
+        push!(conditions, "FIRE_YEAR = ?")
+        push!(params, year)
+    end
+    if !isnothing(state)
+        push!(conditions, "STATE = ?")
+        push!(params, state)
+    end
 
     where_clause = isempty(conditions) ? "1=1" : join(conditions, " AND ")
+    push!(params, n)
 
-    query("""
-        SELECT FOD_ID, FIRE_NAME, FIRE_YEAR, FIRE_SIZE, STATE, COUNTY,
-               NWCG_GENERAL_CAUSE, LATITUDE, LONGITUDE
-        FROM Fires
-        WHERE $where_clause
-        ORDER BY FIRE_SIZE DESC
-        LIMIT $n
-    """)
+    with_db() do db
+        sql = """
+            SELECT FOD_ID, FIRE_NAME, FIRE_YEAR, FIRE_SIZE, STATE, COUNTY,
+                   NWCG_GENERAL_CAUSE, LATITUDE, LONGITUDE
+            FROM Fires
+            WHERE $where_clause
+            ORDER BY FIRE_SIZE DESC
+            LIMIT ?
+        """
+        result = DBInterface.execute(db, sql, params)
+        return [NamedTuple(row) for row in result]
+    end
 end
 
 #-----------------------------------------------------------------------------# Utility Functions

@@ -32,14 +32,13 @@ The package includes modules for accessing data from:
 
 ```julia
 using WildfireData
-using WildfireData.WFIGS
 
 # Get current fire perimeters
 data = WFIGS.download(:current_perimeters, limit=10)
 
 # Access features
-for feature in data.features
-    println(feature.properties.IncidentName)
+for feature in data
+    println(feature.IncidentName)
 end
 ```
 
@@ -47,7 +46,7 @@ end
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/joshday/WildfireData.jl")
+Pkg.add(url="https://github.com/RallypointOne/WildfireData.jl")
 ```
 
 See the [Getting Started](getting-started.qmd) guide for more details.

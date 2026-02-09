@@ -10,7 +10,31 @@ export WFIGS, IRWIN, FPA_FOD, MTBS, FIRMS, LANDFIRE
 #-----------------------------------------------------------------------------# Data Directory
 dir(x...) = joinpath(Scratch.@get_scratch!("data"), x...)
 
-#-----------------------------------------------------------------------------# Common Dataset Definition
+#-----------------------------------------------------------------------------# Abstract Dataset Interface
+
+"""
+    AbstractDataset
+
+Abstract type for dataset metadata. Subtypes must have a `name::String` field
+and implement `base_query_url(d)` and `base_layer_url(d)`.
+"""
+abstract type AbstractDataset end
+
+"""
+    base_query_url(d::AbstractDataset) -> String
+
+Return the base URL for query requests (without parameters).
+"""
+function base_query_url end
+
+"""
+    base_layer_url(d::AbstractDataset) -> String
+
+Return the base URL for layer metadata requests.
+"""
+function base_layer_url end
+
+#-----------------------------------------------------------------------------# ArcGIS Dataset
 
 """
     ArcGISDataset
@@ -25,7 +49,7 @@ Metadata for an ArcGIS FeatureServer dataset.
 - `description::String`: Dataset description
 - `category::Symbol`: Category (e.g., :perimeters, :locations, :incidents, :history)
 """
-struct ArcGISDataset
+struct ArcGISDataset <: AbstractDataset
     base_url::String
     service::String
     layer::Int
@@ -34,15 +58,18 @@ struct ArcGISDataset
     category::Symbol
 end
 
+base_query_url(d::ArcGISDataset) = "$(d.base_url)/$(d.service)/FeatureServer/$(d.layer)/query"
+base_layer_url(d::ArcGISDataset) = "$(d.base_url)/$(d.service)/FeatureServer/$(d.layer)"
+
 #-----------------------------------------------------------------------------# Common URL Builder
 
 """
-    query_url(d::Dataset; where="1=1", outfields="*", limit=nothing, format="geojson")
+    query_url(d::AbstractDataset; where="1=1", outfields="*", limit=nothing, format="geojson")
 
-Build a FeatureServer query URL for the dataset.
+Build a query URL for the dataset.
 """
-function query_url(d::ArcGISDataset; where::String="1=1", outfields::String="*", limit::Union{Int,Nothing}=nothing, format::String="geojson")
-    url = "$(d.base_url)/$(d.service)/FeatureServer/$(d.layer)/query"
+function query_url(d::AbstractDataset; where::String="1=1", outfields::String="*", limit::Union{Int,Nothing}=nothing, format::String="geojson")
+    url = base_query_url(d)
     params = [
         "where" => HTTP.escapeuri(where),
         "outFields" => outfields,
@@ -58,11 +85,11 @@ end
 #-----------------------------------------------------------------------------# Common API Functions
 
 """
-    _datasets(all_datasets::Dict{Symbol,ArcGISDataset}; category=nothing)
+    _datasets(all_datasets::Dict{Symbol,<:AbstractDataset}; category=nothing)
 
 Filter datasets by category. Used internally by submodules.
 """
-function _datasets(all_datasets::Dict{Symbol,ArcGISDataset}; category::Union{Symbol,Nothing}=nothing)
+function _datasets(all_datasets::Dict{Symbol,<:AbstractDataset}; category::Union{Symbol,Nothing}=nothing)
     if isnothing(category)
         return all_datasets
     else
@@ -71,11 +98,11 @@ function _datasets(all_datasets::Dict{Symbol,ArcGISDataset}; category::Union{Sym
 end
 
 """
-    _info(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String)
+    _info(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String)
 
 Print information about a specific dataset. Used internally by submodules.
 """
-function _info(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String)
+function _info(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String)
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
     end
@@ -89,11 +116,11 @@ function _info(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module
 end
 
 """
-    _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String; kwargs...)
+    _download(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String; kwargs...)
 
 Download a dataset and return it as a GeoJSON FeatureCollection. Used internally by submodules.
 """
-function _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String;
+function _download(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String;
                    where::String="1=1", fields::String="*", limit::Union{Int,Nothing}=nothing, verbose::Bool=true)
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
@@ -114,10 +141,12 @@ function _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, mo
     verbose && println("Parsing GeoJSON...")
     body = String(response.body)
 
-    # First check for ArcGIS error response using JSON3
-    json_data = JSON3.read(body)
-    if haskey(json_data, :error)
-        error("ArcGIS API error: $(json_data.error)")
+    # Check for ArcGIS error response (avoid full double-parse)
+    if contains(body, "\"error\"")
+        json_data = JSON3.read(body)
+        if haskey(json_data, :error)
+            error("ArcGIS API error: $(json_data.error)")
+        end
     end
 
     # Parse as GeoJSON
@@ -125,7 +154,7 @@ function _download(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, mo
 
     n = length(data)
     verbose && println("Downloaded $n features")
-    if haskey(json_data, :properties) && haskey(json_data.properties, :exceededTransferLimit) && json_data.properties.exceededTransferLimit
+    if contains(body, "exceededTransferLimit") && contains(body, "true")
         verbose && println("⚠ Warning: Transfer limit exceeded. Use `limit` parameter or refine `where` clause to get all data.")
     end
 
@@ -137,7 +166,7 @@ end
 
 Download a dataset and save it to the local data directory. Used internally by submodules.
 """
-function _download_file(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String, data_dir::String;
+function _download_file(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String, data_dir::String;
                         filename::Union{String,Nothing}=nothing, force::Bool=false, verbose::Bool=true, kwargs...)
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
@@ -185,23 +214,22 @@ function _load_file(data_dir::String, dataset::Symbol; filename::Union{String,No
 end
 
 """
-    _count(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String; where="1=1")
+    _count(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String; where="1=1")
 
 Get the count of features in a dataset. Used internally by submodules.
 """
-function _count(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String; where::String="1=1")
+function _count(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String; where::String="1=1")
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
     end
 
     d = all_datasets[dataset]
-    url = "$(d.base_url)/$(d.service)/FeatureServer/$(d.layer)/query"
     params = [
         "where" => HTTP.escapeuri(where),
         "returnCountOnly" => "true",
         "f" => "json",
     ]
-    full_url = url * "?" * join(["$k=$v" for (k, v) in params], "&")
+    full_url = base_query_url(d) * "?" * join(["$k=$v" for (k, v) in params], "&")
 
     response = HTTP.get(full_url; status_exception=false)
     if response.status != 200
@@ -213,17 +241,17 @@ function _count(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, modul
 end
 
 """
-    _fields(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String)
+    _fields(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String)
 
 Get the field names and types for a dataset. Used internally by submodules.
 """
-function _fields(all_datasets::Dict{Symbol,ArcGISDataset}, dataset::Symbol, module_name::String)
+function _fields(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String)
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
     end
 
     d = all_datasets[dataset]
-    url = "$(d.base_url)/$(d.service)/FeatureServer/$(d.layer)?f=json"
+    url = base_layer_url(d) * "?f=json"
 
     response = HTTP.get(url; status_exception=false)
     if response.status != 200

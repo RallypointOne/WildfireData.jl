@@ -3,7 +3,6 @@ module IRWIN
 using ..WildfireData: WildfireData, ArcGISDataset,
     _datasets, _info, _download, _download_file, _load_file, _count, _fields
 
-export datasets, download, info
 
 #-----------------------------------------------------------------------------# Data Directory
 dir() = WildfireData.dir("IRWIN")

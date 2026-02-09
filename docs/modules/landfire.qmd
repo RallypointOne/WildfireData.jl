@@ -15,37 +15,43 @@ The LANDFIRE module provides access to the LANDFIRE program's geospatial data pr
 
 | Product | Description |
 |---------|-------------|
-| `:FBFM40` | Scott and Burgan Fire Behavior Fuel Models |
 | `:FBFM13` | Anderson 13 Fire Behavior Fuel Models |
+| `:FBFM40` | Scott and Burgan 40 Fire Behavior Fuel Models |
+| `:CFFDRS` | Canadian Forest Fire Danger Rating System |
 | `:CBD` | Canopy Bulk Density |
 | `:CBH` | Canopy Base Height |
 | `:CC` | Canopy Cover |
 | `:CH` | Canopy Height |
+| `:FVC` | Fuel Vegetation Cover |
+| `:FVH` | Fuel Vegetation Height |
+| `:FVT` | Fuel Vegetation Type |
 
 ### Vegetation Products
 
 | Product | Description |
 |---------|-------------|
-| `:EVT` | Existing Vegetation Type |
+| `:BPS` | Biophysical Settings |
 | `:EVC` | Existing Vegetation Cover |
 | `:EVH` | Existing Vegetation Height |
-| `:ESP` | Ecological Systems |
+| `:EVT` | Existing Vegetation Type |
+| `:SCLASS` | Succession Class |
+| `:VCC` | Vegetation Condition Class |
+| `:VDEP` | Vegetation Departure |
 
 ### Disturbance Products
 
 | Product | Description |
 |---------|-------------|
-| `:DIST` | Disturbance |
-| `:VDIST` | Vegetation Disturbance |
-| `:HDIST` | Historical Disturbance |
+| `:Dist` | Annual Disturbance |
+| `:HDist` | Historical Disturbance (1999-present) |
 
 ### Topographic Products
 
 | Product | Description |
 |---------|-------------|
-| `:ELEV` | Elevation |
-| `:SLP` | Slope |
-| `:ASP` | Aspect |
+| `:Elev` | Elevation |
+| `:Slp` | Slope |
+| `:Asp` | Aspect |
 
 ### Fire Regime Products
 
@@ -67,12 +73,12 @@ The LANDFIRE module provides access to the LANDFIRE program's geospatial data pr
 
 ## Versions
 
-LANDFIRE data is versioned by year: `:LF2001`, `:LF2008`, `:LF2010`, `:LF2012`, `:LF2014`, `:LF2016`, `:LF2019`, `:LF2020`, `:LF2022`, `:LF2023`, `:LF2024`
+LANDFIRE data is versioned by year: `:LF2001`, `:LF2008`, `:LF2010`, `:LF2012`, `:LF2014`, `:LF2016`, `:LF2020`, `:LF2022`, `:LF2023`, `:LF2024`
 
 ## Basic Usage
 
 ```julia
-using WildfireData.LANDFIRE
+using WildfireData
 
 # List all products
 LANDFIRE.products()
@@ -81,8 +87,15 @@ LANDFIRE.products()
 LANDFIRE.products(category=:fuel)
 LANDFIRE.products(category=:vegetation)
 
-# Get product info
-LANDFIRE.info(:FBFM40)
+# Convenience category functions
+LANDFIRE.fuel_products()
+LANDFIRE.vegetation_products()
+LANDFIRE.topographic_products()
+LANDFIRE.fire_regime_products()
+LANDFIRE.disturbance_products()
+
+# Print general info
+LANDFIRE.info()
 ```
 
 ## Web Coverage Service (WCS)
@@ -121,16 +134,12 @@ path = LANDFIRE.download_product(:FBFM40, :conus, :LF2024)
 
 # Force re-download
 path = LANDFIRE.download_product(:FBFM40, :conus, :LF2024, force=true)
-```
 
-## Product Categories
+# Get the download URL without downloading
+url = LANDFIRE.download_url(:FBFM40, :conus, :LF2024)
 
-```julia
-# Get all categories
-LANDFIRE.categories()  # [:fuel, :vegetation, :disturbance, :topographic, :fire_regime]
-
-# List products in a category
-LANDFIRE.products(category=:fuel)
+# List previously downloaded files
+LANDFIRE.list_downloads()
 ```
 
 ## API Reference
@@ -138,8 +147,7 @@ LANDFIRE.products(category=:fuel)
 ### Functions
 
 - `products(; category=nothing)` - List available products
-- `info(product)` - Print product information
-- `categories()` - List product categories
+- `info()` - Print LANDFIRE information
 - `regions()` - List available regions
 - `versions()` - List available versions
 - `wcs_url(region, version)` - Get WCS base URL
@@ -147,4 +155,11 @@ LANDFIRE.products(category=:fuel)
 - `wms_url(region, version)` - Get WMS base URL
 - `wms_capabilities_url(region, version)` - Get WMS GetCapabilities URL
 - `download_product(product, region, version; force, verbose)` - Download full extent
+- `download_url(product, region, version)` - Get download URL
+- `list_downloads()` - List locally downloaded files
+- `fuel_products()` - List fuel products
+- `vegetation_products()` - List vegetation products
+- `topographic_products()` - List topographic products
+- `fire_regime_products()` - List fire regime products
+- `disturbance_products()` - List disturbance products
 - `dir()` - Get local data directory path

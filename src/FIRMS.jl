@@ -6,7 +6,6 @@ using CSV
 using DataFrames
 using Dates
 
-export set_map_key!, get_map_key, sources, download, info
 
 #-----------------------------------------------------------------------------# Data Directory
 dir() = WildfireData.dir("FIRMS")
@@ -153,7 +152,7 @@ function info()
         println("Status: MAP_KEY not configured")
         println("Register for free at: https://firms.modaps.eosdis.nasa.gov/api/map_key/")
     else
-        println("Status: MAP_KEY configured ($(key[1:4])...)")
+        println("Status: MAP_KEY configured")
     end
 
     return nothing
