@@ -1,0 +1,970 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "WildfireData.jl",
+    "section": "",
+    "text": "Overview\nWildfireData.jl is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from various U.S. government sources.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#data-sources",
+    "href": "index.html#data-sources",
+    "title": "WildfireData.jl",
+    "section": "Data Sources",
+    "text": "Data Sources\nThe package includes modules for accessing data from:\n\n\n\nModule\nDescription\nData Type\n\n\n\n\nWFIGS\nWildland Fire Interagency Geospatial Services\nCurrent & historical fire perimeters\n\n\nIRWIN\nIntegrated Reporting of Wildland Fire Information\nFire incidents & perimeters\n\n\nFPA-FOD\nFire Program Analysis Fire-Occurrence Database\nHistorical fire records (1992-2020)\n\n\nMTBS\nMonitoring Trends in Burn Severity\nBurn severity & fire boundaries\n\n\nFIRMS\nFire Information for Resource Management System\nSatellite fire detections\n\n\nLANDFIRE\nLandscape Fire and Resource Management\nFuel, vegetation, topography",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#features",
+    "href": "index.html#features",
+    "title": "WildfireData.jl",
+    "section": "Features",
+    "text": "Features\n\nUnified API: Consistent interface across different data sources\nMultiple formats: GeoJSON, CSV, SQLite, GeoTIFF support\nQuery capabilities: Filter data by location, time, and attributes\nLocal caching: Downloaded data is stored locally for reuse\nWeb services: Access WCS/WMS endpoints for streaming data",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#quick-example",
+    "href": "index.html#quick-example",
+    "title": "WildfireData.jl",
+    "section": "Quick Example",
+    "text": "Quick Example\nusing WildfireData\n\n# Get current fire perimeters\ndata = WFIGS.download(:current_perimeters, limit=10)\n\n# Access features\nfor feature in data\n    println(feature.IncidentName)\nend",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "WildfireData.jl",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\nSee the Getting Started guide for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "WildfireData.jl",
+    "section": "License",
+    "text": "License\nThis package is open source. The data accessed through this package is provided by various U.S. government agencies and is generally in the public domain.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html",
+    "href": "getting-started.html",
+    "title": "Getting Started",
+    "section": "",
+    "text": "Getting Started",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#installation",
+    "href": "getting-started.html#installation",
+    "title": "Getting Started",
+    "section": "Installation",
+    "text": "Installation\nWildfireData.jl can be installed from GitHub:\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#basic-usage",
+    "href": "getting-started.html#basic-usage",
+    "title": "Getting Started",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nLoad the package — all submodules are available immediately:\nusing WildfireData\n\nWFIGS.datasets()\nFIRMS.sources()",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#module-overview",
+    "href": "getting-started.html#module-overview",
+    "title": "Getting Started",
+    "section": "Module Overview",
+    "text": "Module Overview\n\nReal-time Fire Data\nFor current fire incidents and perimeters:\nusing WildfireData\n\n# Current fire perimeters from WFIGS\nperimeters = WFIGS.download(:current_perimeters, limit=10)\n\n# Current incidents from IRWIN\nincidents = IRWIN.download(:usa_current_incidents, limit=10)\n\n\nSatellite Fire Detections\nFor near real-time satellite-based fire detections:\nusing WildfireData\n\n# Requires a free API key from NASA\n# Set via environment variable: ENV[\"FIRMS_MAP_KEY\"] = \"your-key\"\n# Or: FIRMS.set_map_key!(\"your-key\")\n\n# Download VIIRS fire detections for California\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)\n\n\nHistorical Fire Data\nFor historical fire records:\nusing WildfireData\n\n# Download the database first (~214 MB)\nFPA_FOD.download_database()\n\n# Query fires\nfires = FPA_FOD.fires(state=\"CA\", year=2020, limit=100)\nlargest = FPA_FOD.largest_fires(10)\n\n\nBurn Severity Data\nFor burn severity and fire boundaries:\nusing WildfireData\n\n# Fire occurrence points\nfires = MTBS.download(:fire_occurrence, limit=100)\n\n# Burn boundaries\nboundaries = MTBS.download(:burn_boundaries, limit=10)\n\n\nLandscape Data\nFor fuel, vegetation, and topographic data:\nusing WildfireData\n\n# List available products\nLANDFIRE.products()\n\n# Get WCS URL for streaming access\nurl = LANDFIRE.wcs_url(:conus, :LF2024)\n\n# Download full extent (warning: large files)\n# LANDFIRE.download_product(:FBFM40, :conus, :LF2024)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#data-storage",
+    "href": "getting-started.html#data-storage",
+    "title": "Getting Started",
+    "section": "Data Storage",
+    "text": "Data Storage\nDownloaded data is stored in a scratch space managed by the Scratch.jl package. You can find the location with:\nusing WildfireData\nWildfireData.dir()  # Returns the base data directory\nEach module has its own subdirectory: - WildfireData.dir(\"WFIGS\") - WildfireData.dir(\"FIRMS\") - etc.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#common-patterns",
+    "href": "getting-started.html#common-patterns",
+    "title": "Getting Started",
+    "section": "Common Patterns",
+    "text": "Common Patterns\n\nFiltering Data\nMost modules support filtering via where clauses or keyword arguments:\n# WFIGS/IRWIN: SQL-like where clause\ndata = WFIGS.download(:current_perimeters, where=\"GISAcres &gt; 1000\", limit=10)\n\n# FPA_FOD: Keyword arguments\nfires = FPA_FOD.fires(state=\"CA\", year=2020, min_size=1000)\n\n# FIRMS: Region and time filters\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, region=:western_us, days=3)\n\n\nCounting Records\nCheck how many records match your query before downloading:\n# Count all current perimeters\nn = WFIGS.count(:current_perimeters)\n\n# Count with filter\nn = WFIGS.count(:current_perimeters, where=\"GISAcres &gt; 1000\")\n\n\nGetting Field Information\nDiscover available fields in a dataset:\nfields = WFIGS.fields(:current_perimeters)\nfor f in fields\n    println(\"$(f.name): $(f.type)\")\nend\n\n\nSaving Data Locally\nDownload data to a local file:\n# Save as GeoJSON\npath = WFIGS.download_file(:current_perimeters, limit=100)\n\n# Load later\ndata = WFIGS.load_file(:current_perimeters)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "getting-started.html#next-steps",
+    "href": "getting-started.html#next-steps",
+    "title": "Getting Started",
+    "section": "Next Steps",
+    "text": "Next Steps\nExplore the documentation for each module:\n\nWFIGS - Current and historical fire perimeters\nIRWIN - Fire incident data\nFPA-FOD - Historical fire occurrence database\nMTBS - Burn severity data\nFIRMS - Satellite fire detections\nLANDFIRE - Landscape and fuel data",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Getting Started</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources",
+    "href": "api.html#data-sources",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation",
+    "href": "api.html#installation",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start",
+    "href": "api.html#quick-start",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-1",
+    "href": "api.html#data-sources-1",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-1",
+    "href": "api.html#installation-1",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-1",
+    "href": "api.html#quick-start-1",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-2",
+    "href": "api.html#data-sources-2",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-2",
+    "href": "api.html#installation-2",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-2",
+    "href": "api.html#quick-start-2",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-3",
+    "href": "api.html#data-sources-3",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-3",
+    "href": "api.html#installation-3",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-3",
+    "href": "api.html#quick-start-3",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-4",
+    "href": "api.html#data-sources-4",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-4",
+    "href": "api.html#installation-4",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-4",
+    "href": "api.html#quick-start-4",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-5",
+    "href": "api.html#data-sources-5",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-5",
+    "href": "api.html#installation-5",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-5",
+    "href": "api.html#quick-start-5",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html",
+    "href": "modules/wfigs.html",
+    "title": "WFIGS",
+    "section": "",
+    "text": "Overview\nThe WFIGS module provides access to wildland fire data from the NIFC Open Data portal. This includes current and historical fire perimeters and incident locations.\nData Source: WFIGS Fire History",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#available-datasets",
+    "href": "modules/wfigs.html#available-datasets",
+    "title": "WFIGS",
+    "section": "Available Datasets",
+    "text": "Available Datasets\n\n\n\n\n\n\n\n\nDataset\nDescription\nCategory\n\n\n\n\n:current_perimeters\nCurrent fire perimeters (updated every 5 min)\nperimeters\n\n\n:current_locations\nCurrent fire locations (updated every 5 min)\nlocations\n\n\n:historic_geomac\nHistoric GeoMAC perimeters (2000-2018)\nhistory\n\n\n:perimeters_all_years\nAll historical perimeters\nhistory\n\n\n:historic_geomac_YYYY\nYear-specific GeoMAC (2000-2018)\nhistory",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#basic-usage",
+    "href": "modules/wfigs.html#basic-usage",
+    "title": "WFIGS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.WFIGS\n\n# List all datasets\nWFIGS.datasets()\n\n# Filter by category\nWFIGS.datasets(category=:perimeters)\n\n# Get dataset info\nWFIGS.info(:current_perimeters)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#downloading-data",
+    "href": "modules/wfigs.html#downloading-data",
+    "title": "WFIGS",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n# Download current perimeters (GeoJSON)\ndata = WFIGS.download(:current_perimeters, limit=10)\n\n# Download with filter\ndata = WFIGS.download(:current_perimeters, where=\"GISAcres &gt; 1000\", limit=10)\n\n# Download specific fields only\ndata = WFIGS.download(:current_perimeters, fields=\"IncidentName,GISAcres\", limit=10)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#querying",
+    "href": "modules/wfigs.html#querying",
+    "title": "WFIGS",
+    "section": "Querying",
+    "text": "Querying\n# Count records\nn = WFIGS.count(:current_perimeters)\nn = WFIGS.count(:current_perimeters, where=\"GISAcres &gt; 1000\")\n\n# Get field information\nfields = WFIGS.fields(:current_perimeters)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#saving-and-loading-files",
+    "href": "modules/wfigs.html#saving-and-loading-files",
+    "title": "WFIGS",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to local file\npath = WFIGS.download_file(:current_perimeters, limit=100)\n\n# Load previously downloaded file\ndata = WFIGS.load_file(:current_perimeters)\n\n# Custom filename\npath = WFIGS.download_file(:current_perimeters, filename=\"my_perimeters.geojson\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#working-with-results",
+    "href": "modules/wfigs.html#working-with-results",
+    "title": "WFIGS",
+    "section": "Working with Results",
+    "text": "Working with Results\nThe download functions return a GeoJSON.FeatureCollection:\ndata = WFIGS.download(:current_locations, limit=5)\n\n# Access features (iterate directly over the collection)\nfor feature in data\n    println(\"$(feature.IncidentName): $(feature.DailyAcres) acres\")\nend\n\n# Access geometry\nfeature = data[1]\ngeom = GeoJSON.geometry(feature)\nprintln(\"Type: $(typeof(geom))\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/wfigs.html#api-reference",
+    "href": "modules/wfigs.html#api-reference",
+    "title": "WFIGS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\ndatasets(; category=nothing) - List available datasets\ninfo(dataset) - Print dataset information\ndownload(dataset; where, fields, limit, verbose) - Download data\ndownload_file(dataset; filename, force, verbose, ...) - Download and save to file\nload_file(dataset; filename) - Load previously downloaded file\ncount(dataset; where) - Get record count\nfields(dataset) - Get field names and types\nquery_url(dataset; where, outfields, limit, format) - Build query URL\ndir() - Get local data directory path",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>WFIGS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html",
+    "href": "modules/irwin.html",
+    "title": "IRWIN",
+    "section": "",
+    "text": "Overview\nThe IRWIN module provides access to wildfire incident data from the Integrated Reporting of Wildland Fire Information system. This is the authoritative source for federal and some state fire agency incident data.\nData Source: IRWIN/InFORM",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#available-datasets",
+    "href": "modules/irwin.html#available-datasets",
+    "title": "IRWIN",
+    "section": "Available Datasets",
+    "text": "Available Datasets\n\n\n\n\n\n\n\n\nDataset\nDescription\nCategory\n\n\n\n\n:fire_occurrence\nInFORM Fire Occurrence Records (2020-present)\nincidents\n\n\n:usa_current_incidents\nCurrent US wildfire incidents\nincidents\n\n\n:usa_current_perimeters\nCurrent US wildfire perimeters\nperimeters",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#basic-usage",
+    "href": "modules/irwin.html#basic-usage",
+    "title": "IRWIN",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.IRWIN\n\n# List all datasets\nIRWIN.datasets()\n\n# Filter by category\nIRWIN.datasets(category=:incidents)\n\n# Get dataset info\nIRWIN.info(:usa_current_incidents)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#downloading-data",
+    "href": "modules/irwin.html#downloading-data",
+    "title": "IRWIN",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n# Download current incidents\ndata = IRWIN.download(:usa_current_incidents, limit=10)\n\n# Download fire occurrence records for California\ndata = IRWIN.download(:fire_occurrence, where=\"POOState = 'US-CA'\", limit=100)\n\n# Download large fires only\ndata = IRWIN.download(:usa_current_incidents, where=\"DailyAcres &gt; 1000\", limit=10)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#querying",
+    "href": "modules/irwin.html#querying",
+    "title": "IRWIN",
+    "section": "Querying",
+    "text": "Querying\n# Count all current incidents\nn = IRWIN.count(:usa_current_incidents)\n\n# Count fire occurrence records\nn = IRWIN.count(:fire_occurrence)\nn = IRWIN.count(:fire_occurrence, where=\"POOState = 'US-CA'\")\n\n# Get field information\nfields = IRWIN.fields(:usa_current_incidents)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#saving-and-loading-files",
+    "href": "modules/irwin.html#saving-and-loading-files",
+    "title": "IRWIN",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to local file\npath = IRWIN.download_file(:usa_current_incidents, limit=100)\n\n# Load previously downloaded file\ndata = IRWIN.load_file(:usa_current_incidents)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#working-with-results",
+    "href": "modules/irwin.html#working-with-results",
+    "title": "IRWIN",
+    "section": "Working with Results",
+    "text": "Working with Results\ndata = IRWIN.download(:usa_current_incidents, limit=5)\n\n# Access incident properties\nfor feature in data\n    println(\"$(feature.IncidentName)\")\n    println(\"  Acres: $(feature.DailyAcres)\")\n    println(\"  State: $(feature.POOState)\")\nend",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#key-fields",
+    "href": "modules/irwin.html#key-fields",
+    "title": "IRWIN",
+    "section": "Key Fields",
+    "text": "Key Fields\nCommon fields in the incident data:\n\nIncidentName - Name of the fire\nDailyAcres - Current size in acres\nPOOState - State (e.g., “US-CA”)\nDiscoveryDate - When the fire was discovered\nFireCause - Cause of the fire\nPercentContained - Containment percentage",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/irwin.html#api-reference",
+    "href": "modules/irwin.html#api-reference",
+    "title": "IRWIN",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\ndatasets(; category=nothing) - List available datasets\ninfo(dataset) - Print dataset information\ndownload(dataset; where, fields, limit, verbose) - Download data\ndownload_file(dataset; filename, force, verbose, ...) - Download and save to file\nload_file(dataset; filename) - Load previously downloaded file\ncount(dataset; where) - Get record count\nfields(dataset) - Get field names and types\nquery_url(dataset; kwargs...) - Build query URL\ndir() - Get local data directory path",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>IRWIN</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html",
+    "href": "modules/fpa-fod.html",
+    "title": "FPA-FOD",
+    "section": "",
+    "text": "Overview\nThe FPA-FOD module provides access to the Fire Program Analysis Fire-Occurrence Database, a comprehensive SQLite database containing 2.3 million wildfire records from 1992-2020.\nData Source: USDA Forest Service Research Data Archive\nDOI: 10.2737/RDS-2013-0009.6",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#database-setup",
+    "href": "modules/fpa-fod.html#database-setup",
+    "title": "FPA-FOD",
+    "section": "Database Setup",
+    "text": "Database Setup\nThe database must be downloaded before use (~214 MB):\nusing WildfireData.FPA_FOD\n\n# Download the database\nFPA_FOD.download_database()\n\n# Check database status\nFPA_FOD.info()",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#basic-queries",
+    "href": "modules/fpa-fod.html#basic-queries",
+    "title": "FPA-FOD",
+    "section": "Basic Queries",
+    "text": "Basic Queries\n# Count total records\nn = FPA_FOD.count()  # ~2.3 million\n\n# Count with filter\nn = FPA_FOD.count(where=\"STATE = 'CA'\")\nn = FPA_FOD.count(where=\"FIRE_YEAR = 2020\")\nn = FPA_FOD.count(where=\"FIRE_SIZE &gt; 1000\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#querying-fires",
+    "href": "modules/fpa-fod.html#querying-fires",
+    "title": "FPA-FOD",
+    "section": "Querying Fires",
+    "text": "Querying Fires\n\nUsing the fires() Function\n# Get California fires from 2020\nfires = FPA_FOD.fires(state=\"CA\", year=2020, limit=100)\n\n# Get large fires\nfires = FPA_FOD.fires(min_size=10000, limit=100)\n\n# Combine filters\nfires = FPA_FOD.fires(state=\"CA\", year=2019, cause=\"Natural\", limit=50)\n\n\nUsing Raw SQL\n# Execute any SQL query\nresults = FPA_FOD.query(\"\"\"\n    SELECT FIRE_NAME, FIRE_SIZE, FIRE_YEAR, STATE\n    FROM Fires\n    WHERE FIRE_SIZE &gt; 50000\n    ORDER BY FIRE_SIZE DESC\n    LIMIT 10\n\"\"\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#convenience-functions",
+    "href": "modules/fpa-fod.html#convenience-functions",
+    "title": "FPA-FOD",
+    "section": "Convenience Functions",
+    "text": "Convenience Functions\n# Get largest fires\nlargest = FPA_FOD.largest_fires(10)\nlargest = FPA_FOD.largest_fires(10, year=2020)\nlargest = FPA_FOD.largest_fires(10, state=\"CA\")\n\n# Get summary statistics\nstates = FPA_FOD.states()      # Fire counts by state\ncauses = FPA_FOD.causes()      # Fire counts by cause\nyears = FPA_FOD.years()        # Fire counts by year",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#database-schema",
+    "href": "modules/fpa-fod.html#database-schema",
+    "title": "FPA-FOD",
+    "section": "Database Schema",
+    "text": "Database Schema\n# List tables\nFPA_FOD.tables()\n\n# Get schema for the Fires table\nFPA_FOD.schema()\n\nKey Fields in the Fires Table\n\n\n\nField\nDescription\n\n\n\n\nFOD_ID\nUnique identifier\n\n\nFIRE_NAME\nName of the fire\n\n\nFIRE_YEAR\nYear of discovery (1992-2020)\n\n\nDISCOVERY_DATE\nDate of discovery\n\n\nFIRE_SIZE\nSize in acres\n\n\nFIRE_SIZE_CLASS\nSize class (A-G)\n\n\nSTATE\nTwo-letter state code\n\n\nCOUNTY\nCounty name\n\n\nLATITUDE / LONGITUDE\nLocation\n\n\nNWCG_CAUSE_CLASSIFICATION\nHuman/Natural/Missing\n\n\nNWCG_GENERAL_CAUSE\nGeneral cause category",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#fire-size-classes",
+    "href": "modules/fpa-fod.html#fire-size-classes",
+    "title": "FPA-FOD",
+    "section": "Fire Size Classes",
+    "text": "Fire Size Classes\n\n\n\nClass\nAcres\n\n\n\n\nA\n0 - 0.25\n\n\nB\n0.26 - 9.9\n\n\nC\n10 - 99.9\n\n\nD\n100 - 299.9\n\n\nE\n300 - 999.9\n\n\nF\n1,000 - 4,999.9\n\n\nG\n5,000+",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#constants",
+    "href": "modules/fpa-fod.html#constants",
+    "title": "FPA-FOD",
+    "section": "Constants",
+    "text": "Constants\nFPA_FOD.YEAR_START  # 1992\nFPA_FOD.YEAR_END    # 2020\nFPA_FOD.SIZE_CLASSES\nFPA_FOD.GENERAL_CAUSES\nFPA_FOD.CAUSE_CLASSIFICATIONS",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/fpa-fod.html#api-reference",
+    "href": "modules/fpa-fod.html#api-reference",
+    "title": "FPA-FOD",
+    "section": "API Reference",
+    "text": "API Reference\n\nDatabase Functions\n\ndownload_database(; force, verbose) - Download the SQLite database\ndb_path() - Get path to database (or nothing if not downloaded)\ninfo() - Print database information\ntables() - List database tables\nschema(table=\"Fires\") - Get table schema\n\n\n\nQuery Functions\n\nquery(sql; limit) - Execute SQL query\ncount(; where) - Count records\nfires(; state, year, cause, min_size, max_size, limit) - Query fires\nlargest_fires(n; year, state) - Get largest fires\n\n\n\nSummary Functions\n\nstates() - Fire counts by state\ncauses() - Fire counts by cause\nyears() - Fire counts by year",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>FPA-FOD</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html",
+    "href": "modules/mtbs.html",
+    "title": "MTBS",
+    "section": "",
+    "text": "Overview\nThe MTBS module provides access to burn severity data from the Monitoring Trends in Burn Severity program. MTBS maps the burn severity and perimeters of large fires across the United States.\nData Source: MTBS",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#available-datasets",
+    "href": "modules/mtbs.html#available-datasets",
+    "title": "MTBS",
+    "section": "Available Datasets",
+    "text": "Available Datasets\n\n\n\nDataset\nDescription\nGeometry\n\n\n\n\n:fire_occurrence\nFire occurrence points (1984-present)\npoint\n\n\n:burn_boundaries\nBurned area boundaries (1984-present)\npolygon",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#basic-usage",
+    "href": "modules/mtbs.html#basic-usage",
+    "title": "MTBS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData\n\n# List all datasets\nMTBS.datasets()\n\n# Get dataset info\nMTBS.info(:fire_occurrence)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#downloading-data",
+    "href": "modules/mtbs.html#downloading-data",
+    "title": "MTBS",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n# Download fire occurrence points\ndata = MTBS.download(:fire_occurrence, limit=100)\n\n# Download burn boundaries\ndata = MTBS.download(:burn_boundaries, limit=10)\n\n# Download with filter\ndata = MTBS.download(:fire_occurrence, where=\"ACRES &gt; 10000\", limit=50)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#querying",
+    "href": "modules/mtbs.html#querying",
+    "title": "MTBS",
+    "section": "Querying",
+    "text": "Querying\n# Count records\nn = MTBS.count(:fire_occurrence)\nn = MTBS.count(:burn_boundaries)\n\n# Count with filter\nn = MTBS.count(:fire_occurrence, where=\"ACRES &gt; 5000\")\n\n# Get field information\nfields = MTBS.fields(:fire_occurrence)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#convenience-functions",
+    "href": "modules/mtbs.html#convenience-functions",
+    "title": "MTBS",
+    "section": "Convenience Functions",
+    "text": "Convenience Functions\n# Query fire occurrence with filters\ndata = MTBS.fires(year=2020, limit=100)\ndata = MTBS.fires(min_acres=50000, fire_type=\"Wildfire\", limit=100)\n\n# Query burn boundaries with filters\ndata = MTBS.boundaries(year=2020, limit=50)\ndata = MTBS.boundaries(min_acres=100000, limit=50)\n\n# Get largest fires (sorted client-side)\nlargest = MTBS.largest_fires(10)\nlargest = MTBS.largest_fires(10, year=2020)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#saving-and-loading-files",
+    "href": "modules/mtbs.html#saving-and-loading-files",
+    "title": "MTBS",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to local file\npath = MTBS.download_file(:fire_occurrence, limit=100)\n\n# Load previously downloaded file\ndata = MTBS.load_file(:fire_occurrence)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#working-with-results",
+    "href": "modules/mtbs.html#working-with-results",
+    "title": "MTBS",
+    "section": "Working with Results",
+    "text": "Working with Results\ndata = MTBS.download(:fire_occurrence, limit=5)\n\n# Iterate directly over the FeatureCollection\nfor feature in data\n    println(\"$(feature.FIRE_NAME): $(feature.ACRES) acres\")\nend",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#direct-downloads",
+    "href": "modules/mtbs.html#direct-downloads",
+    "title": "MTBS",
+    "section": "Direct Downloads",
+    "text": "Direct Downloads\nMTBS also provides direct download links for full shapefiles and geodatabases:\n# List available downloads\nMTBS.available_downloads()\n\n# Download a shapefile or geodatabase\npath = MTBS.download_shapefile(:fire_occurrence_shp)\npath = MTBS.download_shapefile(:burn_boundaries_gdb)\n\n\n\nKey\nDescription\n\n\n\n\n:burn_boundaries_shp\nBurn area boundaries shapefile (~374 MB)\n\n\n:burn_boundaries_gdb\nBurn area boundaries geodatabase (~158 MB)\n\n\n:fire_occurrence_shp\nFire occurrence points shapefile (~3 MB)\n\n\n:fire_occurrence_gdb\nFire occurrence points geodatabase (~2 MB)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/mtbs.html#api-reference",
+    "href": "modules/mtbs.html#api-reference",
+    "title": "MTBS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\ndatasets() - List available datasets\ninfo(dataset) - Print dataset information\ndownload(dataset; where, fields, limit, verbose) - Download data\ndownload_file(dataset; filename, force, verbose, ...) - Download and save to file\nload_file(dataset; filename) - Load previously downloaded file\ncount(dataset; where) - Get record count\nfields(dataset) - Get field names and types\nquery_url(dataset; kwargs...) - Build query URL\nfires(; year, min_acres, max_acres, fire_type, limit) - Query fire occurrence\nboundaries(; year, min_acres, max_acres, limit) - Query burn boundaries\nlargest_fires(n; year) - Get largest fires by acreage\navailable_downloads() - List direct download options\ndownload_shapefile(key; force, verbose) - Download shapefile/geodatabase\ndir() - Get local data directory path",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>MTBS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html",
+    "href": "modules/firms.html",
+    "title": "FIRMS",
+    "section": "",
+    "text": "Overview\nThe FIRMS module provides access to NASA’s Fire Information for Resource Management System. FIRMS distributes near real-time active fire data from satellite sensors including MODIS, VIIRS, and LANDSAT.\nData Source: NASA FIRMS",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#api-key-setup",
+    "href": "modules/firms.html#api-key-setup",
+    "title": "FIRMS",
+    "section": "API Key Setup",
+    "text": "API Key Setup\nFIRMS requires a free API key (MAP_KEY) from NASA.\n\nRegister at NASA Earthdata\nRequest a FIRMS MAP_KEY at FIRMS MAP_KEY Request\n\nusing WildfireData\n\n# Set via environment variable (recommended)\nENV[\"FIRMS_MAP_KEY\"] = \"your-32-character-key\"\n\n# Or set programmatically\nFIRMS.set_map_key!(\"your-32-character-key\")\n\n# Check current key\nFIRMS.get_map_key()",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#available-sources",
+    "href": "modules/firms.html#available-sources",
+    "title": "FIRMS",
+    "section": "Available Sources",
+    "text": "Available Sources\n\n\n\nSource\nDescription\n\n\n\n\n:MODIS_NRT\nMODIS Near Real-Time\n\n\n:MODIS_SP\nMODIS Standard Processing\n\n\n:VIIRS_NOAA20_NRT\nVIIRS NOAA-20 Near Real-Time\n\n\n:VIIRS_NOAA21_NRT\nVIIRS NOAA-21 Near Real-Time\n\n\n:VIIRS_SNPP_NRT\nVIIRS Suomi NPP Near Real-Time\n\n\n:VIIRS_NOAA20_SP\nVIIRS NOAA-20 Standard Processing\n\n\n:VIIRS_SNPP_SP\nVIIRS Suomi NPP Standard Processing\n\n\n:LANDSAT_NRT\nLANDSAT Near Real-Time",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#basic-usage",
+    "href": "modules/firms.html#basic-usage",
+    "title": "FIRMS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData\n\n# List all sources\nFIRMS.sources()\n\n# Filter by type\nFIRMS.sources(type=:NRT)\n\n# Print general info\nFIRMS.info()",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#downloading-data",
+    "href": "modules/firms.html#downloading-data",
+    "title": "FIRMS",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n\nBy Region\n# Download for a predefined region\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)\n\n# Available regions\nFIRMS.regions()  # :conus, :california, :western_us, etc.\n\n\nBy Bounding Box\n# Download for custom bounding box (\"west,south,east,north\")\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, area=\"-125,32,-114,42\", days=1)\n\n\nHistorical Data\n# Last N days (1-10)\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=3)\n\n# Specific date\ndf = FIRMS.download(:VIIRS_SNPP_SP, region=:western_us, days=1, date=\"2023-08-15\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#working-with-results",
+    "href": "modules/firms.html#working-with-results",
+    "title": "FIRMS",
+    "section": "Working with Results",
+    "text": "Working with Results\nFIRMS returns a DataFrame:\ndf = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)\n\n# View columns\nnames(df)\n\n# Filter by confidence\nhigh_confidence = filter(row -&gt; row.confidence == \"h\", df)\n\n# Get fire locations\nfor row in eachrow(df)\n    println(\"Lat: $(row.latitude), Lon: $(row.longitude)\")\n    println(\"  FRP: $(row.frp)\")\nend",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#key-fields",
+    "href": "modules/firms.html#key-fields",
+    "title": "FIRMS",
+    "section": "Key Fields",
+    "text": "Key Fields\n\n\n\nField\nDescription\n\n\n\n\nlatitude / longitude\nFire location\n\n\nbright_ti4\nBrightness temperature (Kelvin)\n\n\nbright_ti5\nBrightness temperature (Kelvin)\n\n\nfrp\nFire Radiative Power (MW)\n\n\nconfidence\nDetection confidence (l/n/h for low/nominal/high)\n\n\nacq_date\nAcquisition date\n\n\nacq_time\nAcquisition time (HHMM)\n\n\nsatellite\nSatellite name\n\n\ndaynight\nDay or night detection (D/N)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#convenience-functions",
+    "href": "modules/firms.html#convenience-functions",
+    "title": "FIRMS",
+    "section": "Convenience Functions",
+    "text": "Convenience Functions\n# Get recent fires with optional confidence filtering\ndf = FIRMS.recent_fires(region=:california, days=2)\ndf = FIRMS.recent_fires(source=:MODIS_NRT, region=:conus, min_confidence=80)\n\n# Group detections by date\nby_date = FIRMS.hotspots_by_date(region=:western_us, days=5)\n\n# Check data availability\navail = FIRMS.data_availability(:VIIRS_NOAA20_NRT)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#saving-and-loading-files",
+    "href": "modules/firms.html#saving-and-loading-files",
+    "title": "FIRMS",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to CSV\npath = FIRMS.download_file(:VIIRS_NOAA20_NRT, region=:california, days=1)\n\n# Load previously downloaded file (pass the filename as a String)\ndf = FIRMS.load_file(\"VIIRS_NOAA20_NRT_20240115.csv\")",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#predefined-regions",
+    "href": "modules/firms.html#predefined-regions",
+    "title": "FIRMS",
+    "section": "Predefined Regions",
+    "text": "Predefined Regions\nFIRMS.regions()\n\n\n\nRegion\nDescription\n\n\n\n\n:world\nGlobal coverage\n\n\n:conus\nContinental United States\n\n\n:alaska\nAlaska\n\n\n:california\nCalifornia\n\n\n:western_us\nWestern United States\n\n\n:eastern_us\nEastern United States\n\n\n:canada\nCanada\n\n\n:australia\nAustralia\n\n\n:europe\nEurope\n\n\n:amazon\nAmazon basin\n\n\n:africa\nAfrica",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/firms.html#api-reference",
+    "href": "modules/firms.html#api-reference",
+    "title": "FIRMS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\nsources(; type=nothing) - List available satellite sources\ninfo() - Print FIRMS API information\nregions() - List predefined regions\ndownload(source; area, region, days, date, verbose) - Download fire data\ndownload_file(source; filename, force, verbose, ...) - Download and save to file\nload_file(filename) - Load previously downloaded CSV file\nquery_url(source, area, days; date) - Build API query URL\ndata_availability(source) - Check data availability\nrecent_fires(; source, region, days, min_confidence) - Get recent detections\nhotspots_by_date(; source, region, days) - Group detections by date\nget_map_key() - Get current API key\nset_map_key!(key) - Set API key\ndir() - Get local data directory path",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>FIRMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html",
+    "href": "modules/landfire.html",
+    "title": "LANDFIRE",
+    "section": "",
+    "text": "Overview\nThe LANDFIRE module provides access to the LANDFIRE program’s geospatial data products. LANDFIRE provides nationwide, consistent vegetation, fuel, and fire regime data for the United States.\nData Source: LANDFIRE",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#available-products",
+    "href": "modules/landfire.html#available-products",
+    "title": "LANDFIRE",
+    "section": "Available Products",
+    "text": "Available Products\n\nFuel Products\n\n\n\nProduct\nDescription\n\n\n\n\n:FBFM13\nAnderson 13 Fire Behavior Fuel Models\n\n\n:FBFM40\nScott and Burgan 40 Fire Behavior Fuel Models\n\n\n:CFFDRS\nCanadian Forest Fire Danger Rating System\n\n\n:CBD\nCanopy Bulk Density\n\n\n:CBH\nCanopy Base Height\n\n\n:CC\nCanopy Cover\n\n\n:CH\nCanopy Height\n\n\n:FVC\nFuel Vegetation Cover\n\n\n:FVH\nFuel Vegetation Height\n\n\n:FVT\nFuel Vegetation Type\n\n\n\n\n\nVegetation Products\n\n\n\nProduct\nDescription\n\n\n\n\n:BPS\nBiophysical Settings\n\n\n:EVC\nExisting Vegetation Cover\n\n\n:EVH\nExisting Vegetation Height\n\n\n:EVT\nExisting Vegetation Type\n\n\n:SCLASS\nSuccession Class\n\n\n:VCC\nVegetation Condition Class\n\n\n:VDEP\nVegetation Departure\n\n\n\n\n\nDisturbance Products\n\n\n\nProduct\nDescription\n\n\n\n\n:Dist\nAnnual Disturbance\n\n\n:HDist\nHistorical Disturbance (1999-present)\n\n\n\n\n\nTopographic Products\n\n\n\nProduct\nDescription\n\n\n\n\n:Elev\nElevation\n\n\n:Slp\nSlope\n\n\n:Asp\nAspect\n\n\n\n\n\nFire Regime Products\n\n\n\nProduct\nDescription\n\n\n\n\n:FRG\nFire Regime Groups\n\n\n:MFRI\nMean Fire Return Interval\n\n\n:PLS\nPercent Low Severity Fire\n\n\n:PMS\nPercent Mixed Severity Fire\n\n\n:PRS\nPercent Replacement Severity Fire",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#regions",
+    "href": "modules/landfire.html#regions",
+    "title": "LANDFIRE",
+    "section": "Regions",
+    "text": "Regions\n\n\n\nRegion\nDescription\n\n\n\n\n:conus\nContinental United States\n\n\n:alaska\nAlaska\n\n\n:hawaii\nHawaii",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#versions",
+    "href": "modules/landfire.html#versions",
+    "title": "LANDFIRE",
+    "section": "Versions",
+    "text": "Versions\nLANDFIRE data is versioned by year: :LF2001, :LF2008, :LF2010, :LF2012, :LF2014, :LF2016, :LF2020, :LF2022, :LF2023, :LF2024",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#basic-usage",
+    "href": "modules/landfire.html#basic-usage",
+    "title": "LANDFIRE",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData\n\n# List all products\nLANDFIRE.products()\n\n# Filter by category\nLANDFIRE.products(category=:fuel)\nLANDFIRE.products(category=:vegetation)\n\n# Convenience category functions\nLANDFIRE.fuel_products()\nLANDFIRE.vegetation_products()\nLANDFIRE.topographic_products()\nLANDFIRE.fire_regime_products()\nLANDFIRE.disturbance_products()\n\n# Print general info\nLANDFIRE.info()",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#web-coverage-service-wcs",
+    "href": "modules/landfire.html#web-coverage-service-wcs",
+    "title": "LANDFIRE",
+    "section": "Web Coverage Service (WCS)",
+    "text": "Web Coverage Service (WCS)\nAccess LANDFIRE data via WCS for streaming or custom area downloads:\n# Get WCS URL\nurl = LANDFIRE.wcs_url(:conus, :LF2024)\n\n# Get WCS GetCapabilities URL\nurl = LANDFIRE.wcs_capabilities_url(:conus, :LF2024)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#web-map-service-wms",
+    "href": "modules/landfire.html#web-map-service-wms",
+    "title": "LANDFIRE",
+    "section": "Web Map Service (WMS)",
+    "text": "Web Map Service (WMS)\nAccess LANDFIRE data via WMS for visualization:\n# Get WMS URL\nurl = LANDFIRE.wms_url(:conus, :LF2024)\n\n# Get WMS GetCapabilities URL\nurl = LANDFIRE.wms_capabilities_url(:conus, :LF2024)",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#downloading-full-extent",
+    "href": "modules/landfire.html#downloading-full-extent",
+    "title": "LANDFIRE",
+    "section": "Downloading Full Extent",
+    "text": "Downloading Full Extent\n\n\n\n\n\n\nWarning\n\n\n\nFull extent downloads are very large (hundreds of MB to several GB). Use WCS for smaller areas when possible.\n\n\n# Download full extent GeoTIFF\npath = LANDFIRE.download_product(:FBFM40, :conus, :LF2024)\n\n# Force re-download\npath = LANDFIRE.download_product(:FBFM40, :conus, :LF2024, force=true)\n\n# Get the download URL without downloading\nurl = LANDFIRE.download_url(:FBFM40, :conus, :LF2024)\n\n# List previously downloaded files\nLANDFIRE.list_downloads()",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "modules/landfire.html#api-reference",
+    "href": "modules/landfire.html#api-reference",
+    "title": "LANDFIRE",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\nproducts(; category=nothing) - List available products\ninfo() - Print LANDFIRE information\nregions() - List available regions\nversions() - List available versions\nwcs_url(region, version) - Get WCS base URL\nwcs_capabilities_url(region, version) - Get WCS GetCapabilities URL\nwms_url(region, version) - Get WMS base URL\nwms_capabilities_url(region, version) - Get WMS GetCapabilities URL\ndownload_product(product, region, version; force, verbose) - Download full extent\ndownload_url(product, region, version) - Get download URL\nlist_downloads() - List locally downloaded files\nfuel_products() - List fuel products\nvegetation_products() - List vegetation products\ntopographic_products() - List topographic products\nfire_regime_products() - List fire regime products\ndisturbance_products() - List disturbance products\ndir() - Get local data directory path",
+    "crumbs": [
+      "Data Modules",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>LANDFIRE</span>"
+    ]
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "Unreleased",
+    "crumbs": [
+      "Reference",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Changelog</span>"
+    ]
+  }
+]

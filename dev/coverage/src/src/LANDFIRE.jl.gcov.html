@@ -1,0 +1,596 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - on branch main - src/src/LANDFIRE.jl</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">src/src</a> - LANDFIRE.jl<span style="font-size: 80%;"> (source / <a href="LANDFIRE.jl.func-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">on branch main</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">70.2&nbsp;%</td>
+            <td class="headerCovTableEntry">104</td>
+            <td class="headerCovTableEntry">73</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-02-12 16:52:18</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">-</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : module LANDFIRE</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : using ..WildfireData</span>
+<span id="L4"><span class="lineNum">       4</span>              : using Downloads</span>
+<span id="L5"><span class="lineNum">       5</span>              : using HTTP</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #-----------------------------------------------------------------------------# Data Directory</span>
+<span id="L9"><span class="lineNum">       9</span> <span class="tlaGNC tlaBgGNC">           2 : dir() = WildfireData.dir(&quot;LANDFIRE&quot;)</span></span>
+<span id="L10"><span class="lineNum">      10</span>              : </span>
+<span id="L11"><span class="lineNum">      11</span>              : #-----------------------------------------------------------------------------# Constants</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : const DOWNLOAD_BASE = &quot;https://landfire.gov/data-downloads&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>              : const WCS_BASE = &quot;https://edcintl.cr.usgs.gov/geoserver/landfire_wcs&quot;</span>
+<span id="L15"><span class="lineNum">      15</span>              : const WMS_BASE = &quot;https://edcintl.cr.usgs.gov/geoserver/landfire&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : # Available regions</span>
+<span id="L18"><span class="lineNum">      18</span>              : const REGIONS = Dict{Symbol, NamedTuple{(:name, :code, :wcs_code, :wms_code), Tuple{String, String, String, String}}}(</span>
+<span id="L19"><span class="lineNum">      19</span>              :     :conus =&gt; (name=&quot;Continental US&quot;, code=&quot;US&quot;, wcs_code=&quot;us&quot;, wms_code=&quot;us&quot;),</span>
+<span id="L20"><span class="lineNum">      20</span>              :     :alaska =&gt; (name=&quot;Alaska&quot;, code=&quot;AK&quot;, wcs_code=&quot;ak&quot;, wms_code=&quot;ak&quot;),</span>
+<span id="L21"><span class="lineNum">      21</span>              :     :hawaii =&gt; (name=&quot;Hawaii&quot;, code=&quot;HI&quot;, wcs_code=&quot;hi&quot;, wms_code=&quot;hi&quot;),</span>
+<span id="L22"><span class="lineNum">      22</span>              : )</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : # Available versions with their numeric codes</span>
+<span id="L25"><span class="lineNum">      25</span>              : const VERSIONS = Dict{Symbol, NamedTuple{(:year, :code), Tuple{Int, String}}}(</span>
+<span id="L26"><span class="lineNum">      26</span>              :     :LF2024 =&gt; (year=2024, code=&quot;250&quot;),</span>
+<span id="L27"><span class="lineNum">      27</span>              :     :LF2023 =&gt; (year=2023, code=&quot;240&quot;),</span>
+<span id="L28"><span class="lineNum">      28</span>              :     :LF2022 =&gt; (year=2022, code=&quot;230&quot;),</span>
+<span id="L29"><span class="lineNum">      29</span>              :     :LF2020 =&gt; (year=2020, code=&quot;220&quot;),</span>
+<span id="L30"><span class="lineNum">      30</span>              :     :LF2016 =&gt; (year=2016, code=&quot;200&quot;),</span>
+<span id="L31"><span class="lineNum">      31</span>              :     :LF2014 =&gt; (year=2014, code=&quot;140&quot;),</span>
+<span id="L32"><span class="lineNum">      32</span>              :     :LF2012 =&gt; (year=2012, code=&quot;130&quot;),</span>
+<span id="L33"><span class="lineNum">      33</span>              :     :LF2010 =&gt; (year=2010, code=&quot;120&quot;),</span>
+<span id="L34"><span class="lineNum">      34</span>              :     :LF2008 =&gt; (year=2008, code=&quot;110&quot;),</span>
+<span id="L35"><span class="lineNum">      35</span>              :     :LF2001 =&gt; (year=2001, code=&quot;105&quot;),</span>
+<span id="L36"><span class="lineNum">      36</span>              : )</span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span>              : # Product categories and their products</span>
+<span id="L39"><span class="lineNum">      39</span>              : const PRODUCTS = Dict{Symbol, NamedTuple{(:name, :category, :description), Tuple{String, Symbol, String}}}(</span>
+<span id="L40"><span class="lineNum">      40</span>              :     # Fuel Products</span>
+<span id="L41"><span class="lineNum">      41</span>              :     :FBFM13 =&gt; (</span>
+<span id="L42"><span class="lineNum">      42</span>              :         name = &quot;13 Anderson Fire Behavior Fuel Models&quot;,</span>
+<span id="L43"><span class="lineNum">      43</span>              :         category = :fuel,</span>
+<span id="L44"><span class="lineNum">      44</span>              :         description = &quot;Fire behavior fuel models based on Anderson's 13 fuel model classification&quot;</span>
+<span id="L45"><span class="lineNum">      45</span>              :     ),</span>
+<span id="L46"><span class="lineNum">      46</span>              :     :FBFM40 =&gt; (</span>
+<span id="L47"><span class="lineNum">      47</span>              :         name = &quot;40 Scott and Burgan Fire Behavior Fuel Models&quot;,</span>
+<span id="L48"><span class="lineNum">      48</span>              :         category = :fuel,</span>
+<span id="L49"><span class="lineNum">      49</span>              :         description = &quot;Fire behavior fuel models based on Scott and Burgan's 40 fuel model classification&quot;</span>
+<span id="L50"><span class="lineNum">      50</span>              :     ),</span>
+<span id="L51"><span class="lineNum">      51</span>              :     :CFFDRS =&gt; (</span>
+<span id="L52"><span class="lineNum">      52</span>              :         name = &quot;Canadian Forest Fire Danger Rating System&quot;,</span>
+<span id="L53"><span class="lineNum">      53</span>              :         category = :fuel,</span>
+<span id="L54"><span class="lineNum">      54</span>              :         description = &quot;Fuel types mapped to the Canadian Forest Fire Danger Rating System&quot;</span>
+<span id="L55"><span class="lineNum">      55</span>              :     ),</span>
+<span id="L56"><span class="lineNum">      56</span>              :     :CBD =&gt; (</span>
+<span id="L57"><span class="lineNum">      57</span>              :         name = &quot;Canopy Bulk Density&quot;,</span>
+<span id="L58"><span class="lineNum">      58</span>              :         category = :fuel,</span>
+<span id="L59"><span class="lineNum">      59</span>              :         description = &quot;Mass of available canopy fuel per unit canopy volume (kg/m³)&quot;</span>
+<span id="L60"><span class="lineNum">      60</span>              :     ),</span>
+<span id="L61"><span class="lineNum">      61</span>              :     :CBH =&gt; (</span>
+<span id="L62"><span class="lineNum">      62</span>              :         name = &quot;Canopy Base Height&quot;,</span>
+<span id="L63"><span class="lineNum">      63</span>              :         category = :fuel,</span>
+<span id="L64"><span class="lineNum">      64</span>              :         description = &quot;Height from ground to the base of the canopy (m)&quot;</span>
+<span id="L65"><span class="lineNum">      65</span>              :     ),</span>
+<span id="L66"><span class="lineNum">      66</span>              :     :CC =&gt; (</span>
+<span id="L67"><span class="lineNum">      67</span>              :         name = &quot;Canopy Cover&quot;,</span>
+<span id="L68"><span class="lineNum">      68</span>              :         category = :fuel,</span>
+<span id="L69"><span class="lineNum">      69</span>              :         description = &quot;Percent cover of the tree canopy&quot;</span>
+<span id="L70"><span class="lineNum">      70</span>              :     ),</span>
+<span id="L71"><span class="lineNum">      71</span>              :     :CH =&gt; (</span>
+<span id="L72"><span class="lineNum">      72</span>              :         name = &quot;Canopy Height&quot;,</span>
+<span id="L73"><span class="lineNum">      73</span>              :         category = :fuel,</span>
+<span id="L74"><span class="lineNum">      74</span>              :         description = &quot;Average height of the top of the canopy (m)&quot;</span>
+<span id="L75"><span class="lineNum">      75</span>              :     ),</span>
+<span id="L76"><span class="lineNum">      76</span>              :     :FVC =&gt; (</span>
+<span id="L77"><span class="lineNum">      77</span>              :         name = &quot;Fuel Vegetation Cover&quot;,</span>
+<span id="L78"><span class="lineNum">      78</span>              :         category = :fuel,</span>
+<span id="L79"><span class="lineNum">      79</span>              :         description = &quot;Percent cover of fuel vegetation&quot;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     ),</span>
+<span id="L81"><span class="lineNum">      81</span>              :     :FVH =&gt; (</span>
+<span id="L82"><span class="lineNum">      82</span>              :         name = &quot;Fuel Vegetation Height&quot;,</span>
+<span id="L83"><span class="lineNum">      83</span>              :         category = :fuel,</span>
+<span id="L84"><span class="lineNum">      84</span>              :         description = &quot;Average height of fuel vegetation&quot;</span>
+<span id="L85"><span class="lineNum">      85</span>              :     ),</span>
+<span id="L86"><span class="lineNum">      86</span>              :     :FVT =&gt; (</span>
+<span id="L87"><span class="lineNum">      87</span>              :         name = &quot;Fuel Vegetation Type&quot;,</span>
+<span id="L88"><span class="lineNum">      88</span>              :         category = :fuel,</span>
+<span id="L89"><span class="lineNum">      89</span>              :         description = &quot;Classification of fuel vegetation types&quot;</span>
+<span id="L90"><span class="lineNum">      90</span>              :     ),</span>
+<span id="L91"><span class="lineNum">      91</span>              : </span>
+<span id="L92"><span class="lineNum">      92</span>              :     # Vegetation Products</span>
+<span id="L93"><span class="lineNum">      93</span>              :     :BPS =&gt; (</span>
+<span id="L94"><span class="lineNum">      94</span>              :         name = &quot;Biophysical Settings&quot;,</span>
+<span id="L95"><span class="lineNum">      95</span>              :         category = :vegetation,</span>
+<span id="L96"><span class="lineNum">      96</span>              :         description = &quot;Potential natural vegetation that may have been dominant prior to Euro-American settlement&quot;</span>
+<span id="L97"><span class="lineNum">      97</span>              :     ),</span>
+<span id="L98"><span class="lineNum">      98</span>              :     :EVC =&gt; (</span>
+<span id="L99"><span class="lineNum">      99</span>              :         name = &quot;Existing Vegetation Cover&quot;,</span>
+<span id="L100"><span class="lineNum">     100</span>              :         category = :vegetation,</span>
+<span id="L101"><span class="lineNum">     101</span>              :         description = &quot;Vertically projected percent cover of the existing vegetation&quot;</span>
+<span id="L102"><span class="lineNum">     102</span>              :     ),</span>
+<span id="L103"><span class="lineNum">     103</span>              :     :EVH =&gt; (</span>
+<span id="L104"><span class="lineNum">     104</span>              :         name = &quot;Existing Vegetation Height&quot;,</span>
+<span id="L105"><span class="lineNum">     105</span>              :         category = :vegetation,</span>
+<span id="L106"><span class="lineNum">     106</span>              :         description = &quot;Average height of the dominant vegetation&quot;</span>
+<span id="L107"><span class="lineNum">     107</span>              :     ),</span>
+<span id="L108"><span class="lineNum">     108</span>              :     :EVT =&gt; (</span>
+<span id="L109"><span class="lineNum">     109</span>              :         name = &quot;Existing Vegetation Type&quot;,</span>
+<span id="L110"><span class="lineNum">     110</span>              :         category = :vegetation,</span>
+<span id="L111"><span class="lineNum">     111</span>              :         description = &quot;Classification of existing vegetation types&quot;</span>
+<span id="L112"><span class="lineNum">     112</span>              :     ),</span>
+<span id="L113"><span class="lineNum">     113</span>              :     :SCLASS =&gt; (</span>
+<span id="L114"><span class="lineNum">     114</span>              :         name = &quot;Succession Class&quot;,</span>
+<span id="L115"><span class="lineNum">     115</span>              :         category = :vegetation,</span>
+<span id="L116"><span class="lineNum">     116</span>              :         description = &quot;Current vegetation conditions relative to reference conditions&quot;</span>
+<span id="L117"><span class="lineNum">     117</span>              :     ),</span>
+<span id="L118"><span class="lineNum">     118</span>              :     :VCC =&gt; (</span>
+<span id="L119"><span class="lineNum">     119</span>              :         name = &quot;Vegetation Condition Class&quot;,</span>
+<span id="L120"><span class="lineNum">     120</span>              :         category = :vegetation,</span>
+<span id="L121"><span class="lineNum">     121</span>              :         description = &quot;Departure of current vegetation from historical reference conditions&quot;</span>
+<span id="L122"><span class="lineNum">     122</span>              :     ),</span>
+<span id="L123"><span class="lineNum">     123</span>              :     :VDEP =&gt; (</span>
+<span id="L124"><span class="lineNum">     124</span>              :         name = &quot;Vegetation Departure&quot;,</span>
+<span id="L125"><span class="lineNum">     125</span>              :         category = :vegetation,</span>
+<span id="L126"><span class="lineNum">     126</span>              :         description = &quot;Degree to which current vegetation has departed from simulated historical reference&quot;</span>
+<span id="L127"><span class="lineNum">     127</span>              :     ),</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span>              :     # Disturbance Products</span>
+<span id="L130"><span class="lineNum">     130</span>              :     :Dist =&gt; (</span>
+<span id="L131"><span class="lineNum">     131</span>              :         name = &quot;Annual Disturbance&quot;,</span>
+<span id="L132"><span class="lineNum">     132</span>              :         category = :disturbance,</span>
+<span id="L133"><span class="lineNum">     133</span>              :         description = &quot;Annual disturbance events including fire, insects, disease, and other factors&quot;</span>
+<span id="L134"><span class="lineNum">     134</span>              :     ),</span>
+<span id="L135"><span class="lineNum">     135</span>              :     :HDist =&gt; (</span>
+<span id="L136"><span class="lineNum">     136</span>              :         name = &quot;Historical Disturbance&quot;,</span>
+<span id="L137"><span class="lineNum">     137</span>              :         category = :disturbance,</span>
+<span id="L138"><span class="lineNum">     138</span>              :         description = &quot;Cumulative disturbance from 1999 to present&quot;</span>
+<span id="L139"><span class="lineNum">     139</span>              :     ),</span>
+<span id="L140"><span class="lineNum">     140</span>              : </span>
+<span id="L141"><span class="lineNum">     141</span>              :     # Topographic Products</span>
+<span id="L142"><span class="lineNum">     142</span>              :     :Elev =&gt; (</span>
+<span id="L143"><span class="lineNum">     143</span>              :         name = &quot;Elevation&quot;,</span>
+<span id="L144"><span class="lineNum">     144</span>              :         category = :topographic,</span>
+<span id="L145"><span class="lineNum">     145</span>              :         description = &quot;Elevation above sea level (m)&quot;</span>
+<span id="L146"><span class="lineNum">     146</span>              :     ),</span>
+<span id="L147"><span class="lineNum">     147</span>              :     :Slp =&gt; (</span>
+<span id="L148"><span class="lineNum">     148</span>              :         name = &quot;Slope&quot;,</span>
+<span id="L149"><span class="lineNum">     149</span>              :         category = :topographic,</span>
+<span id="L150"><span class="lineNum">     150</span>              :         description = &quot;Slope steepness (degrees)&quot;</span>
+<span id="L151"><span class="lineNum">     151</span>              :     ),</span>
+<span id="L152"><span class="lineNum">     152</span>              :     :Asp =&gt; (</span>
+<span id="L153"><span class="lineNum">     153</span>              :         name = &quot;Aspect&quot;,</span>
+<span id="L154"><span class="lineNum">     154</span>              :         category = :topographic,</span>
+<span id="L155"><span class="lineNum">     155</span>              :         description = &quot;Slope direction (degrees from north)&quot;</span>
+<span id="L156"><span class="lineNum">     156</span>              :     ),</span>
+<span id="L157"><span class="lineNum">     157</span>              : </span>
+<span id="L158"><span class="lineNum">     158</span>              :     # Fire Regime Products</span>
+<span id="L159"><span class="lineNum">     159</span>              :     :FRG =&gt; (</span>
+<span id="L160"><span class="lineNum">     160</span>              :         name = &quot;Fire Regime Group&quot;,</span>
+<span id="L161"><span class="lineNum">     161</span>              :         category = :fire_regime,</span>
+<span id="L162"><span class="lineNum">     162</span>              :         description = &quot;Groupings of fire frequency and severity&quot;</span>
+<span id="L163"><span class="lineNum">     163</span>              :     ),</span>
+<span id="L164"><span class="lineNum">     164</span>              :     :MFRI =&gt; (</span>
+<span id="L165"><span class="lineNum">     165</span>              :         name = &quot;Mean Fire Return Interval&quot;,</span>
+<span id="L166"><span class="lineNum">     166</span>              :         category = :fire_regime,</span>
+<span id="L167"><span class="lineNum">     167</span>              :         description = &quot;Average period between fires under historical conditions&quot;</span>
+<span id="L168"><span class="lineNum">     168</span>              :     ),</span>
+<span id="L169"><span class="lineNum">     169</span>              :     :PLS =&gt; (</span>
+<span id="L170"><span class="lineNum">     170</span>              :         name = &quot;Percent Low Severity&quot;,</span>
+<span id="L171"><span class="lineNum">     171</span>              :         category = :fire_regime,</span>
+<span id="L172"><span class="lineNum">     172</span>              :         description = &quot;Percent of fires that were low severity under historical conditions&quot;</span>
+<span id="L173"><span class="lineNum">     173</span>              :     ),</span>
+<span id="L174"><span class="lineNum">     174</span>              :     :PMS =&gt; (</span>
+<span id="L175"><span class="lineNum">     175</span>              :         name = &quot;Percent Mixed Severity&quot;,</span>
+<span id="L176"><span class="lineNum">     176</span>              :         category = :fire_regime,</span>
+<span id="L177"><span class="lineNum">     177</span>              :         description = &quot;Percent of fires that were mixed severity under historical conditions&quot;</span>
+<span id="L178"><span class="lineNum">     178</span>              :     ),</span>
+<span id="L179"><span class="lineNum">     179</span>              :     :PRS =&gt; (</span>
+<span id="L180"><span class="lineNum">     180</span>              :         name = &quot;Percent Replacement Severity&quot;,</span>
+<span id="L181"><span class="lineNum">     181</span>              :         category = :fire_regime,</span>
+<span id="L182"><span class="lineNum">     182</span>              :         description = &quot;Percent of fires that were stand-replacing under historical conditions&quot;</span>
+<span id="L183"><span class="lineNum">     183</span>              :     ),</span>
+<span id="L184"><span class="lineNum">     184</span>              : )</span>
+<span id="L185"><span class="lineNum">     185</span>              : </span>
+<span id="L186"><span class="lineNum">     186</span>              : #-----------------------------------------------------------------------------# Info Functions</span>
+<span id="L187"><span class="lineNum">     187</span>              : </span>
+<span id="L188"><span class="lineNum">     188</span>              : &quot;&quot;&quot;</span>
+<span id="L189"><span class="lineNum">     189</span>              :     info()</span>
+<span id="L190"><span class="lineNum">     190</span>              : </span>
+<span id="L191"><span class="lineNum">     191</span>              : Print information about LANDFIRE data products and access methods.</span>
+<span id="L192"><span class="lineNum">     192</span>              : &quot;&quot;&quot;</span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">           1 : function info()</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           1 :     println(&quot;LANDFIRE: Landscape Fire and Resource Management Planning Tools&quot;)</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           1 :     println(&quot;=&quot; ^ 65)</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           1 :     println(&quot;A joint USDI/USDA Forest Service program providing geospatial data&quot;)</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">           1 :     println(&quot;for wildland fire and natural resource management.&quot;)</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">           1 :     println()</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">           1 :     println(&quot;Data Categories:&quot;)</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">           1 :     println(&quot;  - Fuel: Fire behavior fuel models, canopy characteristics&quot;)</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">           1 :     println(&quot;  - Vegetation: Existing and potential vegetation classifications&quot;)</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           1 :     println(&quot;  - Disturbance: Annual and historical disturbance events&quot;)</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">           1 :     println(&quot;  - Topographic: Elevation, slope, aspect&quot;)</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">           1 :     println(&quot;  - Fire Regime: Historical fire frequency and severity&quot;)</span></span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">           1 :     println()</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">           1 :     println(&quot;Access Methods:&quot;)</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">           1 :     println(&quot;  - Full extent downloads (GeoTIFF rasters)&quot;)</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">           1 :     println(&quot;  - WCS/WMS web services for streaming access&quot;)</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">           1 :     println()</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           1 :     println(&quot;Regions: CONUS, Alaska, Hawaii&quot;)</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">           1 :     println(&quot;Versions: 2001-2024&quot;)</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">           1 :     println()</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           1 :     println(&quot;Use `LANDFIRE.products()` to list available products&quot;)</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">           1 :     println(&quot;Use `LANDFIRE.download_product()` to download data&quot;)</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">           1 :     return nothing</span></span>
+<span id="L216"><span class="lineNum">     216</span>              : end</span>
+<span id="L217"><span class="lineNum">     217</span>              : </span>
+<span id="L218"><span class="lineNum">     218</span>              : &quot;&quot;&quot;</span>
+<span id="L219"><span class="lineNum">     219</span>              :     products(; category=nothing)</span>
+<span id="L220"><span class="lineNum">     220</span>              : </span>
+<span id="L221"><span class="lineNum">     221</span>              : List available LANDFIRE products. Optionally filter by category.</span>
+<span id="L222"><span class="lineNum">     222</span>              : </span>
+<span id="L223"><span class="lineNum">     223</span>              : # Categories</span>
+<span id="L224"><span class="lineNum">     224</span>              : - `:fuel` - Fire behavior fuel models and canopy characteristics</span>
+<span id="L225"><span class="lineNum">     225</span>              : - `:vegetation` - Existing and potential vegetation</span>
+<span id="L226"><span class="lineNum">     226</span>              : - `:disturbance` - Annual and historical disturbances</span>
+<span id="L227"><span class="lineNum">     227</span>              : - `:topographic` - Elevation, slope, aspect</span>
+<span id="L228"><span class="lineNum">     228</span>              : - `:fire_regime` - Historical fire patterns</span>
+<span id="L229"><span class="lineNum">     229</span>              : </span>
+<span id="L230"><span class="lineNum">     230</span>              : # Example</span>
+<span id="L231"><span class="lineNum">     231</span>              : ```julia</span>
+<span id="L232"><span class="lineNum">     232</span>              : LANDFIRE.products()  # all products</span>
+<span id="L233"><span class="lineNum">     233</span>              : LANDFIRE.products(category=:fuel)  # only fuel products</span>
+<span id="L234"><span class="lineNum">     234</span>              : ```</span>
+<span id="L235"><span class="lineNum">     235</span>              : &quot;&quot;&quot;</span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaGNC">          14 : function products(; category::Union{Symbol, Nothing}=nothing)</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">          14 :     if isnothing(category)</span></span>
+<span id="L238"><span class="lineNum">     238</span> <span class="tlaGNC">           1 :         return PRODUCTS</span></span>
+<span id="L239"><span class="lineNum">     239</span>              :     else</span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">          13 :         return Dict(k =&gt; v for (k, v) in PRODUCTS if v.category == category)</span></span>
+<span id="L241"><span class="lineNum">     241</span>              :     end</span>
+<span id="L242"><span class="lineNum">     242</span>              : end</span>
+<span id="L243"><span class="lineNum">     243</span>              : </span>
+<span id="L244"><span class="lineNum">     244</span>              : &quot;&quot;&quot;</span>
+<span id="L245"><span class="lineNum">     245</span>              :     versions()</span>
+<span id="L246"><span class="lineNum">     246</span>              : </span>
+<span id="L247"><span class="lineNum">     247</span>              : List available LANDFIRE versions.</span>
+<span id="L248"><span class="lineNum">     248</span>              : </span>
+<span id="L249"><span class="lineNum">     249</span>              : # Example</span>
+<span id="L250"><span class="lineNum">     250</span>              : ```julia</span>
+<span id="L251"><span class="lineNum">     251</span>              : LANDFIRE.versions()</span>
+<span id="L252"><span class="lineNum">     252</span>              : ```</span>
+<span id="L253"><span class="lineNum">     253</span>              : &quot;&quot;&quot;</span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">           1 : versions() = VERSIONS</span></span>
+<span id="L255"><span class="lineNum">     255</span>              : </span>
+<span id="L256"><span class="lineNum">     256</span>              : &quot;&quot;&quot;</span>
+<span id="L257"><span class="lineNum">     257</span>              :     regions()</span>
+<span id="L258"><span class="lineNum">     258</span>              : </span>
+<span id="L259"><span class="lineNum">     259</span>              : List available LANDFIRE regions.</span>
+<span id="L260"><span class="lineNum">     260</span>              : </span>
+<span id="L261"><span class="lineNum">     261</span>              : # Example</span>
+<span id="L262"><span class="lineNum">     262</span>              : ```julia</span>
+<span id="L263"><span class="lineNum">     263</span>              : LANDFIRE.regions()</span>
+<span id="L264"><span class="lineNum">     264</span>              : ```</span>
+<span id="L265"><span class="lineNum">     265</span>              : &quot;&quot;&quot;</span>
+<span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">           1 : regions() = REGIONS</span></span>
+<span id="L267"><span class="lineNum">     267</span>              : </span>
+<span id="L268"><span class="lineNum">     268</span>              : #-----------------------------------------------------------------------------# WCS/WMS URLs</span>
+<span id="L269"><span class="lineNum">     269</span>              : </span>
+<span id="L270"><span class="lineNum">     270</span>              : &quot;&quot;&quot;</span>
+<span id="L271"><span class="lineNum">     271</span>              :     wcs_url(region::Symbol, version::Symbol)</span>
+<span id="L272"><span class="lineNum">     272</span>              : </span>
+<span id="L273"><span class="lineNum">     273</span>              : Get the WCS (Web Coverage Service) URL for a region and version.</span>
+<span id="L274"><span class="lineNum">     274</span>              : </span>
+<span id="L275"><span class="lineNum">     275</span>              : WCS provides pixel-level data access for analysis without downloading.</span>
+<span id="L276"><span class="lineNum">     276</span>              : </span>
+<span id="L277"><span class="lineNum">     277</span>              : # Arguments</span>
+<span id="L278"><span class="lineNum">     278</span>              : - `region::Symbol`: `:conus`, `:alaska`, or `:hawaii`</span>
+<span id="L279"><span class="lineNum">     279</span>              : - `version::Symbol`: e.g., `:LF2024`, `:LF2023`, `:LF2020`</span>
+<span id="L280"><span class="lineNum">     280</span>              : </span>
+<span id="L281"><span class="lineNum">     281</span>              : # Example</span>
+<span id="L282"><span class="lineNum">     282</span>              : ```julia</span>
+<span id="L283"><span class="lineNum">     283</span>              : LANDFIRE.wcs_url(:conus, :LF2024)</span>
+<span id="L284"><span class="lineNum">     284</span>              : ```</span>
+<span id="L285"><span class="lineNum">     285</span>              : &quot;&quot;&quot;</span>
+<span id="L286"><span class="lineNum">     286</span> <span class="tlaGNC">           5 : function wcs_url(region::Symbol, version::Symbol)</span></span>
+<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC">           6 :     haskey(REGIONS, region) || error(&quot;Unknown region: $region. Options: $(keys(REGIONS))&quot;)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           5 :     haskey(VERSIONS, version) || error(&quot;Unknown version: $version. Options: $(keys(VERSIONS))&quot;)</span></span>
+<span id="L289"><span class="lineNum">     289</span>              : </span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           3 :     r = REGIONS[region]</span></span>
+<span id="L291"><span class="lineNum">     291</span> <span class="tlaGNC">           3 :     v = VERSIONS[version]</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           3 :     return &quot;$WCS_BASE/$(r.wcs_code)_$(v.code)/wcs&quot;</span></span>
+<span id="L293"><span class="lineNum">     293</span>              : end</span>
+<span id="L294"><span class="lineNum">     294</span>              : </span>
+<span id="L295"><span class="lineNum">     295</span>              : &quot;&quot;&quot;</span>
+<span id="L296"><span class="lineNum">     296</span>              :     wms_url(region::Symbol, version::Symbol)</span>
+<span id="L297"><span class="lineNum">     297</span>              : </span>
+<span id="L298"><span class="lineNum">     298</span>              : Get the WMS (Web Map Service) URL for a region and version.</span>
+<span id="L299"><span class="lineNum">     299</span>              : </span>
+<span id="L300"><span class="lineNum">     300</span>              : WMS provides map image access for viewing in GIS applications.</span>
+<span id="L301"><span class="lineNum">     301</span>              : </span>
+<span id="L302"><span class="lineNum">     302</span>              : # Arguments</span>
+<span id="L303"><span class="lineNum">     303</span>              : - `region::Symbol`: `:conus`, `:alaska`, or `:hawaii`</span>
+<span id="L304"><span class="lineNum">     304</span>              : - `version::Symbol`: e.g., `:LF2024`, `:LF2023`, `:LF2020`</span>
+<span id="L305"><span class="lineNum">     305</span>              : </span>
+<span id="L306"><span class="lineNum">     306</span>              : # Example</span>
+<span id="L307"><span class="lineNum">     307</span>              : ```julia</span>
+<span id="L308"><span class="lineNum">     308</span>              : LANDFIRE.wms_url(:conus, :LF2024)</span>
+<span id="L309"><span class="lineNum">     309</span>              : # Add ?service=WMS&amp;request=GetCapabilities for capabilities document</span>
+<span id="L310"><span class="lineNum">     310</span>              : ```</span>
+<span id="L311"><span class="lineNum">     311</span>              : &quot;&quot;&quot;</span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">           3 : function wms_url(region::Symbol, version::Symbol)</span></span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">           3 :     haskey(REGIONS, region) || error(&quot;Unknown region: $region. Options: $(keys(REGIONS))&quot;)</span></span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">           3 :     haskey(VERSIONS, version) || error(&quot;Unknown version: $version. Options: $(keys(VERSIONS))&quot;)</span></span>
+<span id="L315"><span class="lineNum">     315</span>              : </span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">           3 :     r = REGIONS[region]</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">           3 :     v = VERSIONS[version]</span></span>
+<span id="L318"><span class="lineNum">     318</span> <span class="tlaGNC">           3 :     return &quot;$WMS_BASE/$(r.wms_code)_$(v.code)/ows&quot;</span></span>
+<span id="L319"><span class="lineNum">     319</span>              : end</span>
+<span id="L320"><span class="lineNum">     320</span>              : </span>
+<span id="L321"><span class="lineNum">     321</span>              : &quot;&quot;&quot;</span>
+<span id="L322"><span class="lineNum">     322</span>              :     wms_capabilities_url(region::Symbol, version::Symbol)</span>
+<span id="L323"><span class="lineNum">     323</span>              : </span>
+<span id="L324"><span class="lineNum">     324</span>              : Get the WMS GetCapabilities URL for a region and version.</span>
+<span id="L325"><span class="lineNum">     325</span>              : </span>
+<span id="L326"><span class="lineNum">     326</span>              : # Example</span>
+<span id="L327"><span class="lineNum">     327</span>              : ```julia</span>
+<span id="L328"><span class="lineNum">     328</span>              : LANDFIRE.wms_capabilities_url(:conus, :LF2024)</span>
+<span id="L329"><span class="lineNum">     329</span>              : ```</span>
+<span id="L330"><span class="lineNum">     330</span>              : &quot;&quot;&quot;</span>
+<span id="L331"><span class="lineNum">     331</span> <span class="tlaGNC">           1 : function wms_capabilities_url(region::Symbol, version::Symbol)</span></span>
+<span id="L332"><span class="lineNum">     332</span> <span class="tlaGNC">           1 :     return wms_url(region, version) * &quot;?service=WMS&amp;request=GetCapabilities&quot;</span></span>
+<span id="L333"><span class="lineNum">     333</span>              : end</span>
+<span id="L334"><span class="lineNum">     334</span>              : </span>
+<span id="L335"><span class="lineNum">     335</span>              : &quot;&quot;&quot;</span>
+<span id="L336"><span class="lineNum">     336</span>              :     wcs_capabilities_url(region::Symbol, version::Symbol)</span>
+<span id="L337"><span class="lineNum">     337</span>              : </span>
+<span id="L338"><span class="lineNum">     338</span>              : Get the WCS GetCapabilities URL for a region and version.</span>
+<span id="L339"><span class="lineNum">     339</span>              : </span>
+<span id="L340"><span class="lineNum">     340</span>              : # Example</span>
+<span id="L341"><span class="lineNum">     341</span>              : ```julia</span>
+<span id="L342"><span class="lineNum">     342</span>              : LANDFIRE.wcs_capabilities_url(:conus, :LF2024)</span>
+<span id="L343"><span class="lineNum">     343</span>              : ```</span>
+<span id="L344"><span class="lineNum">     344</span>              : &quot;&quot;&quot;</span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">           1 : function wcs_capabilities_url(region::Symbol, version::Symbol)</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">           1 :     return wcs_url(region, version) * &quot;?request=GetCapabilities&amp;service=WCS&quot;</span></span>
+<span id="L347"><span class="lineNum">     347</span>              : end</span>
+<span id="L348"><span class="lineNum">     348</span>              : </span>
+<span id="L349"><span class="lineNum">     349</span>              : #-----------------------------------------------------------------------------# Download Functions</span>
+<span id="L350"><span class="lineNum">     350</span>              : </span>
+<span id="L351"><span class="lineNum">     351</span>              : &quot;&quot;&quot;</span>
+<span id="L352"><span class="lineNum">     352</span>              :     download_url(product::Symbol, region::Symbol, version::Symbol)</span>
+<span id="L353"><span class="lineNum">     353</span>              : </span>
+<span id="L354"><span class="lineNum">     354</span>              : Get the download URL for a specific product, region, and version.</span>
+<span id="L355"><span class="lineNum">     355</span>              : </span>
+<span id="L356"><span class="lineNum">     356</span>              : Note: Not all product/region/version combinations are available.</span>
+<span id="L357"><span class="lineNum">     357</span>              : </span>
+<span id="L358"><span class="lineNum">     358</span>              : # Example</span>
+<span id="L359"><span class="lineNum">     359</span>              : ```julia</span>
+<span id="L360"><span class="lineNum">     360</span>              : LANDFIRE.download_url(:FBFM40, :conus, :LF2024)</span>
+<span id="L361"><span class="lineNum">     361</span>              : ```</span>
+<span id="L362"><span class="lineNum">     362</span>              : &quot;&quot;&quot;</span>
+<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">           4 : function download_url(product::Symbol, region::Symbol, version::Symbol)</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">           5 :     haskey(PRODUCTS, product) || error(&quot;Unknown product: $product. Use `LANDFIRE.products()` to list.&quot;)</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">           3 :     haskey(REGIONS, region) || error(&quot;Unknown region: $region. Options: $(keys(REGIONS))&quot;)</span></span>
+<span id="L366"><span class="lineNum">     366</span> <span class="tlaGNC">           3 :     haskey(VERSIONS, version) || error(&quot;Unknown version: $version. Options: $(keys(VERSIONS))&quot;)</span></span>
+<span id="L367"><span class="lineNum">     367</span>              : </span>
+<span id="L368"><span class="lineNum">     368</span> <span class="tlaGNC">           3 :     r = REGIONS[region]</span></span>
+<span id="L369"><span class="lineNum">     369</span> <span class="tlaGNC">           3 :     v = VERSIONS[version]</span></span>
+<span id="L370"><span class="lineNum">     370</span> <span class="tlaGNC">           3 :     p = PRODUCTS[product]</span></span>
+<span id="L371"><span class="lineNum">     371</span>              : </span>
+<span id="L372"><span class="lineNum">     372</span>              :     # Build the download path based on product category and naming conventions</span>
+<span id="L373"><span class="lineNum">     373</span> <span class="tlaGNC">           3 :     region_code = r.code</span></span>
+<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC">           3 :     version_code = v.code</span></span>
+<span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">           3 :     year = v.year</span></span>
+<span id="L376"><span class="lineNum">     376</span>              : </span>
+<span id="L377"><span class="lineNum">     377</span>              :     # Different products have different URL patterns</span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           3 :     if p.category == :topographic</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaUNC tlaBgUNC">           0 :         dir_suffix = &quot;Topo_$(year)&quot;</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaUNC">           0 :         filename = &quot;LF$(year)_$(product)_$(version_code)_$(region_code).zip&quot;</span></span>
+<span id="L381"><span class="lineNum">     381</span> <span class="tlaGNC tlaBgGNC">           3 :     elseif p.category == :disturbance</span></span>
+<span id="L382"><span class="lineNum">     382</span> <span class="tlaGNC">           1 :         if product == :HDist</span></span>
+<span id="L383"><span class="lineNum">     383</span>              :             # Historical disturbance has special naming</span>
+<span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">           1 :             if region == :conus</span></span>
+<span id="L385"><span class="lineNum">     385</span> <span class="tlaGNC">           1 :                 return &quot;$DOWNLOAD_BASE/AnnualDist/USAnnualDisturbance_1999_present.zip&quot;</span></span>
+<span id="L386"><span class="lineNum">     386</span> <span class="tlaUNC tlaBgUNC">           0 :             elseif region == :alaska</span></span>
+<span id="L387"><span class="lineNum">     387</span> <span class="tlaUNC">           0 :                 return &quot;$DOWNLOAD_BASE/AnnualDist/AKAnnualDisturbance_1999_present.zip&quot;</span></span>
+<span id="L388"><span class="lineNum">     388</span>              :             else</span>
+<span id="L389"><span class="lineNum">     389</span> <span class="tlaUNC">           0 :                 return &quot;$DOWNLOAD_BASE/AnnualDist/HIAnnualDisturbance_2011_present.zip&quot;</span></span>
+<span id="L390"><span class="lineNum">     390</span>              :             end</span>
+<span id="L391"><span class="lineNum">     391</span>              :         else</span>
+<span id="L392"><span class="lineNum">     392</span> <span class="tlaUNC">           0 :             dir_suffix = &quot;Disturbance&quot;</span></span>
+<span id="L393"><span class="lineNum">     393</span> <span class="tlaUNC">           0 :             filename = &quot;LF$(year)_$(product)_$(version_code)_$(region_code).zip&quot;</span></span>
+<span id="L394"><span class="lineNum">     394</span>              :         end</span>
+<span id="L395"><span class="lineNum">     395</span>              :     else</span>
+<span id="L396"><span class="lineNum">     396</span> <span class="tlaGNC tlaBgGNC">           2 :         dir_suffix = version_code</span></span>
+<span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">           2 :         filename = &quot;LF$(year)_$(product)_$(version_code)_$(region_code == &quot;US&quot; ? &quot;CONUS&quot; : region_code).zip&quot;</span></span>
+<span id="L398"><span class="lineNum">     398</span>              :     end</span>
+<span id="L399"><span class="lineNum">     399</span>              : </span>
+<span id="L400"><span class="lineNum">     400</span> <span class="tlaGNC">           2 :     return &quot;$DOWNLOAD_BASE/$(region_code)_$(dir_suffix)/$filename&quot;</span></span>
+<span id="L401"><span class="lineNum">     401</span>              : end</span>
+<span id="L402"><span class="lineNum">     402</span>              : </span>
+<span id="L403"><span class="lineNum">     403</span>              : &quot;&quot;&quot;</span>
+<span id="L404"><span class="lineNum">     404</span>              :     download_product(product::Symbol, region::Symbol, version::Symbol; force=false, verbose=true)</span>
+<span id="L405"><span class="lineNum">     405</span>              : </span>
+<span id="L406"><span class="lineNum">     406</span>              : Download a LANDFIRE product for a specific region and version.</span>
+<span id="L407"><span class="lineNum">     407</span>              : </span>
+<span id="L408"><span class="lineNum">     408</span>              : Note: Files can be very large (hundreds of MB to several GB). Not all combinations are available.</span>
+<span id="L409"><span class="lineNum">     409</span>              : </span>
+<span id="L410"><span class="lineNum">     410</span>              : # Arguments</span>
+<span id="L411"><span class="lineNum">     411</span>              : - `product::Symbol`: Product key (see `LANDFIRE.products()`)</span>
+<span id="L412"><span class="lineNum">     412</span>              : - `region::Symbol`: `:conus`, `:alaska`, or `:hawaii`</span>
+<span id="L413"><span class="lineNum">     413</span>              : - `version::Symbol`: e.g., `:LF2024`, `:LF2023`, `:LF2020`</span>
+<span id="L414"><span class="lineNum">     414</span>              : - `force::Bool`: Re-download even if file exists</span>
+<span id="L415"><span class="lineNum">     415</span>              : - `verbose::Bool`: Print progress information</span>
+<span id="L416"><span class="lineNum">     416</span>              : </span>
+<span id="L417"><span class="lineNum">     417</span>              : # Returns</span>
+<span id="L418"><span class="lineNum">     418</span>              : The path to the downloaded file.</span>
+<span id="L419"><span class="lineNum">     419</span>              : </span>
+<span id="L420"><span class="lineNum">     420</span>              : # Example</span>
+<span id="L421"><span class="lineNum">     421</span>              : ```julia</span>
+<span id="L422"><span class="lineNum">     422</span>              : # Download FBFM40 fuel model for CONUS (warning: ~3 GB)</span>
+<span id="L423"><span class="lineNum">     423</span>              : path = LANDFIRE.download_product(:FBFM40, :conus, :LF2024)</span>
+<span id="L424"><span class="lineNum">     424</span>              : </span>
+<span id="L425"><span class="lineNum">     425</span>              : # Download aspect data for Alaska</span>
+<span id="L426"><span class="lineNum">     426</span>              : path = LANDFIRE.download_product(:Asp, :alaska, :LF2020)</span>
+<span id="L427"><span class="lineNum">     427</span>              : ```</span>
+<span id="L428"><span class="lineNum">     428</span>              : &quot;&quot;&quot;</span>
+<span id="L429"><span class="lineNum">     429</span> <span class="tlaUNC tlaBgUNC">           0 : function download_product(product::Symbol, region::Symbol, version::Symbol;</span></span>
+<span id="L430"><span class="lineNum">     430</span>              :                           force::Bool=false, verbose::Bool=true)</span>
+<span id="L431"><span class="lineNum">     431</span> <span class="tlaUNC">           0 :     url = download_url(product, region, version)</span></span>
+<span id="L432"><span class="lineNum">     432</span>              : </span>
+<span id="L433"><span class="lineNum">     433</span> <span class="tlaUNC">           0 :     mkpath(dir())</span></span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaUNC">           0 :     filename = basename(url)</span></span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaUNC">           0 :     filepath = joinpath(dir(), filename)</span></span>
+<span id="L436"><span class="lineNum">     436</span>              : </span>
+<span id="L437"><span class="lineNum">     437</span> <span class="tlaUNC">           0 :     if isfile(filepath) &amp;&amp; !force</span></span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaUNC">           0 :         verbose &amp;&amp; println(&quot;File already exists: $filepath&quot;)</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaUNC">           0 :         verbose &amp;&amp; println(&quot;Use `force=true` to re-download.&quot;)</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaUNC">           0 :         return filepath</span></span>
+<span id="L441"><span class="lineNum">     441</span>              :     end</span>
+<span id="L442"><span class="lineNum">     442</span>              : </span>
+<span id="L443"><span class="lineNum">     443</span> <span class="tlaUNC">           0 :     p = PRODUCTS[product]</span></span>
+<span id="L444"><span class="lineNum">     444</span> <span class="tlaUNC">           0 :     r = REGIONS[region]</span></span>
+<span id="L445"><span class="lineNum">     445</span> <span class="tlaUNC">           0 :     v = VERSIONS[version]</span></span>
+<span id="L446"><span class="lineNum">     446</span>              : </span>
+<span id="L447"><span class="lineNum">     447</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Downloading: $(p.name)&quot;)</span></span>
+<span id="L448"><span class="lineNum">     448</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Region: $(r.name)&quot;)</span></span>
+<span id="L449"><span class="lineNum">     449</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Version: LF $(v.year)&quot;)</span></span>
+<span id="L450"><span class="lineNum">     450</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;URL: $url&quot;)</span></span>
+<span id="L451"><span class="lineNum">     451</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Warning: LANDFIRE files can be very large (hundreds of MB to GB)&quot;)</span></span>
+<span id="L452"><span class="lineNum">     452</span>              : </span>
+<span id="L453"><span class="lineNum">     453</span>              :     # Check if URL is valid first</span>
+<span id="L454"><span class="lineNum">     454</span> <span class="tlaUNC">           0 :     response = HTTP.head(url; status_exception=false)</span></span>
+<span id="L455"><span class="lineNum">     455</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
+<span id="L456"><span class="lineNum">     456</span> <span class="tlaUNC">           0 :         error(&quot;Download not available for this product/region/version combination. HTTP status: $(response.status)&quot;)</span></span>
+<span id="L457"><span class="lineNum">     457</span>              :     end</span>
+<span id="L458"><span class="lineNum">     458</span>              : </span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaUNC">           0 :     Downloads.download(url, filepath)</span></span>
+<span id="L460"><span class="lineNum">     460</span>              : </span>
+<span id="L461"><span class="lineNum">     461</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Saved to: $filepath&quot;)</span></span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaUNC">           0 :     return filepath</span></span>
+<span id="L463"><span class="lineNum">     463</span>              : end</span>
+<span id="L464"><span class="lineNum">     464</span>              : </span>
+<span id="L465"><span class="lineNum">     465</span>              : &quot;&quot;&quot;</span>
+<span id="L466"><span class="lineNum">     466</span>              :     list_downloads()</span>
+<span id="L467"><span class="lineNum">     467</span>              : </span>
+<span id="L468"><span class="lineNum">     468</span>              : List all previously downloaded LANDFIRE files in the local data directory.</span>
+<span id="L469"><span class="lineNum">     469</span>              : </span>
+<span id="L470"><span class="lineNum">     470</span>              : # Example</span>
+<span id="L471"><span class="lineNum">     471</span>              : ```julia</span>
+<span id="L472"><span class="lineNum">     472</span>              : LANDFIRE.list_downloads()</span>
+<span id="L473"><span class="lineNum">     473</span>              : ```</span>
+<span id="L474"><span class="lineNum">     474</span>              : &quot;&quot;&quot;</span>
+<span id="L475"><span class="lineNum">     475</span> <span class="tlaGNC tlaBgGNC">           1 : function list_downloads()</span></span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">           1 :     d = dir()</span></span>
+<span id="L477"><span class="lineNum">     477</span> <span class="tlaGNC">           1 :     if !isdir(d)</span></span>
+<span id="L478"><span class="lineNum">     478</span> <span class="tlaGNC">           1 :         return String[]</span></span>
+<span id="L479"><span class="lineNum">     479</span>              :     end</span>
+<span id="L480"><span class="lineNum">     480</span> <span class="tlaUNC tlaBgUNC">           0 :     return readdir(d)</span></span>
+<span id="L481"><span class="lineNum">     481</span>              : end</span>
+<span id="L482"><span class="lineNum">     482</span>              : </span>
+<span id="L483"><span class="lineNum">     483</span>              : #-----------------------------------------------------------------------------# Convenience Functions</span>
+<span id="L484"><span class="lineNum">     484</span>              : </span>
+<span id="L485"><span class="lineNum">     485</span>              : &quot;&quot;&quot;</span>
+<span id="L486"><span class="lineNum">     486</span>              :     fuel_products()</span>
+<span id="L487"><span class="lineNum">     487</span>              : </span>
+<span id="L488"><span class="lineNum">     488</span>              : List all fuel-related products.</span>
+<span id="L489"><span class="lineNum">     489</span>              : &quot;&quot;&quot;</span>
+<span id="L490"><span class="lineNum">     490</span> <span class="tlaGNC tlaBgGNC">           1 : fuel_products() = products(category=:fuel)</span></span>
+<span id="L491"><span class="lineNum">     491</span>              : </span>
+<span id="L492"><span class="lineNum">     492</span>              : &quot;&quot;&quot;</span>
+<span id="L493"><span class="lineNum">     493</span>              :     vegetation_products()</span>
+<span id="L494"><span class="lineNum">     494</span>              : </span>
+<span id="L495"><span class="lineNum">     495</span>              : List all vegetation-related products.</span>
+<span id="L496"><span class="lineNum">     496</span>              : &quot;&quot;&quot;</span>
+<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">           1 : vegetation_products() = products(category=:vegetation)</span></span>
+<span id="L498"><span class="lineNum">     498</span>              : </span>
+<span id="L499"><span class="lineNum">     499</span>              : &quot;&quot;&quot;</span>
+<span id="L500"><span class="lineNum">     500</span>              :     topographic_products()</span>
+<span id="L501"><span class="lineNum">     501</span>              : </span>
+<span id="L502"><span class="lineNum">     502</span>              : List all topographic products.</span>
+<span id="L503"><span class="lineNum">     503</span>              : &quot;&quot;&quot;</span>
+<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">           1 : topographic_products() = products(category=:topographic)</span></span>
+<span id="L505"><span class="lineNum">     505</span>              : </span>
+<span id="L506"><span class="lineNum">     506</span>              : &quot;&quot;&quot;</span>
+<span id="L507"><span class="lineNum">     507</span>              :     fire_regime_products()</span>
+<span id="L508"><span class="lineNum">     508</span>              : </span>
+<span id="L509"><span class="lineNum">     509</span>              : List all fire regime products.</span>
+<span id="L510"><span class="lineNum">     510</span>              : &quot;&quot;&quot;</span>
+<span id="L511"><span class="lineNum">     511</span> <span class="tlaGNC">           1 : fire_regime_products() = products(category=:fire_regime)</span></span>
+<span id="L512"><span class="lineNum">     512</span>              : </span>
+<span id="L513"><span class="lineNum">     513</span>              : &quot;&quot;&quot;</span>
+<span id="L514"><span class="lineNum">     514</span>              :     disturbance_products()</span>
+<span id="L515"><span class="lineNum">     515</span>              : </span>
+<span id="L516"><span class="lineNum">     516</span>              : List all disturbance products.</span>
+<span id="L517"><span class="lineNum">     517</span>              : &quot;&quot;&quot;</span>
+<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">           1 : disturbance_products() = products(category=:disturbance)</span></span>
+<span id="L519"><span class="lineNum">     519</span>              : </span>
+<span id="L520"><span class="lineNum">     520</span>              : end # module</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com//linux-test-project/lcov" target="_parent">LCOV version 2.0-1</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>
