@@ -210,7 +210,7 @@ function _load_file(data_dir::String, dataset::Symbol; filename::Union{String,No
         error("File not found: $filepath. Download the dataset first.")
     end
 
-    return GeoJSON.read(filepath)
+    return GeoJSON.read(read(filepath, String))
 end
 
 """
