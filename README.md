@@ -1,8 +1,9 @@
-# WildfireData.jl
+[![CI](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml)
+[![Docs Build](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml)
+[![Stable Docs](https://img.shields.io/badge/docs-stable-blue)](https://RallypointOne.github.io/WildfireData.jl/stable/)
+[![Dev Docs](https://img.shields.io/badge/docs-dev-blue)](https://RallypointOne.github.io/WildfireData.jl/dev/)
 
-[![Build Status](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Docs Build](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/docs.yml/badge.svg)](https://github.com/RallypointOne/WildfireData.jl/actions/workflows/docs.yml)
-[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://rallypointone.github.io/WildfireData.jl/)
+# WildfireData.jl
 
 A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.
 
@@ -37,4 +38,4 @@ WFIGS.info(:current_perimeters)
 data = WFIGS.download(:current_perimeters; limit=10)
 ```
 
-See the [documentation](https://rallypointone.github.io/WildfireData.jl/) for more details.
+See the [documentation](https://RallypointOne.github.io/WildfireData.jl/stable/) for more details.

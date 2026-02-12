@@ -1,77 +1,45 @@
 project:
-  type: website
+  type: book
   output-dir: _site
-  render:
-    - index.qmd
-    - getting-started.qmd
-    - modules/wfigs.qmd
-    - modules/irwin.qmd
-    - modules/fpa-fod.qmd
-    - modules/mtbs.qmd
-    - modules/firms.qmd
-    - modules/landfire.qmd
 
-website:
+engine: julia
+julia:
+  project: "."
+
+book:
   title: "WildfireData.jl"
-  description: "Julia package for accessing wildfire and fire-related geospatial data"
-  repo-url: https://github.com/joshday/WildfireData.jl
-  repo-actions: [issue]
   navbar:
-    background: "#8B0000"
-    foreground: white
-    left:
-      - href: index.qmd
-        text: Home
-      - href: getting-started.qmd
-        text: Getting Started
-      - text: Modules
-        menu:
-          - href: modules/wfigs.qmd
-            text: WFIGS
-          - href: modules/irwin.qmd
-            text: IRWIN
-          - href: modules/fpa-fod.qmd
-            text: FPA-FOD
-          - href: modules/mtbs.qmd
-            text: MTBS
-          - href: modules/firms.qmd
-            text: FIRMS
-          - href: modules/landfire.qmd
-            text: LANDFIRE
     right:
+      - icon: star
+        href: https://github.com/RallypointOne/WildfireData.jl/stargazers
+        text: "Star"
       - icon: github
-        href: https://github.com/joshday/WildfireData.jl
-
-  sidebar:
-    style: docked
-    search: true
-    collapse-level: 0
-    contents:
-      - section: "**Overview**"
-        contents:
-          - index.qmd
-          - getting-started.qmd
-      - section: "**Data Modules**"
-        contents:
-          - modules/wfigs.qmd
-          - modules/irwin.qmd
-          - modules/fpa-fod.qmd
-          - modules/mtbs.qmd
-          - modules/firms.qmd
-          - modules/landfire.qmd
-
-  page-footer:
-    center: "WildfireData.jl - Access wildfire data from Julia"
+        href: https://github.com/RallypointOne/WildfireData.jl
+  chapters:
+    - part: "Docs"
+      chapters:
+        - index.qmd
+        - getting-started.qmd
+        - api.qmd
+    - part: "Data Modules"
+      chapters:
+        - modules/wfigs.qmd
+        - modules/irwin.qmd
+        - modules/fpa-fod.qmd
+        - modules/mtbs.qmd
+        - modules/firms.qmd
+        - modules/landfire.qmd
+    - part: "Reference"
+      chapters:
+        - changelog.qmd
+        - coverage.qmd
 
 format:
   html:
+    css: styles.css
+    number-sections: false
     theme:
       light: flatly
       dark: darkly
-    toc: true
-    toc-depth: 3
-    code-copy: true
-    code-overflow: wrap
-
-execute:
-  freeze: auto
+    include-after-body:
+      - file: _version-selector.html
