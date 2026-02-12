@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-12 16:52:18</td>
+            <td class="headerValue">2026-02-12 17:08:35</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -272,7 +272,7 @@
 <span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           3 :         error(&quot;File not found: $filepath. Download the dataset first.&quot;)</span></span>
 <span id="L211"><span class="lineNum">     211</span>              :     end</span>
 <span id="L212"><span class="lineNum">     212</span>              : </span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           3 :     return GeoJSON.read(filepath)</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           3 :     return GeoJSON.read(read(filepath, String))</span></span>
 <span id="L214"><span class="lineNum">     214</span>              : end</span>
 <span id="L215"><span class="lineNum">     215</span>              : </span>
 <span id="L216"><span class="lineNum">     216</span>              : &quot;&quot;&quot;</span>
