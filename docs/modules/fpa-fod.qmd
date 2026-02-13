@@ -127,6 +127,33 @@ FPA_FOD.GENERAL_CAUSES
 FPA_FOD.CAUSE_CLASSIFICATIONS
 ```
 
+## Plot Example
+
+::: {.callout-note}
+This example requires the FPA-FOD database (~214 MB). Run `FPA_FOD.download_database()` first.
+:::
+
+```{julia}
+#| eval: false
+using WildfireData.FPA_FOD
+using CairoMakie
+
+causes = FPA_FOD.causes()
+
+labels = [string(row.cause) for row in causes]
+counts = [row.count for row in causes]
+
+order = sortperm(counts)
+labels = labels[order]
+counts = counts[order]
+
+fig = Figure(size=(800, 500))
+ax = Axis(fig[1, 1], title="FPA-FOD: Fire Counts by Cause (1992-2020)",
+    xlabel="Number of Fires", yticks=(1:length(labels), labels))
+barplot!(ax, 1:length(counts), counts, direction=:x, color=:darkorange)
+fig
+```
+
 ## API Reference
 
 ### Database Functions

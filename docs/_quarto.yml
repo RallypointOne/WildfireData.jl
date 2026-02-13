@@ -21,8 +21,6 @@ book:
         - index.qmd
         - getting-started.qmd
         - api.qmd
-    - part: "Data Modules"
-      chapters:
         - modules/wfigs.qmd
         - modules/irwin.qmd
         - modules/fpa-fod.qmd

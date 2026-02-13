@@ -90,6 +90,30 @@ println("Type: $(typeof(geom))")
 ```
 
 
+## Plot Example
+
+```{julia}
+using WildfireData.WFIGS
+using GeoJSON, CairoMakie
+import JSON3
+CairoMakie.activate!()
+
+data = WFIGS.download(:historic_geomac_2018, limit=100, verbose=false)
+fc = GeoJSON.read(JSON3.write(data))
+
+fig = Figure(size=(800, 500))
+ax = Axis(fig[1, 1], title="GeoMAC 2018 Fire Perimeters (first 100)",
+    xlabel="Longitude", ylabel="Latitude")
+
+for feature in fc
+    geom = GeoJSON.geometry(feature)
+    isnothing(geom) && continue
+    poly!(ax, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
+end
+
+fig
+```
+
 ## API Reference
 
 ### Functions

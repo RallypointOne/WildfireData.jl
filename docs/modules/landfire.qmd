@@ -142,6 +142,36 @@ url = LANDFIRE.download_url(:FBFM40, :conus, :LF2024)
 LANDFIRE.list_downloads()
 ```
 
+## Plot Example
+
+```{julia}
+using WildfireData
+using CairoMakie
+CairoMakie.activate!()
+
+prods = LANDFIRE.products()
+
+category_counts = Dict{Symbol, Int}()
+for (_, v) in prods
+    cat = v.category
+    category_counts[cat] = get(category_counts, cat, 0) + 1
+end
+
+cats = collect(keys(category_counts))
+counts = [category_counts[c] for c in cats]
+labels = [replace(string(c), "_" => " ") for c in cats]
+
+order = sortperm(counts)
+labels = labels[order]
+counts = counts[order]
+
+fig = Figure(size=(700, 400))
+ax = Axis(fig[1, 1], title="LANDFIRE Products by Category",
+    xlabel="Number of Products", yticks=(1:length(labels), labels))
+barplot!(ax, 1:length(counts), counts, direction=:x, color=:seagreen)
+fig
+```
+
 ## API Reference
 
 ### Functions

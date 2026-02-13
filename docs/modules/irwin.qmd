@@ -93,6 +93,40 @@ Common fields in the incident data:
 - `FireCause` - Cause of the fire
 - `PercentContained` - Containment percentage
 
+## Plot Example
+
+```{julia}
+using WildfireData.IRWIN
+using CairoMakie
+CairoMakie.activate!()
+
+data = IRWIN.download(:fire_occurrence, limit=200, verbose=false)
+
+lons = Float64[]
+lats = Float64[]
+acres = Float64[]
+
+for feature in data.features
+    props = feature.properties
+    geom = feature.geometry
+    isnothing(geom) && continue
+    a = get(props, :IncidentSize, nothing)
+    (isnothing(a) || a <= 0) && continue
+    push!(lons, geom.coordinates[1])
+    push!(lats, geom.coordinates[2])
+    push!(acres, Float64(a))
+end
+
+fig = Figure(size=(800, 500))
+ax = Axis(fig[1, 1], title="IRWIN Fire Occurrence (first 200 records)",
+    xlabel="Longitude", ylabel="Latitude")
+if !isempty(lons)
+    sc = scatter!(ax, lons, lats, color=log10.(acres), colormap=:inferno, markersize=6)
+    Colorbar(fig[1, 2], sc, label="log₁₀(IncidentSize)")
+end
+fig
+```
+
 ## API Reference
 
 ### Functions

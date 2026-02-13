@@ -16,3 +16,4 @@ docs/coverage/
 **/*.quarto_ipynb
 *.html
 !docs/_version-selector.html
+gmt.history

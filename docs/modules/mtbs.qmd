@@ -112,6 +112,36 @@ path = MTBS.download_shapefile(:burn_boundaries_gdb)
 | `:fire_occurrence_shp` | Fire occurrence points shapefile (~3 MB) |
 | `:fire_occurrence_gdb` | Fire occurrence points geodatabase (~2 MB) |
 
+## Plot Example
+
+```{julia}
+using WildfireData
+using Dates, CairoMakie
+CairoMakie.activate!()
+
+data = MTBS.largest_fires(50)
+
+years = Int[]
+acres = Float64[]
+
+for feature in data
+    props = feature.properties
+    a = get(props, :ACRES, nothing)
+    d = get(props, :IG_DATE, nothing)
+    (isnothing(a) || isnothing(d) || a <= 0) && continue
+    push!(years, year(unix2datetime(d / 1000)))
+    push!(acres, Float64(a))
+end
+
+fig = Figure(size=(800, 500))
+ax = Axis(fig[1, 1], title="MTBS: 50 Largest Fires on Record",
+    xlabel="Year", ylabel="Acres")
+if !isempty(years)
+    scatter!(ax, years, acres, markersize=sqrt.(acres) ./ 80, color=(:firebrick, 0.6))
+end
+fig
+```
+
 ## API Reference
 
 ### Functions
