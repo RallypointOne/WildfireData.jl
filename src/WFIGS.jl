@@ -99,7 +99,7 @@ WFIGS.info(:current_perimeters)
 info(dataset::Symbol) = _info(DATASETS, dataset, "WFIGS")
 
 """
-    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, verbose=true)
+    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, bbox=nothing, verbose=true)
 
 Download a WFIGS dataset and return it as parsed GeoJSON.
 
@@ -108,10 +108,16 @@ Download a WFIGS dataset and return it as parsed GeoJSON.
 - `where::String`: SQL-like where clause (default: "1=1" for all records)
 - `fields::String`: Comma-separated field names or "*" for all
 - `limit::Int`: Maximum number of features to return (default: unlimited)
+- `bbox`: Bounding box for spatial filtering, as `(west, south, east, north)` tuple or `"west,south,east,north"` string
 - `verbose::Bool`: Print progress information
 
+# Common Fields
+- `:current_perimeters`: `IncidentName`, `GISAcres`, `CreateDate`, `DateCurrent`, `FeatureCategory`, `MapMethod`
+- `:current_locations`: `IncidentName`, `DailyAcres`, `PercentContained`, `FireDiscoveryDateTime`, `POOState`
+- Use `WFIGS.fields(dataset)` to see all available fields.
+
 # Returns
-A `JSON3.Object` containing the GeoJSON FeatureCollection.
+A `GeoJSON.FeatureCollection`.
 
 # Examples
 ```julia
@@ -123,6 +129,9 @@ data = WFIGS.download(:current_perimeters, where="GISAcres > 1000")
 
 # Download with limit
 data = WFIGS.download(:current_locations, limit=10)
+
+# Download fires within a bounding box (California)
+data = WFIGS.download(:current_perimeters, bbox=(-125, 32, -114, 42))
 
 # Download specific fields
 data = WFIGS.download(:current_perimeters, fields="IncidentName,GISAcres,CreateDate")

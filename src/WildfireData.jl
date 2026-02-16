@@ -64,11 +64,16 @@ base_layer_url(d::ArcGISDataset) = "$(d.base_url)/$(d.service)/FeatureServer/$(d
 #-----------------------------------------------------------------------------# Common URL Builder
 
 """
-    query_url(d::AbstractDataset; where="1=1", outfields="*", limit=nothing, format="geojson")
+    query_url(d::AbstractDataset; where="1=1", outfields="*", limit=nothing, format="geojson", bbox=nothing)
 
 Build a query URL for the dataset.
+
+# Arguments
+- `bbox`: Bounding box as `(west, south, east, north)` tuple or "west,south,east,north" string for spatial filtering.
 """
-function query_url(d::AbstractDataset; where::String="1=1", outfields::String="*", limit::Union{Int,Nothing}=nothing, format::String="geojson")
+function query_url(d::AbstractDataset; where::String="1=1", outfields::String="*",
+                   limit::Union{Int,Nothing}=nothing, format::String="geojson",
+                   bbox::Union{NTuple{4,Real},String,Nothing}=nothing)
     url = base_query_url(d)
     params = [
         "where" => HTTP.escapeuri(where),
@@ -78,6 +83,13 @@ function query_url(d::AbstractDataset; where::String="1=1", outfields::String="*
     ]
     if !isnothing(limit)
         push!(params, "resultRecordCount" => string(limit))
+    end
+    if !isnothing(bbox)
+        envelope = bbox isa String ? bbox : join(bbox, ",")
+        push!(params, "geometry" => envelope)
+        push!(params, "geometryType" => "esriGeometryEnvelope")
+        push!(params, "inSR" => "4326")
+        push!(params, "spatialRel" => "esriSpatialRelIntersects")
     end
     return url * "?" * join(["$k=$v" for (k, v) in params], "&")
 end
@@ -121,13 +133,14 @@ end
 Download a dataset and return it as a GeoJSON FeatureCollection. Used internally by submodules.
 """
 function _download(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, module_name::String;
-                   where::String="1=1", fields::String="*", limit::Union{Int,Nothing}=nothing, verbose::Bool=true)
+                   where::String="1=1", fields::String="*", limit::Union{Int,Nothing}=nothing,
+                   bbox::Union{NTuple{4,Real},String,Nothing}=nothing, verbose::Bool=true)
     if !haskey(all_datasets, dataset)
         error("Unknown dataset: $dataset. Use `$module_name.datasets()` to list available datasets.")
     end
 
     d = all_datasets[dataset]
-    url = query_url(d; where=where, outfields=fields, limit=limit)
+    url = query_url(d; where=where, outfields=fields, limit=limit, bbox=bbox)
 
     verbose && println("Downloading: $(d.name)")
     verbose && println("URL: $url")

@@ -80,7 +80,7 @@ IRWIN.info(:fire_occurrence)
 info(dataset::Symbol) = _info(DATASETS, dataset, "IRWIN")
 
 """
-    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, verbose=true)
+    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, bbox=nothing, verbose=true)
 
 Download an IRWIN dataset and return it as parsed GeoJSON.
 
@@ -89,10 +89,16 @@ Download an IRWIN dataset and return it as parsed GeoJSON.
 - `where::String`: SQL-like where clause (default: "1=1" for all records)
 - `fields::String`: Comma-separated field names or "*" for all
 - `limit::Int`: Maximum number of features to return (default: unlimited)
+- `bbox`: Bounding box for spatial filtering, as `(west, south, east, north)` tuple or `"west,south,east,north"` string
 - `verbose::Bool`: Print progress information
 
+# Common Fields
+- `:fire_occurrence`: `IncidentName`, `FireDiscoveryDateTime`, `DailyAcres`, `POOState`, `POOCounty`, `FireCause`
+- `:usa_current_incidents`: `IncidentName`, `DailyAcres`, `PercentContained`, `FireDiscoveryDateTime`
+- Use `IRWIN.fields(dataset)` to see all available fields.
+
 # Returns
-A `JSON3.Object` containing the GeoJSON FeatureCollection.
+A `GeoJSON.FeatureCollection`.
 
 # Examples
 ```julia
@@ -104,6 +110,9 @@ data = IRWIN.download(:fire_occurrence, where="POOState = 'US-CA'", limit=100)
 
 # Download large fires only
 data = IRWIN.download(:usa_current_incidents, where="DailyAcres > 1000")
+
+# Download fires within a bounding box (Western US)
+data = IRWIN.download(:usa_current_incidents, bbox=(-125, 31, -102, 49))
 ```
 """
 download(dataset::Symbol; kwargs...) = _download(DATASETS, dataset, "IRWIN"; kwargs...)

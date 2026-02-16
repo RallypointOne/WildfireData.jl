@@ -100,6 +100,37 @@ url = LANDFIRE.wcs_url(:conus, :LF2024)
 # LANDFIRE.download_product(:FBFM40, :conus, :LF2024)
 ```
 
+## Return Types
+
+Different modules return different data types depending on the underlying data source:
+
+| Module | Return Type | Notes |
+|--------|-------------|-------|
+| WFIGS | `GeoJSON.FeatureCollection` | GeoJSON with geometry |
+| IRWIN | `GeoJSON.FeatureCollection` | GeoJSON with geometry |
+| MTBS | `GeoJSON.FeatureCollection` | GeoJSON with geometry |
+| FPA_FOD | `Vector{NamedTuple}` | Tabular rows from SQLite |
+| FIRMS | `DataFrame` | CSV data from NASA API |
+| LANDFIRE | File path (`String`) | Downloads GeoTIFF rasters |
+
+For GeoJSON results, access feature properties like:
+
+```julia
+data = WFIGS.download(:current_perimeters, limit=5)
+for feature in data
+    println(feature.properties.IncidentName)
+end
+```
+
+For FPA_FOD results, access fields directly on the NamedTuples:
+
+```julia
+fires = FPA_FOD.fires(state="CA", year=2020)
+for fire in fires
+    println(fire.FIRE_NAME, ": ", fire.FIRE_SIZE, " acres")
+end
+```
+
 ## Data Storage
 
 Downloaded data is stored in a scratch space managed by the Scratch.jl package. You can find the location with:
@@ -129,6 +160,25 @@ fires = FPA_FOD.fires(state="CA", year=2020, min_size=1000)
 
 # FIRMS: Region and time filters
 df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:western_us, days=3)
+```
+
+### Spatial Filtering
+
+WFIGS, IRWIN, and MTBS support bounding box filtering via the `bbox` parameter:
+
+```julia
+# Bounding box as (west, south, east, north) tuple
+data = WFIGS.download(:current_perimeters, bbox=(-125, 32, -114, 42))
+
+# Or as a string
+data = IRWIN.download(:usa_current_incidents, bbox="-125,32,-114,42")
+```
+
+FIRMS uses named regions or explicit bounding boxes via the `area`/`region` parameters:
+
+```julia
+df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:california, days=1)
+df = FIRMS.download(:MODIS_NRT, area="-120,35,-115,40", days=2)
 ```
 
 ### Counting Records

@@ -138,19 +138,30 @@ function info(dataset::Symbol)
 end
 
 """
-    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, verbose=true)
+    download(dataset::Symbol; where="1=1", fields="*", limit=nothing, bbox=nothing, verbose=true)
 
 Download an MTBS dataset and return it as parsed GeoJSON.
+
+!!! note "MapServer Record Limit"
+    The MTBS MapServer enforces a maximum of 2000 records per request. If your query
+    matches more than 2000 records, results will be silently truncated. Use `MTBS.count()`
+    to check the total before downloading, and use `where` filters or `limit` to stay
+    within bounds. For the full dataset, use `MTBS.download_shapefile()` instead.
 
 # Arguments
 - `dataset::Symbol`: The dataset key (`:fire_occurrence` or `:burn_boundaries`)
 - `where::String`: SQL-like where clause (default: "1=1" for all records)
 - `fields::String`: Comma-separated field names or "*" for all
-- `limit::Int`: Maximum number of features to return (default: unlimited, but MapServer has 2000 record limit)
+- `limit::Int`: Maximum number of features to return (default: server max of 2000)
+- `bbox`: Bounding box for spatial filtering, as `(west, south, east, north)` tuple or `"west,south,east,north"` string
 - `verbose::Bool`: Print progress information
 
+# Common Fields
+- `:fire_occurrence`: `FIRE_NAME`, `YEAR`, `ACRES`, `FIRE_TYPE`, `IG_DATE`, `MTBS_ID`
+- `:burn_boundaries`: `FIRE_NAME`, `YEAR`, `ACRES`, `IG_DATE`, `MTBS_ID`
+
 # Returns
-A `JSON3.Object` containing the GeoJSON FeatureCollection.
+A `GeoJSON.FeatureCollection`.
 
 # Examples
 ```julia
@@ -165,6 +176,9 @@ data = MTBS.download(:burn_boundaries, where="ACRES > 10000", limit=50)
 
 # Download fires from a specific year
 data = MTBS.download(:fire_occurrence, where="YEAR = 2020", limit=100)
+
+# Download fires within a bounding box (Colorado)
+data = MTBS.download(:fire_occurrence, bbox=(-109, 37, -102, 41), limit=500)
 ```
 """
 download(dataset::Symbol; kwargs...) = _download(DATASETS, dataset, "MTBS"; kwargs...)
@@ -309,12 +323,14 @@ end
 
 Query fire occurrence points with optional filters.
 
+Note: The MapServer enforces a maximum of 2000 records per request.
+
 # Arguments
 - `year::Int`: Filter by year (1984-2024)
 - `min_acres::Real`: Minimum fire size in acres
 - `max_acres::Real`: Maximum fire size in acres
 - `fire_type::String`: Fire type (e.g., "Wildfire", "Prescribed Fire")
-- `limit::Int`: Maximum number of records (default: 1000, max: 2000)
+- `limit::Int`: Maximum number of records (default: 1000, server max: 2000)
 
 # Returns
 A `JSON3.Object` containing the GeoJSON FeatureCollection.
@@ -351,11 +367,13 @@ end
 
 Query burn area boundaries with optional filters.
 
+Note: The MapServer enforces a maximum of 2000 records per request.
+
 # Arguments
 - `year::Int`: Filter by year (1984-2024)
 - `min_acres::Real`: Minimum fire size in acres
 - `max_acres::Real`: Maximum fire size in acres
-- `limit::Int`: Maximum number of records (default: 100, max: 2000)
+- `limit::Int`: Maximum number of records (default: 100, server max: 2000)
 
 # Returns
 A `JSON3.Object` containing the GeoJSON FeatureCollection.

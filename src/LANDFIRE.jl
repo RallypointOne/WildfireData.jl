@@ -448,12 +448,16 @@ function download_product(product::Symbol, region::Symbol, version::Symbol;
     verbose && println("Region: $(r.name)")
     verbose && println("Version: LF $(v.year)")
     verbose && println("URL: $url")
-    verbose && println("Warning: LANDFIRE files can be very large (hundreds of MB to GB)")
-
-    # Check if URL is valid first
+    # Check if URL is valid first and get file size
     response = HTTP.head(url; status_exception=false)
     if response.status != 200
         error("Download not available for this product/region/version combination. HTTP status: $(response.status)")
+    end
+
+    cl = HTTP.header(response, "Content-Length", "")
+    if verbose && !isempty(cl)
+        size_mb = round(parse(Int, cl) / 1024^2, digits=1)
+        println("File size: ~$(size_mb) MB")
     end
 
     Downloads.download(url, filepath)
