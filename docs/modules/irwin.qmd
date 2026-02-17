@@ -97,7 +97,8 @@ Common fields in the incident data:
 
 ```{julia}
 using WildfireData.IRWIN
-using CairoMakie
+using CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
 CairoMakie.activate!()
 
 data = IRWIN.download(:fire_occurrence, limit=200, verbose=false)
@@ -117,14 +118,19 @@ for feature in data.features
     push!(acres, Float64(a))
 end
 
-fig = Figure(size=(800, 500))
-ax = Axis(fig[1, 1], title="IRWIN Fire Occurrence (first 200 records)",
-    xlabel="Longitude", ylabel="Latitude")
 if !isempty(lons)
-    sc = scatter!(ax, lons, lats, color=log10.(acres), colormap=:inferno, markersize=6)
-    Colorbar(fig[1, 2], sc, label="log₁₀(IncidentSize)")
+    pad = 2.0
+    ext = Extent(; X=(minimum(lons) - pad, maximum(lons) + pad),
+                   Y=(minimum(lats) - pad, maximum(lats) + pad))
+    m = Tyler.Map(ext;
+        size = (900, 600),
+        axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+        provider = TileProviders.OpenStreetMap(:Mapnik),
+    )
+    sc = scatter!(m.axis, lons, lats, color=log10.(acres), colormap=:inferno, markersize=6)
+    Colorbar(m.figure[1, 2], sc, label="log₁₀(IncidentSize)")
+    m.figure
 end
-fig
 ```
 
 ## API Reference

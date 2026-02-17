@@ -116,30 +116,42 @@ path = MTBS.download_shapefile(:burn_boundaries_gdb)
 
 ```{julia}
 using WildfireData
-using Dates, CairoMakie
+using CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
 CairoMakie.activate!()
 
 data = MTBS.largest_fires(50)
 
-years = Int[]
+lons = Float64[]
+lats = Float64[]
 acres = Float64[]
 
 for feature in data
     props = feature.properties
+    geom = feature.geometry
+    isnothing(geom) && continue
     a = get(props, :ACRES, nothing)
-    d = get(props, :IG_DATE, nothing)
-    (isnothing(a) || isnothing(d) || a <= 0) && continue
-    push!(years, year(unix2datetime(d / 1000)))
+    (isnothing(a) || a <= 0) && continue
+    push!(lons, geom.coordinates[1])
+    push!(lats, geom.coordinates[2])
     push!(acres, Float64(a))
 end
 
-fig = Figure(size=(800, 500))
-ax = Axis(fig[1, 1], title="MTBS: 50 Largest Fires on Record",
-    xlabel="Year", ylabel="Acres")
-if !isempty(years)
-    scatter!(ax, years, acres, markersize=sqrt.(acres) ./ 80, color=(:firebrick, 0.6))
+if !isempty(lons)
+    pad = 2.0
+    ext = Extent(; X=(minimum(lons) - pad, maximum(lons) + pad),
+                   Y=(minimum(lats) - pad, maximum(lats) + pad))
+    m = Tyler.Map(ext;
+        size = (900, 600),
+        axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+        provider = TileProviders.OpenStreetMap(:Mapnik),
+    )
+    scatter!(m.axis, lons, lats,
+        markersize=sqrt.(acres) ./ 80,
+        color=(:firebrick, 0.6),
+        strokecolor=:black, strokewidth=0.5)
+    m.figure
 end
-fig
 ```
 
 ## API Reference

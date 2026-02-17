@@ -8,6 +8,10 @@ julia:
 
 book:
   title: "WildfireData.jl"
+  search:
+    location: sidebar
+    keyboard-shortcut:
+      - "/"
   navbar:
     right:
       - icon: star
@@ -20,17 +24,25 @@ book:
       chapters:
         - index.qmd
         - getting-started.qmd
-        - api.qmd
         - modules/wfigs.qmd
         - modules/irwin.qmd
         - modules/fpa-fod.qmd
         - modules/mtbs.qmd
         - modules/firms.qmd
         - modules/landfire.qmd
+    - part: "API"
+      chapters:
+        - api.qmd
     - part: "Reference"
       chapters:
         - changelog.qmd
         - coverage.qmd
+
+  page-footer:
+    center: "Built on __BUILD_DATE__"
+
+language:
+  search-text-placeholder: "Search  (/)"
 
 format:
   html:
@@ -39,5 +51,6 @@ format:
     theme:
       light: flatly
       dark: darkly
+    respect-user-color-scheme: true
     include-after-body:
       - file: _version-selector.html

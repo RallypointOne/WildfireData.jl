@@ -94,24 +94,28 @@ println("Type: $(typeof(geom))")
 
 ```{julia}
 using WildfireData.WFIGS
-using GeoJSON, CairoMakie
+using GeoJSON, CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
 import JSON3
 CairoMakie.activate!()
 
 data = WFIGS.download(:historic_geomac_2018, limit=100, verbose=false)
 fc = GeoJSON.read(JSON3.write(data))
 
-fig = Figure(size=(800, 500))
-ax = Axis(fig[1, 1], title="GeoMAC 2018 Fire Perimeters (first 100)",
-    xlabel="Longitude", ylabel="Latitude")
+ext = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))
+m = Tyler.Map(ext;
+    size = (900, 600),
+    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+    provider = TileProviders.OpenStreetMap(:Mapnik),
+)
 
 for feature in fc
     geom = GeoJSON.geometry(feature)
     isnothing(geom) && continue
-    poly!(ax, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
+    poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
 end
 
-fig
+m.figure
 ```
 
 ## API Reference

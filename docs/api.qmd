@@ -1,6 +1,8 @@
 ---
 title: "API"
 engine: julia
+toc: true
+toc-depth: 4
 ---
 
 ```{julia}

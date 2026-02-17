@@ -166,25 +166,25 @@ FIRMS.regions()
 
 ## Plot Example
 
-::: {.callout-note}
-This example requires a NASA FIRMS API key. See the [API Key Setup](#api-key-setup) section above.
-:::
-
 ```{julia}
-#| eval: false
 using WildfireData
-using CairoMakie
+using CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
+CairoMakie.activate!()
 
 df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:conus, days=1, verbose=false)
 
 if !isempty(df)
-    fig = Figure(size=(900, 500))
-    ax = Axis(fig[1, 1], title="FIRMS VIIRS Detections (CONUS, last 24h)",
-        xlabel="Longitude", ylabel="Latitude")
-    sc = scatter!(ax, df.longitude, df.latitude, color=df.frp,
+    ext = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))
+    m = Tyler.Map(ext;
+        size = (900, 600),
+        axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+        provider = TileProviders.OpenStreetMap(:Mapnik),
+    )
+    sc = scatter!(m.axis, df.longitude, df.latitude, color=df.frp,
         colormap=:hot, markersize=4)
-    Colorbar(fig[1, 2], sc, label="Fire Radiative Power (MW)")
-    fig
+    Colorbar(m.figure[1, 2], sc, label="Fire Radiative Power (MW)")
+    m.figure
 end
 ```
 

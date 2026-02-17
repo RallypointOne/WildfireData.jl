@@ -1,6 +1,10 @@
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+Extents = "411431e0-e8b7-467b-b5e0-f676ba4f2910"
 GeoInterface = "cf35fbd7-0cd7-5166-be24-54bfbe79505f"
+GeoMakie = "db073c08-6b98-4ee5-b6a4-5efafb3259c6"
 LocalCoverage = "5f6e1e16-694c-5876-87ef-16b5274f298e"
+TileProviders = "263fe934-28e1-4ae9-998a-c2629c5fede6"
+Tyler = "e170d443-b9d6-418a-9ee8-061e966341ef"
 WildfireData = "c50625c8-1a95-45e7-9f30-e55dbed7e5b4"
 ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
