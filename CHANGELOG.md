@@ -1,5 +1,17 @@
 ## Unreleased
 
+## v0.0.2
+
+### Documentation
+- Add interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules
+- Improve docstrings and module exports
+- Update CI workflows and docs configuration from package template
+- Add versioned docs deployment with backfill workflow
+- Add dark mode support and search improvements to docs site
+
+### Fixes
+- Fix GeoJSON.read to pass file contents as string
+
 ## v0.0.1
 
 Initial release of WildfireData.jl.
