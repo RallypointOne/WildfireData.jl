@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>FPA-FOD – WildfireData.jl</title>
+<title>HMS – WildfireData.jl</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../modules/mtbs.html" rel="next">
-<link href="../modules/irwin.html" rel="prev">
+<link href="../modules/gwis.html" rel="next">
+<link href="../modules/cwfis.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -320,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/fpa-fod.html"><span class="chapter-title">FPA-FOD</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/hms.html"><span class="chapter-title">HMS</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -371,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../modules/fpa-fod.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">FPA-FOD</span></a>
+  <a href="../modules/fpa-fod.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">FPA-FOD</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -401,7 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../modules/hms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">HMS</span></a>
+  <a href="../modules/hms.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">HMS</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -464,26 +464,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#database-setup" id="toc-database-setup" class="nav-link" data-scroll-target="#database-setup">Database Setup</a></li>
-  <li><a href="#basic-queries" id="toc-basic-queries" class="nav-link" data-scroll-target="#basic-queries">Basic Queries</a></li>
-  <li><a href="#querying-fires" id="toc-querying-fires" class="nav-link" data-scroll-target="#querying-fires">Querying Fires</a>
-  <ul class="collapse">
-  <li><a href="#using-the-fires-function" id="toc-using-the-fires-function" class="nav-link" data-scroll-target="#using-the-fires-function">Using the <code>fires()</code> Function</a></li>
-  <li><a href="#using-raw-sql" id="toc-using-raw-sql" class="nav-link" data-scroll-target="#using-raw-sql">Using Raw SQL</a></li>
-  </ul></li>
-  <li><a href="#convenience-functions" id="toc-convenience-functions" class="nav-link" data-scroll-target="#convenience-functions">Convenience Functions</a></li>
-  <li><a href="#database-schema" id="toc-database-schema" class="nav-link" data-scroll-target="#database-schema">Database Schema</a>
-  <ul class="collapse">
-  <li><a href="#key-fields-in-the-fires-table" id="toc-key-fields-in-the-fires-table" class="nav-link" data-scroll-target="#key-fields-in-the-fires-table">Key Fields in the Fires Table</a></li>
-  </ul></li>
-  <li><a href="#fire-size-classes" id="toc-fire-size-classes" class="nav-link" data-scroll-target="#fire-size-classes">Fire Size Classes</a></li>
-  <li><a href="#constants" id="toc-constants" class="nav-link" data-scroll-target="#constants">Constants</a></li>
-  <li><a href="#plot-example" id="toc-plot-example" class="nav-link" data-scroll-target="#plot-example">Plot Example</a></li>
+  <li><a href="#available-products" id="toc-available-products" class="nav-link" data-scroll-target="#available-products">Available Products</a></li>
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage">Basic Usage</a></li>
+  <li><a href="#downloading-fire-points" id="toc-downloading-fire-points" class="nav-link" data-scroll-target="#downloading-fire-points">Downloading Fire Points</a></li>
+  <li><a href="#downloading-smoke-polygons" id="toc-downloading-smoke-polygons" class="nav-link" data-scroll-target="#downloading-smoke-polygons">Downloading Smoke Polygons</a></li>
+  <li><a href="#building-urls" id="toc-building-urls" class="nav-link" data-scroll-target="#building-urls">Building URLs</a></li>
+  <li><a href="#saving-and-loading-fire-point-files" id="toc-saving-and-loading-fire-point-files" class="nav-link" data-scroll-target="#saving-and-loading-fire-point-files">Saving and Loading Fire Point Files</a></li>
   <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API Reference</a>
   <ul class="collapse">
-  <li><a href="#database-functions" id="toc-database-functions" class="nav-link" data-scroll-target="#database-functions">Database Functions</a></li>
-  <li><a href="#query-functions" id="toc-query-functions" class="nav-link" data-scroll-target="#query-functions">Query Functions</a></li>
-  <li><a href="#summary-functions" id="toc-summary-functions" class="nav-link" data-scroll-target="#summary-functions">Summary Functions</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -492,10 +481,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/fpa-fod.html"><span class="chapter-title">FPA-FOD</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/hms.html"><span class="chapter-title">HMS</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">FPA-FOD</span></h1>
-<p class="subtitle lead">Fire Program Analysis Fire-Occurrence Database</p>
+<h1 class="title"><span class="chapter-title">HMS</span></h1>
+<p class="subtitle lead">NOAA Hazard Mapping System</p>
 </div>
 
 
@@ -514,244 +503,98 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>The FPA-FOD module provides access to the Fire Program Analysis Fire-Occurrence Database, a comprehensive SQLite database containing 2.3 million wildfire records from 1992-2020.</p>
-<p><strong>Data Source:</strong> <a href="https://www.fs.usda.gov/rds/archive/catalog/RDS-2013-0009.6">USDA Forest Service Research Data Archive</a></p>
-<p><strong>DOI:</strong> <a href="https://doi.org/10.2737/RDS-2013-0009.6">10.2737/RDS-2013-0009.6</a></p>
+<p>The HMS module provides access to NOAA’s Hazard Mapping System Fire and Smoke Product. HMS delivers daily satellite fire detection data and analyst-drawn smoke plume polygons produced by the NOAA/NESDIS Satellite Analysis Branch.</p>
+<p><strong>Data Source:</strong> <a href="https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS">NOAA HMS Archive</a></p>
+<p>No API key is required.</p>
 </section>
-<section id="database-setup" class="level2">
-<h2 class="anchored" data-anchor-id="database-setup">Database Setup</h2>
-<p>The database must be downloaded before use (~214 MB):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.FPA_FOD</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the database</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>FPA_FOD.<span class="fu">download_database</span>()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check database status</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>FPA_FOD.<span class="fu">info</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="basic-queries" class="level2">
-<h2 class="anchored" data-anchor-id="basic-queries">Basic Queries</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Count total records</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> FPA_FOD.<span class="fu">count</span>()  <span class="co"># ~2.3 million</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Count with filter</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> FPA_FOD.<span class="fu">count</span>(<span class="kw">where</span><span class="op">=</span><span class="st">"STATE = 'CA'"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> FPA_FOD.<span class="fu">count</span>(<span class="kw">where</span><span class="op">=</span><span class="st">"FIRE_YEAR = 2020"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> FPA_FOD.<span class="fu">count</span>(<span class="kw">where</span><span class="op">=</span><span class="st">"FIRE_SIZE &gt; 1000"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="querying-fires" class="level2">
-<h2 class="anchored" data-anchor-id="querying-fires">Querying Fires</h2>
-<section id="using-the-fires-function" class="level3">
-<h3 class="anchored" data-anchor-id="using-the-fires-function">Using the <code>fires()</code> Function</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get California fires from 2020</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fires <span class="op">=</span> FPA_FOD.<span class="fu">fires</span>(state<span class="op">=</span><span class="st">"CA"</span>, year<span class="op">=</span><span class="fl">2020</span>, limit<span class="op">=</span><span class="fl">100</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get large fires</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>fires <span class="op">=</span> FPA_FOD.<span class="fu">fires</span>(min_size<span class="op">=</span><span class="fl">10000</span>, limit<span class="op">=</span><span class="fl">100</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine filters</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fires <span class="op">=</span> FPA_FOD.<span class="fu">fires</span>(state<span class="op">=</span><span class="st">"CA"</span>, year<span class="op">=</span><span class="fl">2019</span>, cause<span class="op">=</span><span class="st">"Natural"</span>, limit<span class="op">=</span><span class="fl">50</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="using-raw-sql" class="level3">
-<h3 class="anchored" data-anchor-id="using-raw-sql">Using Raw SQL</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Execute any SQL query</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> FPA_FOD.<span class="fu">query</span>(<span class="st">"""</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT FIRE_NAME, FIRE_SIZE, FIRE_YEAR, STATE</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM Fires</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE FIRE_SIZE &gt; 50000</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY FIRE_SIZE DESC</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">    LIMIT 10</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-</section>
-<section id="convenience-functions" class="level2">
-<h2 class="anchored" data-anchor-id="convenience-functions">Convenience Functions</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get largest fires</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>largest <span class="op">=</span> FPA_FOD.<span class="fu">largest_fires</span>(<span class="fl">10</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>largest <span class="op">=</span> FPA_FOD.<span class="fu">largest_fires</span>(<span class="fl">10</span>, year<span class="op">=</span><span class="fl">2020</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>largest <span class="op">=</span> FPA_FOD.<span class="fu">largest_fires</span>(<span class="fl">10</span>, state<span class="op">=</span><span class="st">"CA"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get summary statistics</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>states <span class="op">=</span> FPA_FOD.<span class="fu">states</span>()      <span class="co"># Fire counts by state</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>causes <span class="op">=</span> FPA_FOD.<span class="fu">causes</span>()      <span class="co"># Fire counts by cause</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> FPA_FOD.<span class="fu">years</span>()        <span class="co"># Fire counts by year</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="database-schema" class="level2">
-<h2 class="anchored" data-anchor-id="database-schema">Database Schema</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List tables</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>FPA_FOD.<span class="fu">tables</span>()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get schema for the Fires table</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>FPA_FOD.<span class="fu">schema</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="key-fields-in-the-fires-table" class="level3">
-<h3 class="anchored" data-anchor-id="key-fields-in-the-fires-table">Key Fields in the Fires Table</h3>
+<section id="available-products" class="level2">
+<h2 class="anchored" data-anchor-id="available-products">Available Products</h2>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 32%">
+<col style="width: 20%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Field</th>
+<th>Product</th>
 <th>Description</th>
+<th>Format</th>
+<th>Coverage</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>FOD_ID</code></td>
-<td>Unique identifier</td>
+<td><code>:fire_points</code></td>
+<td>Satellite-detected fire locations (MODIS, VIIRS, GOES, AVHRR)</td>
+<td>CSV</td>
+<td>2003-present</td>
 </tr>
 <tr class="even">
-<td><code>FIRE_NAME</code></td>
-<td>Name of the fire</td>
-</tr>
-<tr class="odd">
-<td><code>FIRE_YEAR</code></td>
-<td>Year of discovery (1992-2020)</td>
-</tr>
-<tr class="even">
-<td><code>DISCOVERY_DATE</code></td>
-<td>Date of discovery</td>
-</tr>
-<tr class="odd">
-<td><code>FIRE_SIZE</code></td>
-<td>Size in acres</td>
-</tr>
-<tr class="even">
-<td><code>FIRE_SIZE_CLASS</code></td>
-<td>Size class (A-G)</td>
-</tr>
-<tr class="odd">
-<td><code>STATE</code></td>
-<td>Two-letter state code</td>
-</tr>
-<tr class="even">
-<td><code>COUNTY</code></td>
-<td>County name</td>
-</tr>
-<tr class="odd">
-<td><code>LATITUDE</code> / <code>LONGITUDE</code></td>
-<td>Location</td>
-</tr>
-<tr class="even">
-<td><code>NWCG_CAUSE_CLASSIFICATION</code></td>
-<td>Human/Natural/Missing</td>
-</tr>
-<tr class="odd">
-<td><code>NWCG_GENERAL_CAUSE</code></td>
-<td>General cause category</td>
+<td><code>:smoke_polygons</code></td>
+<td>Analyst-drawn smoke plume polygons (light, medium, heavy)</td>
+<td>Shapefile</td>
+<td>2005-present</td>
 </tr>
 </tbody>
 </table>
 </section>
+<section id="basic-usage" class="level2">
+<h2 class="anchored" data-anchor-id="basic-usage">Basic Usage</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.HMS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List available products</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>HMS.<span class="fu">products</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print product info</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>HMS.<span class="fu">info</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="fire-size-classes" class="level2">
-<h2 class="anchored" data-anchor-id="fire-size-classes">Fire Size Classes</h2>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Class</th>
-<th>Acres</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>A</td>
-<td>0 - 0.25</td>
-</tr>
-<tr class="even">
-<td>B</td>
-<td>0.26 - 9.9</td>
-</tr>
-<tr class="odd">
-<td>C</td>
-<td>10 - 99.9</td>
-</tr>
-<tr class="even">
-<td>D</td>
-<td>100 - 299.9</td>
-</tr>
-<tr class="odd">
-<td>E</td>
-<td>300 - 999.9</td>
-</tr>
-<tr class="even">
-<td>F</td>
-<td>1,000 - 4,999.9</td>
-</tr>
-<tr class="odd">
-<td>G</td>
-<td>5,000+</td>
-</tr>
-</tbody>
-</table>
+<section id="downloading-fire-points" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-fire-points">Downloading Fire Points</h2>
+<p>Fire point data is returned as a <code>DataFrame</code> with columns: <code>Lon</code>, <code>Lat</code>, <code>YearDay</code>, <code>Time</code>, <code>Satellite</code>, <code>Method</code>, <code>Ecosystem</code>, <code>FRP</code>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download fire detections for a specific date</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> HMS.<span class="fu">download</span>(<span class="st">"2024-08-15"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Using a Date object</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Dates</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> HMS.<span class="fu">download</span>(<span class="fu">Date</span>(<span class="fl">2024</span>, <span class="fl">8</span>, <span class="fl">15</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="constants" class="level2">
-<h2 class="anchored" data-anchor-id="constants">Constants</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>FPA_FOD.YEAR_START  <span class="co"># 1992</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>FPA_FOD.YEAR_END    <span class="co"># 2020</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>FPA_FOD.SIZE_CLASSES</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>FPA_FOD.GENERAL_CAUSES</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>FPA_FOD.CAUSE_CLASSIFICATIONS</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="downloading-smoke-polygons" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-smoke-polygons">Downloading Smoke Polygons</h2>
+<p>Smoke polygon data is downloaded as a shapefile zip archive.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download smoke polygons for a date</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> HMS.<span class="fu">download_smoke</span>(<span class="st">"2024-08-15"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="plot-example" class="level2">
-<h2 class="anchored" data-anchor-id="plot-example">Plot Example</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This example requires the FPA-FOD database (~214 MB). Run <code>FPA_FOD.download_database()</code> first.</p>
-</div>
-</div>
-<div id="2" class="cell" data-execution_count="0">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.FPA_FOD</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>causes <span class="op">=</span> FPA_FOD.<span class="fu">causes</span>()</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="fu">string</span>(row.cause) for row <span class="kw">in</span> causes]</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> [row.count for row <span class="kw">in</span> causes]</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> <span class="fu">sortperm</span>(counts)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> labels[order]</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> counts[order]</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> <span class="fu">Figure</span>(size<span class="op">=</span>(<span class="fl">800</span>, <span class="fl">500</span>))</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>, <span class="fl">1</span>], title<span class="op">=</span><span class="st">"FPA-FOD: Fire Counts by Cause (1992-2020)"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span><span class="st">"Number of Fires"</span>, yticks<span class="op">=</span>(<span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(labels), labels))</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot!</span>(ax, <span class="fl">1</span><span class="op">:</span><span class="fu">length</span>(counts), counts, direction<span class="op">=:</span>x, color<span class="op">=:</span>darkorange)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>fig</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="building-urls" class="level2">
+<h2 class="anchored" data-anchor-id="building-urls">Building URLs</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the download URL for fire points</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> HMS.<span class="fu">download_url</span>(<span class="op">:</span>fire_points, <span class="st">"2024-08-15"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the download URL for smoke polygons</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> HMS.<span class="fu">download_url</span>(<span class="op">:</span>smoke_polygons, <span class="st">"2024-08-15"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="saving-and-loading-fire-point-files" class="level2">
+<h2 class="anchored" data-anchor-id="saving-and-loading-fire-point-files">Saving and Loading Fire Point Files</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download and save fire points as CSV</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> HMS.<span class="fu">download_file</span>(<span class="st">"2024-08-15"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load previously downloaded CSV</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> HMS.<span class="fu">load_file</span>(<span class="st">"hms_fire20240815.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="api-reference" class="level2">
 <h2 class="anchored" data-anchor-id="api-reference">API Reference</h2>
-<section id="database-functions" class="level3">
-<h3 class="anchored" data-anchor-id="database-functions">Database Functions</h3>
+<section id="functions" class="level3">
+<h3 class="anchored" data-anchor-id="functions">Functions</h3>
 <ul>
-<li><code>download_database(; force, verbose)</code> - Download the SQLite database</li>
-<li><code>db_path()</code> - Get path to database (or <code>nothing</code> if not downloaded)</li>
-<li><code>info()</code> - Print database information</li>
-<li><code>tables()</code> - List database tables</li>
-<li><code>schema(table="Fires")</code> - Get table schema</li>
-</ul>
-</section>
-<section id="query-functions" class="level3">
-<h3 class="anchored" data-anchor-id="query-functions">Query Functions</h3>
-<ul>
-<li><code>query(sql; limit)</code> - Execute SQL query</li>
-<li><code>count(; where)</code> - Count records</li>
-<li><code>fires(; state, year, cause, min_size, max_size, limit)</code> - Query fires</li>
-<li><code>largest_fires(n; year, state)</code> - Get largest fires</li>
-</ul>
-</section>
-<section id="summary-functions" class="level3">
-<h3 class="anchored" data-anchor-id="summary-functions">Summary Functions</h3>
-<ul>
-<li><code>states()</code> - Fire counts by state</li>
-<li><code>causes()</code> - Fire counts by cause</li>
-<li><code>years()</code> - Fire counts by year</li>
+<li><code>products()</code> - List available HMS products</li>
+<li><code>info()</code> - Print HMS product information</li>
+<li><code>download_url(product, date)</code> - Build download URL for a product and date</li>
+<li><code>download(date; verbose)</code> - Download fire points and return as DataFrame</li>
+<li><code>download_smoke(date; force, verbose)</code> - Download smoke polygon shapefile</li>
+<li><code>download_file(date; filename, force, verbose)</code> - Download fire points and save as CSV</li>
+<li><code>load_file(filename)</code> - Load previously downloaded CSV fire point file</li>
+<li><code>dir()</code> - Get local data directory path</li>
 </ul>
 
 
@@ -1174,13 +1017,13 @@ Note
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../modules/irwin.html" class="pagination-link" aria-label="IRWIN">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">IRWIN</span></span>
+      <a href="../modules/cwfis.html" class="pagination-link" aria-label="CWFIS">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">CWFIS</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../modules/mtbs.html" class="pagination-link" aria-label="MTBS">
-        <span class="nav-page-text"><span class="chapter-title">MTBS</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../modules/gwis.html" class="pagination-link" aria-label="GWIS">
+        <span class="nav-page-text"><span class="chapter-title">GWIS</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

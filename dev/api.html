@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./changelog.html" rel="next">
-<link href="./modules/feds.html" rel="prev">
+<link href="./modules/egp.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -79,9 +79,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c58f986be3ff872790ab570c6d9e49f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7c8ba9dac8feea6a77ed63b2e2898d0e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-c58f986be3ff872790ab570c6d9e49f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-4ff66e45b39d49436fe97d3fe27b9920.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-7e34ecb6a0e7991f0346b0751d4a7c3f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-4ff66e45b39d49436fe97d3fe27b9920.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -394,6 +394,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./modules/feds.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">FEDS</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modules/cwfis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">CWFIS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modules/hms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">HMS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modules/gwis.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GWIS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./modules/egp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">EGP</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -445,9 +465,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#modules" id="toc-modules" class="nav-link active" data-scroll-target="#modules">Modules</a>
   <ul>
+  <li><a href="#cwfis" id="toc-cwfis" class="nav-link" data-scroll-target="#cwfis"><code>CWFIS</code></a></li>
+  <li><a href="#egp" id="toc-egp" class="nav-link" data-scroll-target="#egp"><code>EGP</code></a></li>
   <li><a href="#feds" id="toc-feds" class="nav-link" data-scroll-target="#feds"><code>FEDS</code></a></li>
   <li><a href="#firms" id="toc-firms" class="nav-link" data-scroll-target="#firms"><code>FIRMS</code></a></li>
   <li><a href="#fpa_fod" id="toc-fpa_fod" class="nav-link" data-scroll-target="#fpa_fod"><code>FPA_FOD</code></a></li>
+  <li><a href="#gwis" id="toc-gwis" class="nav-link" data-scroll-target="#gwis"><code>GWIS</code></a></li>
+  <li><a href="#hms" id="toc-hms" class="nav-link" data-scroll-target="#hms"><code>HMS</code></a></li>
   <li><a href="#irwin" id="toc-irwin" class="nav-link" data-scroll-target="#irwin"><code>IRWIN</code></a></li>
   <li><a href="#landfire" id="toc-landfire" class="nav-link" data-scroll-target="#landfire"><code>LANDFIRE</code></a></li>
   <li><a href="#mtbs" id="toc-mtbs" class="nav-link" data-scroll-target="#mtbs"><code>MTBS</code></a></li>
@@ -481,26 +505,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="modules" class="level2">
 <h2 class="anchored" data-anchor-id="modules">Modules</h2>
-<section id="feds" class="level4">
-<h4 class="anchored"><code>FEDS</code></h4>
+<section id="cwfis" class="level4">
+<h4 class="anchored"><code>CWFIS</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.FEDS</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.CWFIS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
@@ -525,26 +612,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="firms" class="level4">
-<h4 class="anchored"><code>FIRMS</code></h4>
+<section id="egp" class="level4">
+<h4 class="anchored"><code>EGP</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.FIRMS</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.EGP</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-1" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-1" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-1">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-1" class="level2">
 <h2 class="anchored" data-anchor-id="installation-1">Installation</h2>
@@ -569,26 +719,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="fpa_fod" class="level4">
-<h4 class="anchored"><code>FPA_FOD</code></h4>
+<section id="feds" class="level4">
+<h4 class="anchored"><code>FEDS</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.FPA_FOD</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.FEDS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-2" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-2" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-2">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-2" class="level2">
 <h2 class="anchored" data-anchor-id="installation-2">Installation</h2>
@@ -613,26 +826,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="irwin" class="level4">
-<h4 class="anchored"><code>IRWIN</code></h4>
+<section id="firms" class="level4">
+<h4 class="anchored"><code>FIRMS</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.IRWIN</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.FIRMS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-3" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-3" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-3">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-3" class="level2">
 <h2 class="anchored" data-anchor-id="installation-3">Installation</h2>
@@ -657,26 +933,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="landfire" class="level4">
-<h4 class="anchored"><code>LANDFIRE</code></h4>
+<section id="fpa_fod" class="level4">
+<h4 class="anchored"><code>FPA_FOD</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.LANDFIRE</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.FPA_FOD</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-4" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-4" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-4">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-4" class="level2">
 <h2 class="anchored" data-anchor-id="installation-4">Installation</h2>
@@ -701,26 +1040,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="mtbs" class="level4">
-<h4 class="anchored"><code>MTBS</code></h4>
+<section id="gwis" class="level4">
+<h4 class="anchored"><code>GWIS</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.MTBS</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.GWIS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-5" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-5" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-5">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-5" class="level2">
 <h2 class="anchored" data-anchor-id="installation-5">Installation</h2>
@@ -745,26 +1147,89 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="wfigs" class="level4">
-<h4 class="anchored"><code>WFIGS</code></h4>
+<section id="hms" class="level4">
+<h4 class="anchored"><code>HMS</code></h4>
 <div class="card mb-3">
 <div class="card-body">
-<p>No docstring found for public module <code>WildfireData.WFIGS</code>. Module does not have any public names.</p>
+<p>No docstring found for public module <code>WildfireData.HMS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
 <section id="wildfiredata.jl-6" class="level1">
 <h1>WildfireData.jl</h1>
-<p>A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.</p>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
 <section id="data-sources-6" class="level2">
 <h2 class="anchored" data-anchor-id="data-sources-6">Data Sources</h2>
-<ul>
-<li><strong>WFIGS</strong> - Wildland Fire Interagency Geospatial Services</li>
-<li><strong>IRWIN</strong> - Integrated Reporting of Wildland-Fire Information</li>
-<li><strong>FPA-FOD</strong> - Fire Program Analysis Fire-Occurrence Database</li>
-<li><strong>MTBS</strong> - Monitoring Trends in Burn Severity</li>
-<li><strong>FIRMS</strong> - Fire Information for Resource Management System (NASA)</li>
-<li><strong>LANDFIRE</strong> - Landscape Fire and Resource Management Planning Tools</li>
-</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="installation-6" class="level2">
 <h2 class="anchored" data-anchor-id="installation-6">Installation</h2>
@@ -783,6 +1248,434 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> WFIGS.<span class="fu">download</span>(<span class="op">:</span>current_perimeters; limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See the <a href="https://RallypointOne.github.io/WildfireData.jl/stable/">documentation</a> for more details.</p>
+</section>
+</section>
+</div>
+</div>
+</section>
+<section id="irwin" class="level4">
+<h4 class="anchored"><code>IRWIN</code></h4>
+<div class="card mb-3">
+<div class="card-body">
+<p>No docstring found for public module <code>WildfireData.IRWIN</code>. Module does not have any public names.</p>
+<hr>
+<p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
+<section id="wildfiredata.jl-7" class="level1">
+<h1>WildfireData.jl</h1>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
+<section id="data-sources-7" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-7">Data Sources</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation-7" class="level2">
+<h2 class="anchored" data-anchor-id="installation-7">Installation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/WildfireData.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quick-start-7" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start-7">Quick Start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List available WFIGS datasets</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">datasets</span>()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get info about a specific dataset</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">info</span>(<span class="op">:</span>current_perimeters)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> WFIGS.<span class="fu">download</span>(<span class="op">:</span>current_perimeters; limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See the <a href="https://RallypointOne.github.io/WildfireData.jl/stable/">documentation</a> for more details.</p>
+</section>
+</section>
+</div>
+</div>
+</section>
+<section id="landfire" class="level4">
+<h4 class="anchored"><code>LANDFIRE</code></h4>
+<div class="card mb-3">
+<div class="card-body">
+<p>No docstring found for public module <code>WildfireData.LANDFIRE</code>. Module does not have any public names.</p>
+<hr>
+<p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
+<section id="wildfiredata.jl-8" class="level1">
+<h1>WildfireData.jl</h1>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
+<section id="data-sources-8" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-8">Data Sources</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation-8" class="level2">
+<h2 class="anchored" data-anchor-id="installation-8">Installation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/WildfireData.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quick-start-8" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start-8">Quick Start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List available WFIGS datasets</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">datasets</span>()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get info about a specific dataset</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">info</span>(<span class="op">:</span>current_perimeters)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> WFIGS.<span class="fu">download</span>(<span class="op">:</span>current_perimeters; limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See the <a href="https://RallypointOne.github.io/WildfireData.jl/stable/">documentation</a> for more details.</p>
+</section>
+</section>
+</div>
+</div>
+</section>
+<section id="mtbs" class="level4">
+<h4 class="anchored"><code>MTBS</code></h4>
+<div class="card mb-3">
+<div class="card-body">
+<p>No docstring found for public module <code>WildfireData.MTBS</code>. Module does not have any public names.</p>
+<hr>
+<p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
+<section id="wildfiredata.jl-9" class="level1">
+<h1>WildfireData.jl</h1>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
+<section id="data-sources-9" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-9">Data Sources</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation-9" class="level2">
+<h2 class="anchored" data-anchor-id="installation-9">Installation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/WildfireData.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quick-start-9" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start-9">Quick Start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List available WFIGS datasets</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">datasets</span>()</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get info about a specific dataset</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">info</span>(<span class="op">:</span>current_perimeters)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> WFIGS.<span class="fu">download</span>(<span class="op">:</span>current_perimeters; limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>See the <a href="https://RallypointOne.github.io/WildfireData.jl/stable/">documentation</a> for more details.</p>
+</section>
+</section>
+</div>
+</div>
+</section>
+<section id="wfigs" class="level4">
+<h4 class="anchored"><code>WFIGS</code></h4>
+<div class="card mb-3">
+<div class="card-body">
+<p>No docstring found for public module <code>WildfireData.WFIGS</code>. Module does not have any public names.</p>
+<hr>
+<p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
+<section id="wildfiredata.jl-10" class="level1">
+<h1>WildfireData.jl</h1>
+<p>A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.</p>
+<section id="data-sources-10" class="level2">
+<h2 class="anchored" data-anchor-id="data-sources-10">Data Sources</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 72%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Module</th>
+<th style="text-align: right;">Source</th>
+<th style="text-align: right;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;"><strong>WFIGS</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Wildland Fire Interagency Geospatial Services</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>IRWIN</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Integrated Reporting of Wildland-Fire Information</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FPA-FOD</strong></td>
+<td style="text-align: right;">USDA</td>
+<td style="text-align: right;">Fire Program Analysis Fire-Occurrence Database</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>MTBS</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Monitoring Trends in Burn Severity</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FIRMS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Information for Resource Management System</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>LANDFIRE</strong></td>
+<td style="text-align: right;">USGS/USDA</td>
+<td style="text-align: right;">Landscape Fire and Resource Management Planning Tools</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>FEDS</strong></td>
+<td style="text-align: right;">NASA</td>
+<td style="text-align: right;">Fire Events Data Suite (satellite-derived fire tracking)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>CWFIS</strong></td>
+<td style="text-align: right;">NRCan</td>
+<td style="text-align: right;">Canadian Wildland Fire Information System</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>HMS</strong></td>
+<td style="text-align: right;">NOAA</td>
+<td style="text-align: right;">Hazard Mapping System (fire detections &amp; smoke plumes)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;"><strong>GWIS</strong></td>
+<td style="text-align: right;">Copernicus</td>
+<td style="text-align: right;">Global Wildfire Information System (fire danger &amp; burnt areas)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;"><strong>EGP</strong></td>
+<td style="text-align: right;">NIFC</td>
+<td style="text-align: right;">Enterprise Geospatial Portal (operational boundaries)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="installation-10" class="level2">
+<h2 class="anchored" data-anchor-id="installation-10">Installation</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>(url<span class="op">=</span><span class="st">"https://github.com/RallypointOne/WildfireData.jl"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quick-start-10" class="level2">
+<h2 class="anchored" data-anchor-id="quick-start-10">Quick Start</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List available WFIGS datasets</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">datasets</span>()</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get info about a specific dataset</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>WFIGS.<span class="fu">info</span>(<span class="op">:</span>current_perimeters)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download data</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> WFIGS.<span class="fu">download</span>(<span class="op">:</span>current_perimeters; limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>See the <a href="https://RallypointOne.github.io/WildfireData.jl/stable/">documentation</a> for more details.</p>
 </section>
 </section>
@@ -1209,8 +2102,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./modules/feds.html" class="pagination-link" aria-label="FEDS">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">FEDS</span></span>
+      <a href="./modules/egp.html" class="pagination-link" aria-label="EGP">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">EGP</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

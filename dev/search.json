@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "WildfireData.jl",
     "section": "",
-    "text": "Overview\nWildfireData.jl is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from various U.S. government sources.",
+    "text": "Overview\nWildfireData.jl is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from U.S., Canadian, and global sources.",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
@@ -15,7 +15,7 @@
     "href": "index.html#data-sources",
     "title": "WildfireData.jl",
     "section": "Data Sources",
-    "text": "Data Sources\nThe package includes modules for accessing data from:\n\n\n\nModule\nDescription\nData Type\n\n\n\n\nWFIGS\nWildland Fire Interagency Geospatial Services\nCurrent & historical fire perimeters\n\n\nIRWIN\nIntegrated Reporting of Wildland Fire Information\nFire incidents & perimeters\n\n\nFPA-FOD\nFire Program Analysis Fire-Occurrence Database\nHistorical fire records (1992-2020)\n\n\nMTBS\nMonitoring Trends in Burn Severity\nBurn severity & fire boundaries\n\n\nFIRMS\nFire Information for Resource Management System\nSatellite fire detections\n\n\nLANDFIRE\nLandscape Fire and Resource Management\nFuel, vegetation, topography",
+    "text": "Data Sources\nThe package includes modules for accessing data from:\n\n\n\nModule\nDescription\nData Type\n\n\n\n\nWFIGS\nWildland Fire Interagency Geospatial Services\nCurrent & historical fire perimeters\n\n\nIRWIN\nIntegrated Reporting of Wildland Fire Information\nFire incidents & perimeters\n\n\nFPA-FOD\nFire Program Analysis Fire-Occurrence Database\nHistorical fire records (1992-2020)\n\n\nMTBS\nMonitoring Trends in Burn Severity\nBurn severity & fire boundaries\n\n\nFIRMS\nFire Information for Resource Management System\nSatellite fire detections\n\n\nLANDFIRE\nLandscape Fire and Resource Management\nFuel, vegetation, topography\n\n\nFEDS\nFire Events Data Suite\nSatellite-derived fire event tracking\n\n\nCWFIS\nCanadian Wildland Fire Information System\nCanadian fire data & hotspots\n\n\nHMS\nNOAA Hazard Mapping System\nFire detections & smoke plumes\n\n\nGWIS\nGlobal Wildfire Information System\nGlobal fire danger & burnt areas\n\n\nEGP\nEnterprise Geospatial Portal\nOperational & jurisdictional boundaries",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
@@ -59,7 +59,7 @@
     "href": "index.html#license",
     "title": "WildfireData.jl",
     "section": "License",
-    "text": "License\nThis package is open source. The data accessed through this package is provided by various U.S. government agencies and is generally in the public domain.",
+    "text": "License\nThis package is open source. The data accessed through this package is provided by various government agencies and is generally in the public domain or available under open licenses (e.g., CC BY 4.0).",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>WildfireData.jl</span>"
@@ -924,6 +924,314 @@
     ]
   },
   {
+    "objectID": "modules/cwfis.html",
+    "href": "modules/cwfis.html",
+    "title": "CWFIS",
+    "section": "",
+    "text": "Overview\nThe CWFIS module provides access to the Canadian Wildland Fire Information System via its WFS (Web Feature Service) GeoServer. CWFIS offers real-time fire data, satellite hotspot detections, fire danger ratings, and historical fire records across Canada.\nData Source: Natural Resources Canada - CWFIS\nNo API key is required.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/cwfis.html#available-collections",
+    "href": "modules/cwfis.html#available-collections",
+    "title": "CWFIS",
+    "section": "Available Collections",
+    "text": "Available Collections\n\n\n\n\n\n\n\n\n\nCollection\nDescription\nCategory\nGeometry\n\n\n\n\n:active_fires\nCurrent active wildland fires in Canada\ncurrent\npoint\n\n\n:reported_fires\nAll reported fires year-to-date\ncurrent\npoint\n\n\n:hotspots\nSatellite-detected fire hotspots with FWI data\ndetection\npoint\n\n\n:hotspots_24h\nSatellite hotspots from the last 24 hours\ndetection\npoint\n\n\n:fire_perimeters\nNational Burned Area Composite (NBAC), 1972-present\narchive\npolygon\n\n\n:fire_points\nNational Fire Database points (&gt;= 200 ha), 1970-present\narchive\npoint\n\n\n:fire_danger\nCurrent fire danger rating polygons\nweather\npolygon\n\n\n:weather_stations\nFire weather stations with current observations\nweather\npoint",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/cwfis.html#basic-usage",
+    "href": "modules/cwfis.html#basic-usage",
+    "title": "CWFIS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.CWFIS\n\n# List all collections\nCWFIS.collections()\n\n# Filter by category\nCWFIS.collections(category=:current)\nCWFIS.collections(category=:detection)\nCWFIS.collections(category=:archive)\nCWFIS.collections(category=:weather)\n\n# Get collection info\nCWFIS.info(:active_fires)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/cwfis.html#downloading-data",
+    "href": "modules/cwfis.html#downloading-data",
+    "title": "CWFIS",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n\nBasic Download\n# Download current active fires\ndata = CWFIS.download(:active_fires)\n\n# Download with a feature count limit\ndata = CWFIS.download(:weather_stations, count=10)\n\n\nSpatial Filtering (Bounding Box)\n# Download hotspots in British Columbia\ndata = CWFIS.download(:hotspots_24h, bbox=(-139, 48, -114, 60))\n\n\nCQL Filtering\n# Download fire perimeters from 2023\ndata = CWFIS.download(:fire_perimeters, count=10, cql_filter=\"year=2023\")\n\n# Download large fires from the NFDB\ndata = CWFIS.download(:fire_points, count=10, cql_filter=\"SIZE_HA &gt; 1000\")\n\n\nPagination\n# Paginate through results\npage1 = CWFIS.download(:fire_points, count=100, start_index=0)\npage2 = CWFIS.download(:fire_points, count=100, start_index=100)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/cwfis.html#saving-and-loading-files",
+    "href": "modules/cwfis.html#saving-and-loading-files",
+    "title": "CWFIS",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to local file\npath = CWFIS.download_file(:active_fires)\n\n# Load previously downloaded file\ndata = CWFIS.load_file(:active_fires)\n\n# Custom filename\npath = CWFIS.download_file(:hotspots_24h, filename=\"bc_hotspots.geojson\",\n    bbox=(-139, 48, -114, 60))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/cwfis.html#api-reference",
+    "href": "modules/cwfis.html#api-reference",
+    "title": "CWFIS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\ncollections(; category=nothing) - List available collections\ninfo(collection) - Print collection information\ndownload(collection; count, start_index, bbox, cql_filter, sortby, verbose) - Download data\ndownload_file(collection; filename, force, verbose, ...) - Download and save to file\nload_file(collection; filename) - Load previously downloaded file\nquery_url(collection; count, start_index, bbox, cql_filter, sortby) - Build WFS query URL\ndir() - Get local data directory path",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>CWFIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html",
+    "href": "modules/hms.html",
+    "title": "HMS",
+    "section": "",
+    "text": "Overview\nThe HMS module provides access to NOAA’s Hazard Mapping System Fire and Smoke Product. HMS delivers daily satellite fire detection data and analyst-drawn smoke plume polygons produced by the NOAA/NESDIS Satellite Analysis Branch.\nData Source: NOAA HMS Archive\nNo API key is required.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#available-products",
+    "href": "modules/hms.html#available-products",
+    "title": "HMS",
+    "section": "Available Products",
+    "text": "Available Products\n\n\n\n\n\n\n\n\n\nProduct\nDescription\nFormat\nCoverage\n\n\n\n\n:fire_points\nSatellite-detected fire locations (MODIS, VIIRS, GOES, AVHRR)\nCSV\n2003-present\n\n\n:smoke_polygons\nAnalyst-drawn smoke plume polygons (light, medium, heavy)\nShapefile\n2005-present",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#basic-usage",
+    "href": "modules/hms.html#basic-usage",
+    "title": "HMS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.HMS\n\n# List available products\nHMS.products()\n\n# Print product info\nHMS.info()",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#downloading-fire-points",
+    "href": "modules/hms.html#downloading-fire-points",
+    "title": "HMS",
+    "section": "Downloading Fire Points",
+    "text": "Downloading Fire Points\nFire point data is returned as a DataFrame with columns: Lon, Lat, YearDay, Time, Satellite, Method, Ecosystem, FRP.\n# Download fire detections for a specific date\ndf = HMS.download(\"2024-08-15\")\n\n# Using a Date object\nusing Dates\ndf = HMS.download(Date(2024, 8, 15))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#downloading-smoke-polygons",
+    "href": "modules/hms.html#downloading-smoke-polygons",
+    "title": "HMS",
+    "section": "Downloading Smoke Polygons",
+    "text": "Downloading Smoke Polygons\nSmoke polygon data is downloaded as a shapefile zip archive.\n# Download smoke polygons for a date\npath = HMS.download_smoke(\"2024-08-15\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#building-urls",
+    "href": "modules/hms.html#building-urls",
+    "title": "HMS",
+    "section": "Building URLs",
+    "text": "Building URLs\n# Get the download URL for fire points\nurl = HMS.download_url(:fire_points, \"2024-08-15\")\n\n# Get the download URL for smoke polygons\nurl = HMS.download_url(:smoke_polygons, \"2024-08-15\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#saving-and-loading-fire-point-files",
+    "href": "modules/hms.html#saving-and-loading-fire-point-files",
+    "title": "HMS",
+    "section": "Saving and Loading Fire Point Files",
+    "text": "Saving and Loading Fire Point Files\n# Download and save fire points as CSV\npath = HMS.download_file(\"2024-08-15\")\n\n# Load previously downloaded CSV\ndf = HMS.load_file(\"hms_fire20240815.csv\")",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/hms.html#api-reference",
+    "href": "modules/hms.html#api-reference",
+    "title": "HMS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\nproducts() - List available HMS products\ninfo() - Print HMS product information\ndownload_url(product, date) - Build download URL for a product and date\ndownload(date; verbose) - Download fire points and return as DataFrame\ndownload_smoke(date; force, verbose) - Download smoke polygon shapefile\ndownload_file(date; filename, force, verbose) - Download fire points and save as CSV\nload_file(filename) - Load previously downloaded CSV fire point file\ndir() - Get local data directory path",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>HMS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html",
+    "href": "modules/gwis.html",
+    "title": "GWIS",
+    "section": "",
+    "text": "Overview\nThe GWIS module provides WMS (Web Map Service) tile URLs for the Global Wildfire Information System and EFFIS (European Forest Fire Information System). These services are part of the Copernicus Emergency Management Service and provide fire danger forecasts, active fire detections, burnt area mapping, and fire severity data.\nData Sources:\nNo API key is required.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#overview",
+    "href": "modules/gwis.html#overview",
+    "title": "GWIS",
+    "section": "",
+    "text": "GWIS\nEFFIS",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#available-layers",
+    "href": "modules/gwis.html#available-layers",
+    "title": "GWIS",
+    "section": "Available Layers",
+    "text": "Available Layers\n\n\n\n\n\n\n\n\n\nLayer\nDescription\nCategory\nType\n\n\n\n\n:modis_hotspots\nMODIS satellite active fire detections\nactive_fires\npoint\n\n\n:viirs_hotspots\nVIIRS satellite active fire detections\nactive_fires\npoint\n\n\n:modis_burnt_areas\nMODIS burnt area perimeters (&gt;= 30 ha)\nburnt_areas\npolygon\n\n\n:viirs_burnt_areas\nVIIRS/Sentinel-2 near real-time burnt areas\nburnt_areas\npolygon\n\n\n:fwi\nFire Weather Index (ECMWF)\nfire_danger\nraster\n\n\n:ffmc\nFine Fuel Moisture Code (ECMWF)\nfire_danger\nraster\n\n\n:dmc\nDuff Moisture Code (ECMWF)\nfire_danger\nraster\n\n\n:dc\nDrought Code (ECMWF)\nfire_danger\nraster\n\n\n:isi\nInitial Spread Index (ECMWF)\nfire_danger\nraster\n\n\n:bui\nBuild Up Index (ECMWF)\nfire_danger\nraster\n\n\n:fwi_anomaly\nFire Weather Index anomaly (ECMWF)\nfire_danger\nraster\n\n\n:fwi_ranking\nFire danger ranking (ECMWF)\nfire_danger\nraster\n\n\n:fwi_mf\nFire Weather Index (Meteo France)\nfire_danger_mf\nraster\n\n\n:severity_2018 … :severity_2024\nAnnual fire severity assessment\nseverity\nraster",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#basic-usage",
+    "href": "modules/gwis.html#basic-usage",
+    "title": "GWIS",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.GWIS\n\n# List all layers\nGWIS.layers()\n\n# Filter by category\nGWIS.layers(category=:active_fires)\nGWIS.layers(category=:fire_danger)\nGWIS.layers(category=:severity)\n\n# Print general info\nGWIS.info()",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#building-wms-urls",
+    "href": "modules/gwis.html#building-wms-urls",
+    "title": "GWIS",
+    "section": "Building WMS URLs",
+    "text": "Building WMS URLs\nThe primary function is wms_url, which builds WMS GetMap URLs for use with mapping tools or direct image download.\n# Get VIIRS hotspots for Europe, last 7 days\nurl = GWIS.wms_url(:viirs_hotspots, bbox=(-25, 27, 45, 72), days=7)\n\n# Get Fire Weather Index for the Mediterranean\nurl = GWIS.wms_url(:fwi, bbox=(-10, 30, 40, 50))\n\n# Get MODIS burnt areas for the full fire season\nurl = GWIS.wms_url(:modis_burnt_areas, bbox=(-25, 27, 45, 72), days=0)\n\n# Custom image size\nurl = GWIS.wms_url(:fwi, width=2048, height=1024)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#downloading-map-tiles",
+    "href": "modules/gwis.html#downloading-map-tiles",
+    "title": "GWIS",
+    "section": "Downloading Map Tiles",
+    "text": "Downloading Map Tiles\n# Download a WMS tile image\npath = GWIS.download_tile(:viirs_hotspots, bbox=(-25, 27, 45, 72), days=7)\n\n# Force re-download\npath = GWIS.download_tile(:fwi, bbox=(-10, 30, 40, 50), force=true)\n\n# Custom filename\npath = GWIS.download_tile(:fwi, filename=\"mediterranean_fwi.png\",\n    bbox=(-10, 30, 40, 50))",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/gwis.html#api-reference",
+    "href": "modules/gwis.html#api-reference",
+    "title": "GWIS",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\nlayers(; category=nothing) - List available WMS layers\ninfo() - Print GWIS/EFFIS service information\nwms_url(layer; bbox, width, height, days, format, srs) - Build WMS GetMap URL\ndownload_tile(layer; filename, force, verbose, ...) - Download a WMS map tile image\ndir() - Get local data directory path",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>GWIS</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html",
+    "href": "modules/egp.html",
+    "title": "EGP",
+    "section": "",
+    "text": "Overview\nThe EGP module provides access to operational and jurisdictional boundary datasets from the NIFC (National Interagency Fire Center) Enterprise Geospatial Portal. These datasets complement fire event data in WFIGS/IRWIN with management and planning boundaries via ArcGIS REST services.\nData Source: NIFC Open Data\nNo API key is required.",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#available-datasets",
+    "href": "modules/egp.html#available-datasets",
+    "title": "EGP",
+    "section": "Available Datasets",
+    "text": "Available Datasets\n\n\n\n\n\n\n\n\nDataset\nDescription\nCategory\n\n\n\n\n:gacc_boundaries\nGeographic Area Coordination Center boundaries\nboundaries\n\n\n:dispatch_boundaries\nInteragency dispatch center boundaries\nboundaries\n\n\n:dispatch_locations\nPoint locations of dispatch centers\nboundaries\n\n\n:psa_boundaries\nPredictive Service Area boundaries for fire weather\nboundaries\n\n\n:pods\nPotential Operational Delineations for wildfire response\nplanning\n\n\n:ia_frequency_zones\nFederal initial attack frequency zones\nplanning",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#basic-usage",
+    "href": "modules/egp.html#basic-usage",
+    "title": "EGP",
+    "section": "Basic Usage",
+    "text": "Basic Usage\nusing WildfireData.EGP\n\n# List all datasets\nEGP.datasets()\n\n# Filter by category\nEGP.datasets(category=:boundaries)\nEGP.datasets(category=:planning)\n\n# Get dataset info\nEGP.info(:gacc_boundaries)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#downloading-data",
+    "href": "modules/egp.html#downloading-data",
+    "title": "EGP",
+    "section": "Downloading Data",
+    "text": "Downloading Data\n\nBasic Download\n# Download all GACC boundaries\ndata = EGP.download(:gacc_boundaries)\n\n# Download with a record limit\ndata = EGP.download(:dispatch_boundaries, limit=10)\n\n\nSpatial Filtering (Bounding Box)\n# Download PODs in California\ndata = EGP.download(:pods, bbox=(-125, 32, -114, 42), limit=50)\n\n\nSQL-Style Filtering\n# Download large PODs\ndata = EGP.download(:pods, where=\"GISAcres &gt; 10000\", limit=10)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#dataset-metadata",
+    "href": "modules/egp.html#dataset-metadata",
+    "title": "EGP",
+    "section": "Dataset Metadata",
+    "text": "Dataset Metadata\n# Get record count\nn = EGP.count(:gacc_boundaries)\n\n# Get field names and types\nf = EGP.fields(:gacc_boundaries)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#saving-and-loading-files",
+    "href": "modules/egp.html#saving-and-loading-files",
+    "title": "EGP",
+    "section": "Saving and Loading Files",
+    "text": "Saving and Loading Files\n# Download and save to local file\npath = EGP.download_file(:gacc_boundaries)\n\n# Load previously downloaded file\ndata = EGP.load_file(:gacc_boundaries)",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
+    "objectID": "modules/egp.html#api-reference",
+    "href": "modules/egp.html#api-reference",
+    "title": "EGP",
+    "section": "API Reference",
+    "text": "API Reference\n\nFunctions\n\ndatasets(; category=nothing) - List available datasets\ninfo(dataset) - Print dataset information\ndownload(dataset; where, fields, limit, bbox, verbose) - Download data as GeoJSON\ndownload_file(dataset; filename, force, verbose, ...) - Download and save to file\nload_file(dataset; filename) - Load previously downloaded file\nquery_url(dataset; ...) - Build ArcGIS query URL\ncount(dataset; where) - Get feature count\nfields(dataset) - Get field names and types\ndir() - Get local data directory path",
+    "crumbs": [
+      "Docs",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>EGP</span>"
+    ]
+  },
+  {
     "objectID": "api.html",
     "href": "api.html",
     "title": "API",
@@ -931,7 +1239,7 @@
     "text": "Modules",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -939,10 +1247,10 @@
     "href": "api.html#modules",
     "title": "API",
     "section": "Data Sources",
-    "text": "FEDS\n\n\nNo docstring found for public module WildfireData.FEDS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nFIRMS\n\n\nNo docstring found for public module WildfireData.FIRMS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nFPA_FOD\n\n\nNo docstring found for public module WildfireData.FPA_FOD. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nIRWIN\n\n\nNo docstring found for public module WildfireData.IRWIN. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nLANDFIRE\n\n\nNo docstring found for public module WildfireData.LANDFIRE. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nMTBS\n\n\nNo docstring found for public module WildfireData.MTBS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nWFIGS\n\n\nNo docstring found for public module WildfireData.WFIGS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.\n\nData Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "text": "CWFIS\n\n\nNo docstring found for public module WildfireData.CWFIS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nEGP\n\n\nNo docstring found for public module WildfireData.EGP. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nFEDS\n\n\nNo docstring found for public module WildfireData.FEDS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nFIRMS\n\n\nNo docstring found for public module WildfireData.FIRMS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nFPA_FOD\n\n\nNo docstring found for public module WildfireData.FPA_FOD. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nGWIS\n\n\nNo docstring found for public module WildfireData.GWIS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nHMS\n\n\nNo docstring found for public module WildfireData.HMS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nIRWIN\n\n\nNo docstring found for public module WildfireData.IRWIN. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nLANDFIRE\n\n\nNo docstring found for public module WildfireData.LANDFIRE. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nMTBS\n\n\nNo docstring found for public module WildfireData.MTBS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.\n\n\n\n\n\n\nWFIGS\n\n\nNo docstring found for public module WildfireData.WFIGS. Module does not have any public names.\n\nPackage description from README.md:    \n\nWildfireData.jl\nA Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.\n\nData Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)\n\n\n\n\n\nInstallation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")\n\n\nQuick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -950,10 +1258,10 @@
     "href": "api.html#data-sources",
     "title": "API",
     "section": "",
-    "text": "WFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Module\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -964,7 +1272,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -975,7 +1283,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -983,10 +1291,10 @@
     "href": "api.html#data-sources-1",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -997,7 +1305,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1008,7 +1316,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1016,10 +1324,10 @@
     "href": "api.html#data-sources-2",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1030,7 +1338,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1041,7 +1349,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1049,10 +1357,10 @@
     "href": "api.html#data-sources-3",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1063,7 +1371,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1074,7 +1382,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1082,10 +1390,10 @@
     "href": "api.html#data-sources-4",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1096,7 +1404,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1107,7 +1415,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1115,10 +1423,10 @@
     "href": "api.html#data-sources-5",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1129,7 +1437,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1140,7 +1448,7 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1148,10 +1456,10 @@
     "href": "api.html#data-sources-6",
     "title": "API",
     "section": "Data Sources",
-    "text": "Data Sources\n\nWFIGS - Wildland Fire Interagency Geospatial Services\nIRWIN - Integrated Reporting of Wildland-Fire Information\nFPA-FOD - Fire Program Analysis Fire-Occurrence Database\nMTBS - Monitoring Trends in Burn Severity\nFIRMS - Fire Information for Resource Management System (NASA)\nLANDFIRE - Landscape Fire and Resource Management Planning Tools",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1162,7 +1470,7 @@
     "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1173,7 +1481,139 @@
     "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
     "crumbs": [
       "API",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>API</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-7",
+    "href": "api.html#data-sources-7",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-7",
+    "href": "api.html#installation-7",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-7",
+    "href": "api.html#quick-start-7",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-8",
+    "href": "api.html#data-sources-8",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-8",
+    "href": "api.html#installation-8",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-8",
+    "href": "api.html#quick-start-8",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-9",
+    "href": "api.html#data-sources-9",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-9",
+    "href": "api.html#installation-9",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-9",
+    "href": "api.html#quick-start-9",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#data-sources-10",
+    "href": "api.html#data-sources-10",
+    "title": "API",
+    "section": "Data Sources",
+    "text": "Data Sources\n\n\n\n\n\n\n\n\nModule\nSource\nDescription\n\n\n\n\nWFIGS\nNIFC\nWildland Fire Interagency Geospatial Services\n\n\nIRWIN\nNIFC\nIntegrated Reporting of Wildland-Fire Information\n\n\nFPA-FOD\nUSDA\nFire Program Analysis Fire-Occurrence Database\n\n\nMTBS\nUSGS/USDA\nMonitoring Trends in Burn Severity\n\n\nFIRMS\nNASA\nFire Information for Resource Management System\n\n\nLANDFIRE\nUSGS/USDA\nLandscape Fire and Resource Management Planning Tools\n\n\nFEDS\nNASA\nFire Events Data Suite (satellite-derived fire tracking)\n\n\nCWFIS\nNRCan\nCanadian Wildland Fire Information System\n\n\nHMS\nNOAA\nHazard Mapping System (fire detections & smoke plumes)\n\n\nGWIS\nCopernicus\nGlobal Wildfire Information System (fire danger & burnt areas)\n\n\nEGP\nNIFC\nEnterprise Geospatial Portal (operational boundaries)",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#installation-10",
+    "href": "api.html#installation-10",
+    "title": "API",
+    "section": "Installation",
+    "text": "Installation\nusing Pkg\nPkg.add(url=\"https://github.com/RallypointOne/WildfireData.jl\")",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
+    ]
+  },
+  {
+    "objectID": "api.html#quick-start-10",
+    "href": "api.html#quick-start-10",
+    "title": "API",
+    "section": "Quick Start",
+    "text": "Quick Start\nusing WildfireData\n\n# List available WFIGS datasets\nWFIGS.datasets()\n\n# Get info about a specific dataset\nWFIGS.info(:current_perimeters)\n\n# Download data\ndata = WFIGS.download(:current_perimeters; limit=10)\nSee the documentation for more details.",
+    "crumbs": [
+      "API",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>API</span>"
     ]
   },
   {
@@ -1184,7 +1624,7 @@
     "text": "Unreleased",
     "crumbs": [
       "Reference",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Changelog</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   },
   {
@@ -1195,7 +1635,7 @@
     "text": "v0.0.2\n\nDocumentation\n\nAdd interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules\nImprove docstrings and module exports\nUpdate CI workflows and docs configuration from package template\nAdd versioned docs deployment with backfill workflow\nAdd dark mode support and search improvements to docs site\n\n\n\nFixes\n\nFix GeoJSON.read to pass file contents as string",
     "crumbs": [
       "Reference",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Changelog</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   },
   {
@@ -1206,7 +1646,7 @@
     "text": "v0.0.1\nInitial release of WildfireData.jl.\n\nFeatures\n\nWFIGS module: Access USGS Wildland Fire Interagency Geospatial Services data (historic perimeters, current perimeters, etc.)\nIRWIN module: Access Integrated Reporting of Wildland-Fire Information (fire occurrence data)\nMTBS module: Access Monitoring Trends in Burn Severity data (burned area boundaries, largest fires)\nFIRMS module: Access NASA FIRMS active fire/hotspot data (MODIS, VIIRS sensors)\nFPA_FOD module: Access Fire Program Analysis Fire-Occurrence Database (SQLite-based)\nLANDFIRE module: Access LANDFIRE geospatial data products (fuel models, vegetation, topography)\n\n\n\nDocumentation\n\nQuarto-based documentation site with versioned deployment\nInteractive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules\nFull API reference with expandable docstrings\nGetting started guide and per-module documentation",
     "crumbs": [
       "Reference",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Changelog</span>"
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   }
 ]
