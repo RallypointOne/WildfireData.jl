@@ -49,6 +49,8 @@ jobs:
       - uses: quarto-dev/quarto-actions/render@v2
         with:
           path: docs
+        env:
+          FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
 
       # Deploy to gh-pages branch
       - name: Deploy to gh-pages

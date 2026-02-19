@@ -173,19 +173,23 @@ using CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
 CairoMakie.activate!()
 
-df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:conus, days=1, verbose=false)
+if !isempty(get(ENV, "FIRMS_MAP_KEY", ""))
+    df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:conus, days=1, verbose=false)
 
-if !isempty(df)
-    ext = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))
-    m = Tyler.Map(ext;
-        size = (900, 600),
-        axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
-        provider = TileProviders.OpenStreetMap(:Mapnik),
-    )
-    sc = scatter!(m.axis, df.longitude, df.latitude, color=df.frp,
-        colormap=:hot, markersize=4)
-    Colorbar(m.figure[1, 2], sc, label="Fire Radiative Power (MW)")
-    m.figure
+    if !isempty(df)
+        ext = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))
+        m = Tyler.Map(ext;
+            size = (900, 600),
+            axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+            provider = TileProviders.OpenStreetMap(:Mapnik),
+        )
+        sc = scatter!(m.axis, df.longitude, df.latitude, color=df.frp,
+            colormap=:hot, markersize=4)
+        Colorbar(m.figure[1, 2], sc, label="Fire Radiative Power (MW)")
+        m.figure
+    end
+else
+    @info "FIRMS_MAP_KEY not set, skipping plot"
 end
 ```
 
