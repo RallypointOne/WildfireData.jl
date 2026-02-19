@@ -5,6 +5,7 @@ using WildfireData.FPA_FOD
 using WildfireData.MTBS
 using WildfireData.FIRMS
 using WildfireData.LANDFIRE
+using WildfireData.FEDS
 using Test
 using DataFrames
 using GeoJSON
@@ -892,6 +893,128 @@ using GeoJSON
             end
         else
             @info "FIRMS MAP_KEY not configured - skipping network tests. Set FIRMS_MAP_KEY environment variable to enable."
+        end
+
+    end
+
+    @testset "FEDS Module" begin
+
+        @testset "collections()" begin
+            c = FEDS.collections()
+            @test c isa Dict{Symbol, <:NamedTuple}
+            @test length(c) == 9
+
+            # Test that expected collections exist
+            @test haskey(c, :snapshot_perimeters)
+            @test haskey(c, :snapshot_firelines)
+            @test haskey(c, :snapshot_newfirepix)
+            @test haskey(c, :lf_perimeters)
+            @test haskey(c, :lf_firelines)
+            @test haskey(c, :lf_newfirepix)
+            @test haskey(c, :archive_perimeters)
+            @test haskey(c, :archive_firelines)
+            @test haskey(c, :archive_newfirepix)
+
+            # Test category filtering
+            snap = FEDS.collections(category=:snapshot)
+            @test length(snap) == 3
+            @test all(v.category == :snapshot for v in values(snap))
+
+            lf = FEDS.collections(category=:large_fire)
+            @test length(lf) == 3
+            @test all(v.category == :large_fire for v in values(lf))
+
+            arch = FEDS.collections(category=:archive)
+            @test length(arch) == 3
+            @test all(v.category == :archive for v in values(arch))
+        end
+
+        @testset "Collection struct" begin
+            c = FEDS.collections()
+            sp = c[:snapshot_perimeters]
+
+            @test sp.id == "public.eis_fire_snapshot_perimeter_nrt"
+            @test sp.category == :snapshot
+            @test sp.geometry == :polygon
+            @test !isempty(sp.name)
+            @test !isempty(sp.description)
+        end
+
+        @testset "query_url()" begin
+            url = FEDS.query_url(:snapshot_perimeters)
+            @test occursin("openveda.cloud", url)
+            @test occursin("eis_fire_snapshot_perimeter_nrt", url)
+            @test occursin("f=geojson", url)
+
+            # Test with limit
+            url_limit = FEDS.query_url(:snapshot_perimeters, limit=10)
+            @test occursin("limit=10", url_limit)
+
+            # Test with bbox tuple
+            url_bbox = FEDS.query_url(:lf_perimeters, bbox=(-125, 32, -114, 42))
+            @test occursin("bbox=-125,32,-114,42", url_bbox)
+
+            # Test with bbox string
+            url_bbox_str = FEDS.query_url(:lf_perimeters, bbox="-125,32,-114,42")
+            @test occursin("bbox=-125,32,-114,42", url_bbox_str)
+
+            # Test with datetime
+            url_dt = FEDS.query_url(:archive_perimeters, datetime="2020-01-01T00:00:00Z/2020-12-31T23:59:59Z")
+            @test occursin("datetime=", url_dt)
+
+            # Test with sortby
+            url_sort = FEDS.query_url(:snapshot_perimeters, sortby="-farea")
+            @test occursin("sortby=-farea", url_sort)
+
+            # Test error for unknown collection
+            @test_throws ErrorException FEDS.query_url(:nonexistent_collection)
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn FEDS.info(:snapshot_perimeters)
+            @test isnothing(result)
+
+            # Test error for unknown collection
+            @test_throws ErrorException FEDS.info(:nonexistent_collection)
+        end
+
+        @testset "dir()" begin
+            d = FEDS.dir()
+            @test d isa String
+            @test occursin("FEDS", d)
+        end
+
+        # Network-dependent tests
+        @testset "Network API Tests" begin
+            @testset "download() with limit" begin
+                data = FEDS.download(:snapshot_perimeters, limit=2, verbose=false)
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
+
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
+                end
+            end
+
+            @testset "download_file() and load_file()" begin
+                filepath = FEDS.download_file(:snapshot_perimeters, limit=2, verbose=false, force=true)
+                @test isfile(filepath)
+                @test endswith(filepath, ".geojson")
+
+                data = FEDS.load_file(:snapshot_perimeters)
+                @test data isa GeoJSON.FeatureCollection
+
+                # Clean up
+                rm(filepath)
+            end
+
+            @testset "Error handling" begin
+                @test_throws ErrorException FEDS.download(:nonexistent_collection)
+                @test_throws ErrorException FEDS.download_file(:nonexistent_collection)
+                @test_throws ErrorException FEDS.load_file(:nonexistent_collection)
+            end
         end
 
     end

@@ -30,6 +30,7 @@ book:
         - modules/mtbs.qmd
         - modules/firms.qmd
         - modules/landfire.qmd
+        - modules/feds.qmd
     - part: "API"
       chapters:
         - api.qmd

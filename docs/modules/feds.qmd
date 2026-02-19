@@ -1,0 +1,157 @@
+---
+title: "FEDS"
+subtitle: "Fire Events Data Suite"
+engine: julia
+---
+
+## Overview
+
+The FEDS module provides access to NASA's Fire Events Data Suite from the [Wildfire Tracking Lab](https://earth-information-system.github.io/fireatlas/). FEDS provides satellite-derived fire event tracking with perimeters, active fire lines, and new fire pixels via a public OGC API.
+
+**Data Source:** [OpenVEDA Features API](https://openveda.cloud/api/features)
+
+No API key is required.
+
+## Available Collections
+
+| Collection | Description | Category | Geometry |
+|------------|-------------|----------|----------|
+| `:snapshot_perimeters` | Rolling ~20-day fire perimeters (NRT) | snapshot | polygon |
+| `:snapshot_firelines` | Rolling ~20-day active fire lines (NRT) | snapshot | line |
+| `:snapshot_newfirepix` | Rolling ~20-day new fire pixels (NRT) | snapshot | point |
+| `:lf_perimeters` | Current-year large fire perimeters (>5 km²) | large_fire | polygon |
+| `:lf_firelines` | Current-year large fire lines (>5 km²) | large_fire | line |
+| `:lf_newfirepix` | Current-year large fire new pixels (>5 km²) | large_fire | point |
+| `:archive_perimeters` | Archived perimeters, Western US (2018-2021) | archive | polygon |
+| `:archive_firelines` | Archived fire lines, Western US (2018-2021) | archive | line |
+| `:archive_newfirepix` | Archived new fire pixels, Western US (2018-2021) | archive | point |
+
+## Basic Usage
+
+```julia
+using WildfireData.FEDS
+
+# List all collections
+FEDS.collections()
+
+# Filter by category
+FEDS.collections(category=:snapshot)
+FEDS.collections(category=:large_fire)
+FEDS.collections(category=:archive)
+
+# Get collection info
+FEDS.info(:snapshot_perimeters)
+```
+
+## Downloading Data
+
+### Basic Download
+
+```julia
+# Download first 10 snapshot perimeters
+data = FEDS.download(:snapshot_perimeters, limit=10)
+```
+
+### Spatial Filtering (Bounding Box)
+
+```julia
+# Download large fire perimeters in California
+data = FEDS.download(:lf_perimeters, bbox=(-125, 32, -114, 42))
+
+# Bounding box as string also works
+data = FEDS.download(:lf_perimeters, bbox="-125,32,-114,42")
+```
+
+### Temporal Filtering
+
+```julia
+# Download archived perimeters for 2020
+data = FEDS.download(:archive_perimeters,
+    datetime="2020-01-01T00:00:00Z/2020-12-31T23:59:59Z")
+```
+
+### CQL Filtering
+
+```julia
+# Use CQL filter expressions
+data = FEDS.download(:lf_perimeters, filter="farea > 100", limit=10)
+```
+
+### Sorting and Pagination
+
+```julia
+# Sort by fire area descending
+data = FEDS.download(:snapshot_perimeters, sortby="-farea", limit=10)
+
+# Pagination
+page1 = FEDS.download(:snapshot_perimeters, limit=10)
+page2 = FEDS.download(:snapshot_perimeters, limit=10, offset=10)
+```
+
+## Working with Results
+
+The download function returns a `GeoJSON.FeatureCollection`:
+
+```julia
+data = FEDS.download(:snapshot_perimeters, limit=5)
+
+# Iterate over features
+for feature in data
+    geom = GeoJSON.geometry(feature)
+    println("Geometry type: $(typeof(geom))")
+end
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = FEDS.download_file(:snapshot_perimeters, limit=100)
+
+# Load previously downloaded file
+data = FEDS.load_file(:snapshot_perimeters)
+
+# Custom filename
+path = FEDS.download_file(:lf_perimeters, filename="ca_fires.geojson",
+    bbox=(-125, 32, -114, 42))
+```
+
+## Plot Example
+
+```{julia}
+using WildfireData.FEDS
+using GeoJSON, CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
+import JSON3
+CairoMakie.activate!()
+
+data = FEDS.download(:snapshot_perimeters, limit=100, verbose=false)
+fc = GeoJSON.read(JSON3.write(data))
+
+ext = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))
+m = Tyler.Map(ext;
+    size = (900, 600),
+    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+    provider = TileProviders.OpenStreetMap(:Mapnik),
+)
+
+for feature in fc
+    geom = GeoJSON.geometry(feature)
+    isnothing(geom) && continue
+    poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
+end
+
+m.figure
+```
+
+## API Reference
+
+### Functions
+
+- `collections(; category=nothing)` - List available collections
+- `info(collection)` - Print collection information
+- `download(collection; limit, offset, bbox, datetime, filter, sortby, verbose)` - Download data
+- `download_file(collection; filename, force, verbose, ...)` - Download and save to file
+- `load_file(collection; filename)` - Load previously downloaded file
+- `query_url(collection; limit, offset, bbox, datetime, filter, sortby)` - Build query URL
+- `dir()` - Get local data directory path

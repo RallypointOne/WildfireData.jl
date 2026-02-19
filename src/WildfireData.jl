@@ -5,7 +5,7 @@ using HTTP
 using JSON3
 using GeoJSON
 
-export WFIGS, IRWIN, FPA_FOD, MTBS, FIRMS, LANDFIRE
+export WFIGS, IRWIN, FPA_FOD, MTBS, FIRMS, LANDFIRE, FEDS
 
 #-----------------------------------------------------------------------------# Data Directory
 dir(x...) = joinpath(Scratch.@get_scratch!("data"), x...)
@@ -287,5 +287,6 @@ include("FPA_FOD.jl")
 include("MTBS.jl")
 include("FIRMS.jl")
 include("LANDFIRE.jl")
+include("FEDS.jl")
 
 end
