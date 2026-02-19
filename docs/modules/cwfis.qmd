@@ -1,0 +1,107 @@
+---
+title: "CWFIS"
+subtitle: "Canadian Wildland Fire Information System"
+engine: julia
+---
+
+## Overview
+
+The CWFIS module provides access to the Canadian Wildland Fire Information System via its WFS (Web Feature Service) GeoServer. CWFIS offers real-time fire data, satellite hotspot detections, fire danger ratings, and historical fire records across Canada.
+
+**Data Source:** [Natural Resources Canada - CWFIS](https://cwfis.cfs.nrcan.gc.ca/)
+
+No API key is required.
+
+## Available Collections
+
+| Collection | Description | Category | Geometry |
+|------------|-------------|----------|----------|
+| `:active_fires` | Current active wildland fires in Canada | current | point |
+| `:reported_fires` | All reported fires year-to-date | current | point |
+| `:hotspots` | Satellite-detected fire hotspots with FWI data | detection | point |
+| `:hotspots_24h` | Satellite hotspots from the last 24 hours | detection | point |
+| `:fire_perimeters` | National Burned Area Composite (NBAC), 1972-present | archive | polygon |
+| `:fire_points` | National Fire Database points (>= 200 ha), 1970-present | archive | point |
+| `:fire_danger` | Current fire danger rating polygons | weather | polygon |
+| `:weather_stations` | Fire weather stations with current observations | weather | point |
+
+## Basic Usage
+
+```julia
+using WildfireData.CWFIS
+
+# List all collections
+CWFIS.collections()
+
+# Filter by category
+CWFIS.collections(category=:current)
+CWFIS.collections(category=:detection)
+CWFIS.collections(category=:archive)
+CWFIS.collections(category=:weather)
+
+# Get collection info
+CWFIS.info(:active_fires)
+```
+
+## Downloading Data
+
+### Basic Download
+
+```julia
+# Download current active fires
+data = CWFIS.download(:active_fires)
+
+# Download with a feature count limit
+data = CWFIS.download(:weather_stations, count=10)
+```
+
+### Spatial Filtering (Bounding Box)
+
+```julia
+# Download hotspots in British Columbia
+data = CWFIS.download(:hotspots_24h, bbox=(-139, 48, -114, 60))
+```
+
+### CQL Filtering
+
+```julia
+# Download fire perimeters from 2023
+data = CWFIS.download(:fire_perimeters, count=10, cql_filter="year=2023")
+
+# Download large fires from the NFDB
+data = CWFIS.download(:fire_points, count=10, cql_filter="SIZE_HA > 1000")
+```
+
+### Pagination
+
+```julia
+# Paginate through results
+page1 = CWFIS.download(:fire_points, count=100, start_index=0)
+page2 = CWFIS.download(:fire_points, count=100, start_index=100)
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = CWFIS.download_file(:active_fires)
+
+# Load previously downloaded file
+data = CWFIS.load_file(:active_fires)
+
+# Custom filename
+path = CWFIS.download_file(:hotspots_24h, filename="bc_hotspots.geojson",
+    bbox=(-139, 48, -114, 60))
+```
+
+## API Reference
+
+### Functions
+
+- `collections(; category=nothing)` - List available collections
+- `info(collection)` - Print collection information
+- `download(collection; count, start_index, bbox, cql_filter, sortby, verbose)` - Download data
+- `download_file(collection; filename, force, verbose, ...)` - Download and save to file
+- `load_file(collection; filename)` - Load previously downloaded file
+- `query_url(collection; count, start_index, bbox, cql_filter, sortby)` - Build WFS query URL
+- `dir()` - Get local data directory path

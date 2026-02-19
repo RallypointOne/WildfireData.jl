@@ -1,0 +1,87 @@
+---
+title: "HMS"
+subtitle: "NOAA Hazard Mapping System"
+engine: julia
+---
+
+## Overview
+
+The HMS module provides access to NOAA's Hazard Mapping System Fire and Smoke Product. HMS delivers daily satellite fire detection data and analyst-drawn smoke plume polygons produced by the NOAA/NESDIS Satellite Analysis Branch.
+
+**Data Source:** [NOAA HMS Archive](https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS)
+
+No API key is required.
+
+## Available Products
+
+| Product | Description | Format | Coverage |
+|---------|-------------|--------|----------|
+| `:fire_points` | Satellite-detected fire locations (MODIS, VIIRS, GOES, AVHRR) | CSV | 2003-present |
+| `:smoke_polygons` | Analyst-drawn smoke plume polygons (light, medium, heavy) | Shapefile | 2005-present |
+
+## Basic Usage
+
+```julia
+using WildfireData.HMS
+
+# List available products
+HMS.products()
+
+# Print product info
+HMS.info()
+```
+
+## Downloading Fire Points
+
+Fire point data is returned as a `DataFrame` with columns: `Lon`, `Lat`, `YearDay`, `Time`, `Satellite`, `Method`, `Ecosystem`, `FRP`.
+
+```julia
+# Download fire detections for a specific date
+df = HMS.download("2024-08-15")
+
+# Using a Date object
+using Dates
+df = HMS.download(Date(2024, 8, 15))
+```
+
+## Downloading Smoke Polygons
+
+Smoke polygon data is downloaded as a shapefile zip archive.
+
+```julia
+# Download smoke polygons for a date
+path = HMS.download_smoke("2024-08-15")
+```
+
+## Building URLs
+
+```julia
+# Get the download URL for fire points
+url = HMS.download_url(:fire_points, "2024-08-15")
+
+# Get the download URL for smoke polygons
+url = HMS.download_url(:smoke_polygons, "2024-08-15")
+```
+
+## Saving and Loading Fire Point Files
+
+```julia
+# Download and save fire points as CSV
+path = HMS.download_file("2024-08-15")
+
+# Load previously downloaded CSV
+df = HMS.load_file("hms_fire20240815.csv")
+```
+
+## API Reference
+
+### Functions
+
+- `products()` - List available HMS products
+- `info()` - Print HMS product information
+- `download_url(product, date)` - Build download URL for a product and date
+- `download(date; verbose)` - Download fire points and return as DataFrame
+- `download_smoke(date; force, verbose)` - Download smoke polygon shapefile
+- `download_file(date; filename, force, verbose)` - Download fire points and save as CSV
+- `load_file(filename)` - Load previously downloaded CSV fire point file
+- `dir()` - Get local data directory path

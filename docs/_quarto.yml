@@ -31,6 +31,10 @@ book:
         - modules/firms.qmd
         - modules/landfire.qmd
         - modules/feds.qmd
+        - modules/cwfis.qmd
+        - modules/hms.qmd
+        - modules/gwis.qmd
+        - modules/egp.qmd
     - part: "API"
       chapters:
         - api.qmd

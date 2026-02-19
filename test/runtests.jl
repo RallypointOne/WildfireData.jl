@@ -6,8 +6,13 @@ using WildfireData.MTBS
 using WildfireData.FIRMS
 using WildfireData.LANDFIRE
 using WildfireData.FEDS
+using WildfireData.CWFIS
+using WildfireData.HMS
+using WildfireData.GWIS
+using WildfireData.EGP
 using Test
 using DataFrames
+using Dates
 using GeoJSON
 
 @testset "WildfireData.jl" begin
@@ -1173,6 +1178,393 @@ using GeoJSON
         @testset "list_downloads()" begin
             downloads = LANDFIRE.list_downloads()
             @test downloads isa Vector{String}
+        end
+
+    end
+
+    @testset "CWFIS Module" begin
+
+        @testset "collections()" begin
+            c = CWFIS.collections()
+            @test c isa Dict{Symbol, <:NamedTuple}
+            @test length(c) == 8
+
+            # Test that expected collections exist
+            @test haskey(c, :active_fires)
+            @test haskey(c, :reported_fires)
+            @test haskey(c, :hotspots)
+            @test haskey(c, :hotspots_24h)
+            @test haskey(c, :fire_perimeters)
+            @test haskey(c, :fire_points)
+            @test haskey(c, :fire_danger)
+            @test haskey(c, :weather_stations)
+
+            # Test category filtering
+            current = CWFIS.collections(category=:current)
+            @test length(current) == 2
+            @test all(v.category == :current for v in values(current))
+
+            detection = CWFIS.collections(category=:detection)
+            @test length(detection) == 2
+            @test all(v.category == :detection for v in values(detection))
+
+            archive = CWFIS.collections(category=:archive)
+            @test length(archive) == 2
+            @test all(v.category == :archive for v in values(archive))
+
+            weather = CWFIS.collections(category=:weather)
+            @test length(weather) == 2
+            @test all(v.category == :weather for v in values(weather))
+        end
+
+        @testset "Collection struct" begin
+            c = CWFIS.collections()
+            af = c[:active_fires]
+
+            @test af.id == "public:activefires_current"
+            @test af.category == :current
+            @test af.geometry == :point
+            @test !isempty(af.name)
+            @test !isempty(af.description)
+        end
+
+        @testset "query_url()" begin
+            url = CWFIS.query_url(:active_fires)
+            @test occursin("cwfis.cfs.nrcan.gc.ca", url)
+            @test occursin("activefires_current", url)
+            @test occursin("outputFormat=application/json", url)
+            @test occursin("srsName=EPSG:4326", url)
+
+            # Test with count
+            url_count = CWFIS.query_url(:active_fires, count=10)
+            @test occursin("count=10", url_count)
+
+            # Test with bbox tuple
+            url_bbox = CWFIS.query_url(:fire_perimeters, bbox=(-130, 48, -110, 60))
+            @test occursin("bbox=-130,48,-110,60", url_bbox)
+
+            # Test with cql_filter
+            url_cql = CWFIS.query_url(:fire_points, cql_filter="YEAR=2023")
+            @test occursin("CQL_FILTER=", url_cql)
+
+            # Test error for unknown collection
+            @test_throws ErrorException CWFIS.query_url(:nonexistent_collection)
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn CWFIS.info(:active_fires)
+            @test isnothing(result)
+
+            # Test error for unknown collection
+            @test_throws ErrorException CWFIS.info(:nonexistent_collection)
+        end
+
+        @testset "dir()" begin
+            d = CWFIS.dir()
+            @test d isa String
+            @test occursin("CWFIS", d)
+        end
+
+        # Network-dependent tests
+        @testset "Network API Tests" begin
+            @testset "download() with count" begin
+                data = CWFIS.download(:weather_stations, count=2, verbose=false)
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
+
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
+                end
+            end
+
+            @testset "download_file() and load_file()" begin
+                filepath = CWFIS.download_file(:weather_stations, count=2, verbose=false, force=true)
+                @test isfile(filepath)
+                @test endswith(filepath, ".geojson")
+
+                data = CWFIS.load_file(:weather_stations)
+                @test data isa GeoJSON.FeatureCollection
+
+                # Clean up
+                rm(filepath)
+            end
+
+            @testset "Error handling" begin
+                @test_throws ErrorException CWFIS.download(:nonexistent_collection)
+                @test_throws ErrorException CWFIS.download_file(:nonexistent_collection)
+                @test_throws ErrorException CWFIS.load_file(:nonexistent_collection)
+            end
+        end
+
+    end
+
+    @testset "HMS Module" begin
+
+        @testset "products()" begin
+            p = HMS.products()
+            @test p isa Dict{Symbol, <:NamedTuple}
+            @test length(p) == 2
+            @test haskey(p, :fire_points)
+            @test haskey(p, :smoke_polygons)
+
+            fp = p[:fire_points]
+            @test fp.format == :csv
+            @test fp.start_year == 2003
+            @test !isempty(fp.name)
+            @test !isempty(fp.description)
+        end
+
+        @testset "download_url()" begin
+            url = HMS.download_url(:fire_points, "2024-08-15")
+            @test occursin("satepsanone.nesdis.noaa.gov", url)
+            @test occursin("Fire_Points/Text", url)
+            @test occursin("2024/08", url)
+            @test occursin("hms_fire20240815", url)
+
+            url_smoke = HMS.download_url(:smoke_polygons, Date(2024, 8, 15))
+            @test occursin("Smoke_Polygons/Shapefile", url_smoke)
+            @test occursin("hms_smoke20240815", url_smoke)
+
+            # Test error for unknown product
+            @test_throws ErrorException HMS.download_url(:nonexistent, "2024-08-15")
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn HMS.info()
+            @test isnothing(result)
+        end
+
+        @testset "dir()" begin
+            d = HMS.dir()
+            @test d isa String
+            @test occursin("HMS", d)
+        end
+
+        # Network-dependent tests
+        @testset "Network API Tests" begin
+            @testset "download() fire points" begin
+                df = HMS.download("2024-08-15", verbose=false)
+                @test df isa DataFrame
+                @test nrow(df) > 0
+                @test "Lon" in names(df)
+                @test "Lat" in names(df)
+                @test "Satellite" in names(df)
+                @test "FRP" in names(df)
+            end
+
+            @testset "download_file() and load_file()" begin
+                filepath = HMS.download_file("2024-08-15", filename="test_hms.csv", verbose=false, force=true)
+                @test isfile(filepath)
+                @test endswith(filepath, ".csv")
+
+                df = HMS.load_file("test_hms.csv")
+                @test df isa DataFrame
+
+                # Clean up
+                rm(filepath)
+            end
+        end
+
+    end
+
+    @testset "GWIS Module" begin
+
+        @testset "layers()" begin
+            l = GWIS.layers()
+            @test l isa Dict{Symbol, <:NamedTuple}
+            @test length(l) >= 18  # 11 base + 7 severity years
+
+            # Test expected layers exist
+            @test haskey(l, :modis_hotspots)
+            @test haskey(l, :viirs_hotspots)
+            @test haskey(l, :modis_burnt_areas)
+            @test haskey(l, :viirs_burnt_areas)
+            @test haskey(l, :fwi)
+            @test haskey(l, :ffmc)
+            @test haskey(l, :severity_2024)
+
+            # Test category filtering
+            active = GWIS.layers(category=:active_fires)
+            @test length(active) == 2
+            @test all(v.category == :active_fires for v in values(active))
+
+            burnt = GWIS.layers(category=:burnt_areas)
+            @test length(burnt) == 2
+            @test all(v.category == :burnt_areas for v in values(burnt))
+
+            danger = GWIS.layers(category=:fire_danger)
+            @test length(danger) == 8
+            @test all(v.category == :fire_danger for v in values(danger))
+
+            severity = GWIS.layers(category=:severity)
+            @test length(severity) == 7  # 2018-2024
+            @test all(v.category == :severity for v in values(severity))
+        end
+
+        @testset "Layer struct" begin
+            l = GWIS.layers()
+            vh = l[:viirs_hotspots]
+
+            @test vh.id == "viirs.hs"
+            @test vh.category == :active_fires
+            @test vh.geometry == :point
+            @test !isempty(vh.name)
+            @test !isempty(vh.description)
+        end
+
+        @testset "wms_url()" begin
+            url = GWIS.wms_url(:viirs_hotspots)
+            @test occursin("maps.effis.emergency.copernicus.eu", url)
+            @test occursin("viirs.hs", url)
+            @test occursin("service=WMS", url)
+            @test occursin("request=GetMap", url)
+            @test occursin("format=image/png", url)
+
+            # Test with bbox
+            url_bbox = GWIS.wms_url(:fwi, bbox=(-10, 30, 40, 50))
+            @test occursin("bbox=-10,30,40,50", url_bbox)
+
+            # Test with days
+            url_days = GWIS.wms_url(:viirs_hotspots, days=7)
+            @test occursin("time=7", url_days)
+
+            # Test raster layer doesn't get time param
+            url_fwi = GWIS.wms_url(:fwi)
+            @test !occursin("time=", url_fwi)
+
+            # Test error for unknown layer
+            @test_throws ErrorException GWIS.wms_url(:nonexistent_layer)
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn GWIS.info()
+            @test isnothing(result)
+        end
+
+        @testset "dir()" begin
+            d = GWIS.dir()
+            @test d isa String
+            @test occursin("GWIS", d)
+        end
+
+    end
+
+    @testset "EGP Module" begin
+
+        @testset "datasets()" begin
+            ds = EGP.datasets()
+            @test ds isa Dict{Symbol, WildfireData.ArcGISDataset}
+            @test length(ds) == 6
+
+            # Test expected datasets exist
+            @test haskey(ds, :gacc_boundaries)
+            @test haskey(ds, :dispatch_boundaries)
+            @test haskey(ds, :dispatch_locations)
+            @test haskey(ds, :psa_boundaries)
+            @test haskey(ds, :pods)
+            @test haskey(ds, :ia_frequency_zones)
+
+            # Test category filtering
+            boundaries = EGP.datasets(category=:boundaries)
+            @test all(d.category == :boundaries for d in values(boundaries))
+            @test haskey(boundaries, :gacc_boundaries)
+            @test !haskey(boundaries, :pods)
+
+            planning = EGP.datasets(category=:planning)
+            @test all(d.category == :planning for d in values(planning))
+            @test haskey(planning, :pods)
+        end
+
+        @testset "Dataset struct" begin
+            ds = EGP.datasets()
+            d = ds[:gacc_boundaries]
+
+            @test d.service == "DMP_NationalGACCBoundaries_Public"
+            @test d.layer == 0
+            @test d.category == :boundaries
+            @test !isempty(d.name)
+            @test !isempty(d.description)
+        end
+
+        @testset "query_url()" begin
+            url = EGP.query_url(:gacc_boundaries)
+            @test occursin("services3.arcgis.com", url)
+            @test occursin("DMP_NationalGACCBoundaries_Public", url)
+            @test occursin("FeatureServer/0/query", url)
+            @test occursin("f=geojson", url)
+
+            # Test with limit
+            url_limit = EGP.query_url(:gacc_boundaries, limit=10)
+            @test occursin("resultRecordCount=10", url_limit)
+
+            # Test error for unknown dataset
+            @test_throws ErrorException EGP.query_url(:nonexistent_dataset)
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn EGP.info(:gacc_boundaries)
+            @test isnothing(result)
+
+            @test_throws ErrorException EGP.info(:nonexistent_dataset)
+        end
+
+        @testset "dir()" begin
+            d = EGP.dir()
+            @test d isa String
+            @test occursin("EGP", d)
+        end
+
+        # Network-dependent tests
+        @testset "Network API Tests" begin
+            @testset "count()" begin
+                n = EGP.count(:gacc_boundaries)
+                @test n isa Integer
+                @test n >= 0
+            end
+
+            @testset "fields()" begin
+                f = EGP.fields(:gacc_boundaries)
+                @test f isa Vector
+                @test length(f) > 0
+
+                first_field = f[1]
+                @test haskey(first_field, :name)
+                @test haskey(first_field, :type)
+                @test haskey(first_field, :alias)
+            end
+
+            @testset "download() with limit" begin
+                data = EGP.download(:gacc_boundaries, limit=2, verbose=false)
+                @test data isa GeoJSON.FeatureCollection
+                @test length(data) <= 2
+
+                if length(data) > 0
+                    feature = data[1]
+                    @test feature isa GeoJSON.Feature
+                    @test !isnothing(GeoJSON.geometry(feature))
+                end
+            end
+
+            @testset "download_file() and load_file()" begin
+                filepath = EGP.download_file(:gacc_boundaries, limit=2, verbose=false, force=true)
+                @test isfile(filepath)
+                @test endswith(filepath, ".geojson")
+
+                data = EGP.load_file(:gacc_boundaries)
+                @test data isa GeoJSON.FeatureCollection
+
+                # Clean up
+                rm(filepath)
+            end
+
+            @testset "Error handling" begin
+                @test_throws ErrorException EGP.download(:nonexistent_dataset)
+                @test_throws ErrorException EGP.count(:nonexistent_dataset)
+                @test_throws ErrorException EGP.fields(:nonexistent_dataset)
+                @test_throws ErrorException EGP.load_file(:nonexistent_dataset)
+            end
         end
 
     end

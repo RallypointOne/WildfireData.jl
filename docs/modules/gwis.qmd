@@ -1,0 +1,94 @@
+---
+title: "GWIS"
+subtitle: "Global Wildfire Information System"
+engine: julia
+---
+
+## Overview
+
+The GWIS module provides WMS (Web Map Service) tile URLs for the Global Wildfire Information System and EFFIS (European Forest Fire Information System). These services are part of the Copernicus Emergency Management Service and provide fire danger forecasts, active fire detections, burnt area mapping, and fire severity data.
+
+**Data Sources:**
+
+- [GWIS](https://gwis.jrc.ec.europa.eu/)
+- [EFFIS](https://effis.jrc.ec.europa.eu/)
+
+No API key is required.
+
+## Available Layers
+
+| Layer | Description | Category | Type |
+|-------|-------------|----------|------|
+| `:modis_hotspots` | MODIS satellite active fire detections | active_fires | point |
+| `:viirs_hotspots` | VIIRS satellite active fire detections | active_fires | point |
+| `:modis_burnt_areas` | MODIS burnt area perimeters (>= 30 ha) | burnt_areas | polygon |
+| `:viirs_burnt_areas` | VIIRS/Sentinel-2 near real-time burnt areas | burnt_areas | polygon |
+| `:fwi` | Fire Weather Index (ECMWF) | fire_danger | raster |
+| `:ffmc` | Fine Fuel Moisture Code (ECMWF) | fire_danger | raster |
+| `:dmc` | Duff Moisture Code (ECMWF) | fire_danger | raster |
+| `:dc` | Drought Code (ECMWF) | fire_danger | raster |
+| `:isi` | Initial Spread Index (ECMWF) | fire_danger | raster |
+| `:bui` | Build Up Index (ECMWF) | fire_danger | raster |
+| `:fwi_anomaly` | Fire Weather Index anomaly (ECMWF) | fire_danger | raster |
+| `:fwi_ranking` | Fire danger ranking (ECMWF) | fire_danger | raster |
+| `:fwi_mf` | Fire Weather Index (Meteo France) | fire_danger_mf | raster |
+| `:severity_2018` ... `:severity_2024` | Annual fire severity assessment | severity | raster |
+
+## Basic Usage
+
+```julia
+using WildfireData.GWIS
+
+# List all layers
+GWIS.layers()
+
+# Filter by category
+GWIS.layers(category=:active_fires)
+GWIS.layers(category=:fire_danger)
+GWIS.layers(category=:severity)
+
+# Print general info
+GWIS.info()
+```
+
+## Building WMS URLs
+
+The primary function is `wms_url`, which builds WMS GetMap URLs for use with mapping tools or direct image download.
+
+```julia
+# Get VIIRS hotspots for Europe, last 7 days
+url = GWIS.wms_url(:viirs_hotspots, bbox=(-25, 27, 45, 72), days=7)
+
+# Get Fire Weather Index for the Mediterranean
+url = GWIS.wms_url(:fwi, bbox=(-10, 30, 40, 50))
+
+# Get MODIS burnt areas for the full fire season
+url = GWIS.wms_url(:modis_burnt_areas, bbox=(-25, 27, 45, 72), days=0)
+
+# Custom image size
+url = GWIS.wms_url(:fwi, width=2048, height=1024)
+```
+
+## Downloading Map Tiles
+
+```julia
+# Download a WMS tile image
+path = GWIS.download_tile(:viirs_hotspots, bbox=(-25, 27, 45, 72), days=7)
+
+# Force re-download
+path = GWIS.download_tile(:fwi, bbox=(-10, 30, 40, 50), force=true)
+
+# Custom filename
+path = GWIS.download_tile(:fwi, filename="mediterranean_fwi.png",
+    bbox=(-10, 30, 40, 50))
+```
+
+## API Reference
+
+### Functions
+
+- `layers(; category=nothing)` - List available WMS layers
+- `info()` - Print GWIS/EFFIS service information
+- `wms_url(layer; bbox, width, height, days, format, srs)` - Build WMS GetMap URL
+- `download_tile(layer; filename, force, verbose, ...)` - Download a WMS map tile image
+- `dir()` - Get local data directory path

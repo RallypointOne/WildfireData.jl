@@ -1,0 +1,100 @@
+---
+title: "EGP"
+subtitle: "Enterprise Geospatial Portal"
+engine: julia
+---
+
+## Overview
+
+The EGP module provides access to operational and jurisdictional boundary datasets from the NIFC (National Interagency Fire Center) Enterprise Geospatial Portal. These datasets complement fire event data in WFIGS/IRWIN with management and planning boundaries via ArcGIS REST services.
+
+**Data Source:** [NIFC Open Data](https://data-nifc.opendata.arcgis.com/)
+
+No API key is required.
+
+## Available Datasets
+
+| Dataset | Description | Category |
+|---------|-------------|----------|
+| `:gacc_boundaries` | Geographic Area Coordination Center boundaries | boundaries |
+| `:dispatch_boundaries` | Interagency dispatch center boundaries | boundaries |
+| `:dispatch_locations` | Point locations of dispatch centers | boundaries |
+| `:psa_boundaries` | Predictive Service Area boundaries for fire weather | boundaries |
+| `:pods` | Potential Operational Delineations for wildfire response | planning |
+| `:ia_frequency_zones` | Federal initial attack frequency zones | planning |
+
+## Basic Usage
+
+```julia
+using WildfireData.EGP
+
+# List all datasets
+EGP.datasets()
+
+# Filter by category
+EGP.datasets(category=:boundaries)
+EGP.datasets(category=:planning)
+
+# Get dataset info
+EGP.info(:gacc_boundaries)
+```
+
+## Downloading Data
+
+### Basic Download
+
+```julia
+# Download all GACC boundaries
+data = EGP.download(:gacc_boundaries)
+
+# Download with a record limit
+data = EGP.download(:dispatch_boundaries, limit=10)
+```
+
+### Spatial Filtering (Bounding Box)
+
+```julia
+# Download PODs in California
+data = EGP.download(:pods, bbox=(-125, 32, -114, 42), limit=50)
+```
+
+### SQL-Style Filtering
+
+```julia
+# Download large PODs
+data = EGP.download(:pods, where="GISAcres > 10000", limit=10)
+```
+
+## Dataset Metadata
+
+```julia
+# Get record count
+n = EGP.count(:gacc_boundaries)
+
+# Get field names and types
+f = EGP.fields(:gacc_boundaries)
+```
+
+## Saving and Loading Files
+
+```julia
+# Download and save to local file
+path = EGP.download_file(:gacc_boundaries)
+
+# Load previously downloaded file
+data = EGP.load_file(:gacc_boundaries)
+```
+
+## API Reference
+
+### Functions
+
+- `datasets(; category=nothing)` - List available datasets
+- `info(dataset)` - Print dataset information
+- `download(dataset; where, fields, limit, bbox, verbose)` - Download data as GeoJSON
+- `download_file(dataset; filename, force, verbose, ...)` - Download and save to file
+- `load_file(dataset; filename)` - Load previously downloaded file
+- `query_url(dataset; ...)` - Build ArcGIS query URL
+- `count(dataset; where)` - Get feature count
+- `fields(dataset)` - Get field names and types
+- `dir()` - Get local data directory path

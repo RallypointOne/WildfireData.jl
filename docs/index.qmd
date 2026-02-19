@@ -5,7 +5,7 @@ subtitle: "Access wildfire and fire-related geospatial data from Julia"
 
 ## Overview
 
-**WildfireData.jl** is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from various U.S. government sources.
+**WildfireData.jl** is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from U.S., Canadian, and global sources.
 
 ## Data Sources
 
@@ -19,6 +19,11 @@ The package includes modules for accessing data from:
 | [MTBS](modules/mtbs.qmd) | Monitoring Trends in Burn Severity | Burn severity & fire boundaries |
 | [FIRMS](modules/firms.qmd) | Fire Information for Resource Management System | Satellite fire detections |
 | [LANDFIRE](modules/landfire.qmd) | Landscape Fire and Resource Management | Fuel, vegetation, topography |
+| [FEDS](modules/feds.qmd) | Fire Events Data Suite | Satellite-derived fire event tracking |
+| [CWFIS](modules/cwfis.qmd) | Canadian Wildland Fire Information System | Canadian fire data & hotspots |
+| [HMS](modules/hms.qmd) | NOAA Hazard Mapping System | Fire detections & smoke plumes |
+| [GWIS](modules/gwis.qmd) | Global Wildfire Information System | Global fire danger & burnt areas |
+| [EGP](modules/egp.qmd) | Enterprise Geospatial Portal | Operational & jurisdictional boundaries |
 
 ## Features
 
@@ -53,4 +58,4 @@ See the [Getting Started](getting-started.qmd) guide for more details.
 
 ## License
 
-This package is open source. The data accessed through this package is provided by various U.S. government agencies and is generally in the public domain.
+This package is open source. The data accessed through this package is provided by various government agencies and is generally in the public domain or available under open licenses (e.g., CC BY 4.0).
