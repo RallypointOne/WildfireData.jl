@@ -5,16 +5,23 @@
 
 # WildfireData.jl
 
-A Julia package for accessing wildfire and fire-related geospatial data from various U.S. government sources.
+A Julia package for accessing wildfire and fire-related geospatial data from U.S., Canadian, and global sources.
 
 ## Data Sources
 
-- **WFIGS** - Wildland Fire Interagency Geospatial Services
-- **IRWIN** - Integrated Reporting of Wildland-Fire Information
-- **FPA-FOD** - Fire Program Analysis Fire-Occurrence Database
-- **MTBS** - Monitoring Trends in Burn Severity
-- **FIRMS** - Fire Information for Resource Management System (NASA)
-- **LANDFIRE** - Landscape Fire and Resource Management Planning Tools
+| Module | Source | Description |
+|--------|--------|-------------|
+| **WFIGS** | NIFC | Wildland Fire Interagency Geospatial Services |
+| **IRWIN** | NIFC | Integrated Reporting of Wildland-Fire Information |
+| **FPA-FOD** | USDA | Fire Program Analysis Fire-Occurrence Database |
+| **MTBS** | USGS/USDA | Monitoring Trends in Burn Severity |
+| **FIRMS** | NASA | Fire Information for Resource Management System |
+| **LANDFIRE** | USGS/USDA | Landscape Fire and Resource Management Planning Tools |
+| **FEDS** | NASA | Fire Events Data Suite (satellite-derived fire tracking) |
+| **CWFIS** | NRCan | Canadian Wildland Fire Information System |
+| **HMS** | NOAA | Hazard Mapping System (fire detections & smoke plumes) |
+| **GWIS** | Copernicus | Global Wildfire Information System (fire danger & burnt areas) |
+| **EGP** | NIFC | Enterprise Geospatial Portal (operational boundaries) |
 
 ## Installation
 
