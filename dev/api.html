@@ -65,8 +65,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./modules/wfigs.html" rel="next">
-<link href="./getting-started.html" rel="prev">
+<link href="./changelog.html" rel="next">
+<link href="./modules/landfire.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -83,18 +83,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/bootstrap/bootstrap-dark-7c8ba9dac8feea6a77ed63b2e2898d0e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="site_libs/bootstrap/bootstrap-c58f986be3ff872790ab570c6d9e49f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
+  "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
+  "panel-placement": "start",
+  "type": "textbox",
   "limit": 50,
   "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
+    "/"
   ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -103,7 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
+    "search-text-placeholder": "Search  (/)",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -257,7 +254,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
     };
     const authorPrefersDark = false;
-    const darkModeDefault = authorPrefersDark;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
       document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
       document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
     let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
@@ -270,6 +268,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       toggleGiscusIfUsed(toAlternate, darkModeDefault);
       window.dispatchEvent(new Event('resize'));
     };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
     // Switch to dark mode if need be
     if (hasAlternateSentinel()) {
       toggleColorMode(true);
@@ -287,7 +293,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <span class="navbar-title">WildfireData.jl</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
@@ -315,9 +320,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Docs</a></li><li class="breadcrumb-item"><a href="./api.html"><span class="chapter-title">API</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api.html">API</a></li><li class="breadcrumb-item"><a href="./api.html"><span class="chapter-title">API</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
     </div>
   </nav>
 </header>
@@ -325,6 +333,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -346,22 +359,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./getting-started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Getting Started</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./api.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">API</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Data Modules</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./modules/wfigs.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">WFIGS</span></a>
@@ -396,6 +393,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">API</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./api.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">API</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
  <span class="menu-text">Reference</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
@@ -420,14 +433,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#modules" id="toc-modules" class="nav-link active" data-scroll-target="#modules">Modules</a>
+  <ul>
+  <li><a href="#firms" id="toc-firms" class="nav-link" data-scroll-target="#firms"><code>FIRMS</code></a></li>
+  <li><a href="#fpa_fod" id="toc-fpa_fod" class="nav-link" data-scroll-target="#fpa_fod"><code>FPA_FOD</code></a></li>
+  <li><a href="#irwin" id="toc-irwin" class="nav-link" data-scroll-target="#irwin"><code>IRWIN</code></a></li>
+  <li><a href="#landfire" id="toc-landfire" class="nav-link" data-scroll-target="#landfire"><code>LANDFIRE</code></a></li>
+  <li><a href="#mtbs" id="toc-mtbs" class="nav-link" data-scroll-target="#mtbs"><code>MTBS</code></a></li>
+  <li><a href="#wfigs" id="toc-wfigs" class="nav-link" data-scroll-target="#wfigs"><code>WFIGS</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Docs</a></li><li class="breadcrumb-item"><a href="./api.html"><span class="chapter-title">API</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./api.html">API</a></li><li class="breadcrumb-item"><a href="./api.html"><span class="chapter-title">API</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-title">API</span></h1>
 </div>
@@ -446,41 +473,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<button class="btn btn-sm btn-outline-secondary mb-3" id="toggle-all-callouts">
-Expand All
-</button>
-<script>
-document.getElementById('toggle-all-callouts').addEventListener('click', function() {
-  var btn = this;
-  var bodies = document.querySelectorAll('.callout-collapse.collapse');
-  var allOpen = Array.from(bodies).every(function(el) { return el.classList.contains('show'); });
-  bodies.forEach(function(el) {
-    var bsCollapse = bootstrap.Collapse.getOrCreateInstance(el, {toggle: false});
-    allOpen ? bsCollapse.hide() : bsCollapse.show();
-  });
-  btn.textContent = allOpen ? 'Expand All' : 'Collapse All';
-});
-</script>
-<ul>
-<li><a href="#firms"><code>FIRMS</code></a> <em>(module)</em></li>
-<li><a href="#fpa_fod"><code>FPA_FOD</code></a> <em>(module)</em></li>
-<li><a href="#irwin"><code>IRWIN</code></a> <em>(module)</em></li>
-<li><a href="#landfire"><code>LANDFIRE</code></a> <em>(module)</em></li>
-<li><a href="#mtbs"><code>MTBS</code></a> <em>(module)</em></li>
-<li><a href="#wfigs"><code>WFIGS</code></a> <em>(module)</em></li>
-</ul>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>FIRMS</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+<section id="modules" class="level2">
+<h2 class="anchored" data-anchor-id="modules">Modules</h2>
+<section id="firms" class="level4">
+<h4 class="anchored"><code>FIRMS</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.FIRMS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -520,19 +518,11 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>FPA_FOD</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="fpa_fod" class="level4">
+<h4 class="anchored"><code>FPA_FOD</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.FPA_FOD</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -572,19 +562,11 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>IRWIN</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="irwin" class="level4">
+<h4 class="anchored"><code>IRWIN</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.IRWIN</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -624,19 +606,11 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>LANDFIRE</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="landfire" class="level4">
+<h4 class="anchored"><code>LANDFIRE</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.LANDFIRE</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -676,19 +650,11 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>MTBS</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="mtbs" class="level4">
+<h4 class="anchored"><code>MTBS</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.MTBS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -728,19 +694,11 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
-<div class="callout callout-style-simple callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span><code>WFIGS</code> <span class="text-muted"><em>(module)</em></span>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
+</section>
+<section id="wfigs" class="level4">
+<h4 class="anchored"><code>WFIGS</code></h4>
+<div class="card mb-3">
+<div class="card-body">
 <p>No docstring found for public module <code>WildfireData.WFIGS</code>. Module does not have any public names.</p>
 <hr>
 <p><em>Package description from <code>README.md</code>:</em> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/CI.yml/badge.svg" class="img-fluid" alt="CI"></a> <a href="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml"><img src="https://github.com/RallypointOne/WildfireData.jl/actions/workflows/Docs.yml/badge.svg" class="img-fluid" alt="Docs Build"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/stable/"><img src="https://img.shields.io/badge/docs-stable-blue.png" class="img-fluid" alt="Stable Docs"></a> <a href="https://RallypointOne.github.io/WildfireData.jl/dev/"><img src="https://img.shields.io/badge/docs-dev-blue.png" class="img-fluid" alt="Dev Docs"></a></p>
@@ -780,9 +738,10 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
 </section>
 </div>
 </div>
-</div>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1200,17 +1159,30 @@ document.getElementById('toggle-all-callouts').addEventListener('click', functio
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./getting-started.html" class="pagination-link" aria-label="Getting Started">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Getting Started</span></span>
+      <a href="./modules/landfire.html" class="pagination-link" aria-label="LANDFIRE">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">LANDFIRE</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./modules/wfigs.html" class="pagination-link" aria-label="WFIGS">
-        <span class="nav-page-text"><span class="chapter-title">WFIGS</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./changelog.html" class="pagination-link" aria-label="Changelog">
+        <span class="nav-page-text"><span class="chapter-title">Changelog</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Built on 2026-02-19</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 <script>
 (function() {
     // Detect repo name and current version from URL path

@@ -31,13 +31,13 @@
             <td class="headerValue">on branch main</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">70.2&nbsp;%</td>
-            <td class="headerCovTableEntry">104</td>
+            <td class="headerCovTableEntryLo">68.2&nbsp;%</td>
+            <td class="headerCovTableEntry">107</td>
             <td class="headerCovTableEntry">73</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-12 17:08:35</td>
+            <td class="headerValue">2026-02-19 14:33:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -510,76 +510,80 @@
 <span id="L448"><span class="lineNum">     448</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Region: $(r.name)&quot;)</span></span>
 <span id="L449"><span class="lineNum">     449</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Version: LF $(v.year)&quot;)</span></span>
 <span id="L450"><span class="lineNum">     450</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;URL: $url&quot;)</span></span>
-<span id="L451"><span class="lineNum">     451</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Warning: LANDFIRE files can be very large (hundreds of MB to GB)&quot;)</span></span>
-<span id="L452"><span class="lineNum">     452</span>              : </span>
-<span id="L453"><span class="lineNum">     453</span>              :     # Check if URL is valid first</span>
-<span id="L454"><span class="lineNum">     454</span> <span class="tlaUNC">           0 :     response = HTTP.head(url; status_exception=false)</span></span>
-<span id="L455"><span class="lineNum">     455</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
-<span id="L456"><span class="lineNum">     456</span> <span class="tlaUNC">           0 :         error(&quot;Download not available for this product/region/version combination. HTTP status: $(response.status)&quot;)</span></span>
-<span id="L457"><span class="lineNum">     457</span>              :     end</span>
-<span id="L458"><span class="lineNum">     458</span>              : </span>
-<span id="L459"><span class="lineNum">     459</span> <span class="tlaUNC">           0 :     Downloads.download(url, filepath)</span></span>
-<span id="L460"><span class="lineNum">     460</span>              : </span>
-<span id="L461"><span class="lineNum">     461</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Saved to: $filepath&quot;)</span></span>
-<span id="L462"><span class="lineNum">     462</span> <span class="tlaUNC">           0 :     return filepath</span></span>
-<span id="L463"><span class="lineNum">     463</span>              : end</span>
+<span id="L451"><span class="lineNum">     451</span>              :     # Check if URL is valid first and get file size</span>
+<span id="L452"><span class="lineNum">     452</span> <span class="tlaUNC">           0 :     response = HTTP.head(url; status_exception=false)</span></span>
+<span id="L453"><span class="lineNum">     453</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
+<span id="L454"><span class="lineNum">     454</span> <span class="tlaUNC">           0 :         error(&quot;Download not available for this product/region/version combination. HTTP status: $(response.status)&quot;)</span></span>
+<span id="L455"><span class="lineNum">     455</span>              :     end</span>
+<span id="L456"><span class="lineNum">     456</span>              : </span>
+<span id="L457"><span class="lineNum">     457</span> <span class="tlaUNC">           0 :     cl = HTTP.header(response, &quot;Content-Length&quot;, &quot;&quot;)</span></span>
+<span id="L458"><span class="lineNum">     458</span> <span class="tlaUNC">           0 :     if verbose &amp;&amp; !isempty(cl)</span></span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaUNC">           0 :         size_mb = round(parse(Int, cl) / 1024^2, digits=1)</span></span>
+<span id="L460"><span class="lineNum">     460</span> <span class="tlaUNC">           0 :         println(&quot;File size: ~$(size_mb) MB&quot;)</span></span>
+<span id="L461"><span class="lineNum">     461</span>              :     end</span>
+<span id="L462"><span class="lineNum">     462</span>              : </span>
+<span id="L463"><span class="lineNum">     463</span> <span class="tlaUNC">           0 :     Downloads.download(url, filepath)</span></span>
 <span id="L464"><span class="lineNum">     464</span>              : </span>
-<span id="L465"><span class="lineNum">     465</span>              : &quot;&quot;&quot;</span>
-<span id="L466"><span class="lineNum">     466</span>              :     list_downloads()</span>
-<span id="L467"><span class="lineNum">     467</span>              : </span>
-<span id="L468"><span class="lineNum">     468</span>              : List all previously downloaded LANDFIRE files in the local data directory.</span>
-<span id="L469"><span class="lineNum">     469</span>              : </span>
-<span id="L470"><span class="lineNum">     470</span>              : # Example</span>
-<span id="L471"><span class="lineNum">     471</span>              : ```julia</span>
-<span id="L472"><span class="lineNum">     472</span>              : LANDFIRE.list_downloads()</span>
-<span id="L473"><span class="lineNum">     473</span>              : ```</span>
-<span id="L474"><span class="lineNum">     474</span>              : &quot;&quot;&quot;</span>
-<span id="L475"><span class="lineNum">     475</span> <span class="tlaGNC tlaBgGNC">           1 : function list_downloads()</span></span>
-<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">           1 :     d = dir()</span></span>
-<span id="L477"><span class="lineNum">     477</span> <span class="tlaGNC">           1 :     if !isdir(d)</span></span>
-<span id="L478"><span class="lineNum">     478</span> <span class="tlaGNC">           1 :         return String[]</span></span>
-<span id="L479"><span class="lineNum">     479</span>              :     end</span>
-<span id="L480"><span class="lineNum">     480</span> <span class="tlaUNC tlaBgUNC">           0 :     return readdir(d)</span></span>
-<span id="L481"><span class="lineNum">     481</span>              : end</span>
-<span id="L482"><span class="lineNum">     482</span>              : </span>
-<span id="L483"><span class="lineNum">     483</span>              : #-----------------------------------------------------------------------------# Convenience Functions</span>
-<span id="L484"><span class="lineNum">     484</span>              : </span>
-<span id="L485"><span class="lineNum">     485</span>              : &quot;&quot;&quot;</span>
-<span id="L486"><span class="lineNum">     486</span>              :     fuel_products()</span>
-<span id="L487"><span class="lineNum">     487</span>              : </span>
-<span id="L488"><span class="lineNum">     488</span>              : List all fuel-related products.</span>
+<span id="L465"><span class="lineNum">     465</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Saved to: $filepath&quot;)</span></span>
+<span id="L466"><span class="lineNum">     466</span> <span class="tlaUNC">           0 :     return filepath</span></span>
+<span id="L467"><span class="lineNum">     467</span>              : end</span>
+<span id="L468"><span class="lineNum">     468</span>              : </span>
+<span id="L469"><span class="lineNum">     469</span>              : &quot;&quot;&quot;</span>
+<span id="L470"><span class="lineNum">     470</span>              :     list_downloads()</span>
+<span id="L471"><span class="lineNum">     471</span>              : </span>
+<span id="L472"><span class="lineNum">     472</span>              : List all previously downloaded LANDFIRE files in the local data directory.</span>
+<span id="L473"><span class="lineNum">     473</span>              : </span>
+<span id="L474"><span class="lineNum">     474</span>              : # Example</span>
+<span id="L475"><span class="lineNum">     475</span>              : ```julia</span>
+<span id="L476"><span class="lineNum">     476</span>              : LANDFIRE.list_downloads()</span>
+<span id="L477"><span class="lineNum">     477</span>              : ```</span>
+<span id="L478"><span class="lineNum">     478</span>              : &quot;&quot;&quot;</span>
+<span id="L479"><span class="lineNum">     479</span> <span class="tlaGNC tlaBgGNC">           1 : function list_downloads()</span></span>
+<span id="L480"><span class="lineNum">     480</span> <span class="tlaGNC">           1 :     d = dir()</span></span>
+<span id="L481"><span class="lineNum">     481</span> <span class="tlaGNC">           1 :     if !isdir(d)</span></span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">           1 :         return String[]</span></span>
+<span id="L483"><span class="lineNum">     483</span>              :     end</span>
+<span id="L484"><span class="lineNum">     484</span> <span class="tlaUNC tlaBgUNC">           0 :     return readdir(d)</span></span>
+<span id="L485"><span class="lineNum">     485</span>              : end</span>
+<span id="L486"><span class="lineNum">     486</span>              : </span>
+<span id="L487"><span class="lineNum">     487</span>              : #-----------------------------------------------------------------------------# Convenience Functions</span>
+<span id="L488"><span class="lineNum">     488</span>              : </span>
 <span id="L489"><span class="lineNum">     489</span>              : &quot;&quot;&quot;</span>
-<span id="L490"><span class="lineNum">     490</span> <span class="tlaGNC tlaBgGNC">           1 : fuel_products() = products(category=:fuel)</span></span>
+<span id="L490"><span class="lineNum">     490</span>              :     fuel_products()</span>
 <span id="L491"><span class="lineNum">     491</span>              : </span>
-<span id="L492"><span class="lineNum">     492</span>              : &quot;&quot;&quot;</span>
-<span id="L493"><span class="lineNum">     493</span>              :     vegetation_products()</span>
-<span id="L494"><span class="lineNum">     494</span>              : </span>
-<span id="L495"><span class="lineNum">     495</span>              : List all vegetation-related products.</span>
+<span id="L492"><span class="lineNum">     492</span>              : List all fuel-related products.</span>
+<span id="L493"><span class="lineNum">     493</span>              : &quot;&quot;&quot;</span>
+<span id="L494"><span class="lineNum">     494</span> <span class="tlaGNC tlaBgGNC">           1 : fuel_products() = products(category=:fuel)</span></span>
+<span id="L495"><span class="lineNum">     495</span>              : </span>
 <span id="L496"><span class="lineNum">     496</span>              : &quot;&quot;&quot;</span>
-<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">           1 : vegetation_products() = products(category=:vegetation)</span></span>
+<span id="L497"><span class="lineNum">     497</span>              :     vegetation_products()</span>
 <span id="L498"><span class="lineNum">     498</span>              : </span>
-<span id="L499"><span class="lineNum">     499</span>              : &quot;&quot;&quot;</span>
-<span id="L500"><span class="lineNum">     500</span>              :     topographic_products()</span>
-<span id="L501"><span class="lineNum">     501</span>              : </span>
-<span id="L502"><span class="lineNum">     502</span>              : List all topographic products.</span>
+<span id="L499"><span class="lineNum">     499</span>              : List all vegetation-related products.</span>
+<span id="L500"><span class="lineNum">     500</span>              : &quot;&quot;&quot;</span>
+<span id="L501"><span class="lineNum">     501</span> <span class="tlaGNC">           1 : vegetation_products() = products(category=:vegetation)</span></span>
+<span id="L502"><span class="lineNum">     502</span>              : </span>
 <span id="L503"><span class="lineNum">     503</span>              : &quot;&quot;&quot;</span>
-<span id="L504"><span class="lineNum">     504</span> <span class="tlaGNC">           1 : topographic_products() = products(category=:topographic)</span></span>
+<span id="L504"><span class="lineNum">     504</span>              :     topographic_products()</span>
 <span id="L505"><span class="lineNum">     505</span>              : </span>
-<span id="L506"><span class="lineNum">     506</span>              : &quot;&quot;&quot;</span>
-<span id="L507"><span class="lineNum">     507</span>              :     fire_regime_products()</span>
-<span id="L508"><span class="lineNum">     508</span>              : </span>
-<span id="L509"><span class="lineNum">     509</span>              : List all fire regime products.</span>
+<span id="L506"><span class="lineNum">     506</span>              : List all topographic products.</span>
+<span id="L507"><span class="lineNum">     507</span>              : &quot;&quot;&quot;</span>
+<span id="L508"><span class="lineNum">     508</span> <span class="tlaGNC">           1 : topographic_products() = products(category=:topographic)</span></span>
+<span id="L509"><span class="lineNum">     509</span>              : </span>
 <span id="L510"><span class="lineNum">     510</span>              : &quot;&quot;&quot;</span>
-<span id="L511"><span class="lineNum">     511</span> <span class="tlaGNC">           1 : fire_regime_products() = products(category=:fire_regime)</span></span>
+<span id="L511"><span class="lineNum">     511</span>              :     fire_regime_products()</span>
 <span id="L512"><span class="lineNum">     512</span>              : </span>
-<span id="L513"><span class="lineNum">     513</span>              : &quot;&quot;&quot;</span>
-<span id="L514"><span class="lineNum">     514</span>              :     disturbance_products()</span>
-<span id="L515"><span class="lineNum">     515</span>              : </span>
-<span id="L516"><span class="lineNum">     516</span>              : List all disturbance products.</span>
+<span id="L513"><span class="lineNum">     513</span>              : List all fire regime products.</span>
+<span id="L514"><span class="lineNum">     514</span>              : &quot;&quot;&quot;</span>
+<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">           1 : fire_regime_products() = products(category=:fire_regime)</span></span>
+<span id="L516"><span class="lineNum">     516</span>              : </span>
 <span id="L517"><span class="lineNum">     517</span>              : &quot;&quot;&quot;</span>
-<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">           1 : disturbance_products() = products(category=:disturbance)</span></span>
+<span id="L518"><span class="lineNum">     518</span>              :     disturbance_products()</span>
 <span id="L519"><span class="lineNum">     519</span>              : </span>
-<span id="L520"><span class="lineNum">     520</span>              : end # module</span>
+<span id="L520"><span class="lineNum">     520</span>              : List all disturbance products.</span>
+<span id="L521"><span class="lineNum">     521</span>              : &quot;&quot;&quot;</span>
+<span id="L522"><span class="lineNum">     522</span> <span class="tlaGNC">           1 : disturbance_products() = products(category=:disturbance)</span></span>
+<span id="L523"><span class="lineNum">     523</span>              : </span>
+<span id="L524"><span class="lineNum">     524</span>              : end # module</span>
         </pre>
               </td>
             </tr>

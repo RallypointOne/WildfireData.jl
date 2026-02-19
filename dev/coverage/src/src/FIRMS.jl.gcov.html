@@ -31,13 +31,13 @@
             <td class="headerValue">on branch main</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntryLo">26.2&nbsp;%</td>
-            <td class="headerCovTableEntry">103</td>
-            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntryMed">81.4&nbsp;%</td>
+            <td class="headerCovTableEntry">102</td>
+            <td class="headerCovTableEntry">83</td>
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-12 17:08:35</td>
+            <td class="headerValue">2026-02-19 14:33:17</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -70,7 +70,7 @@
 <span id="L8"><span class="lineNum">       8</span>              : </span>
 <span id="L9"><span class="lineNum">       9</span>              : </span>
 <span id="L10"><span class="lineNum">      10</span>              : #-----------------------------------------------------------------------------# Data Directory</span>
-<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">           1 : dir() = WildfireData.dir(&quot;FIRMS&quot;)</span></span>
+<span id="L11"><span class="lineNum">      11</span> <span class="tlaGNC tlaBgGNC">           5 : dir() = WildfireData.dir(&quot;FIRMS&quot;)</span></span>
 <span id="L12"><span class="lineNum">      12</span>              : </span>
 <span id="L13"><span class="lineNum">      13</span>              : #-----------------------------------------------------------------------------# Constants</span>
 <span id="L14"><span class="lineNum">      14</span>              : </span>
@@ -152,7 +152,7 @@
 <span id="L90"><span class="lineNum">      90</span>              : </span>
 <span id="L91"><span class="lineNum">      91</span>              : Returns `nothing` if not configured.</span>
 <span id="L92"><span class="lineNum">      92</span>              : &quot;&quot;&quot;</span>
-<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">           3 : get_map_key() = get(ENV, &quot;FIRMS_MAP_KEY&quot;, nothing)</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">          10 : get_map_key() = get(ENV, &quot;FIRMS_MAP_KEY&quot;, nothing)</span></span>
 <span id="L94"><span class="lineNum">      94</span>              : </span>
 <span id="L95"><span class="lineNum">      95</span>              : &quot;&quot;&quot;</span>
 <span id="L96"><span class="lineNum">      96</span>              :     set_map_key!(key::String)</span>
@@ -175,10 +175,10 @@
 <span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           1 :     return nothing</span></span>
 <span id="L114"><span class="lineNum">     114</span>              : end</span>
 <span id="L115"><span class="lineNum">     115</span>              : </span>
-<span id="L116"><span class="lineNum">     116</span> <span class="tlaUNC tlaBgUNC">           0 : function require_map_key()</span></span>
-<span id="L117"><span class="lineNum">     117</span> <span class="tlaUNC">           0 :     key = get_map_key()</span></span>
-<span id="L118"><span class="lineNum">     118</span> <span class="tlaUNC">           0 :     if isnothing(key)</span></span>
-<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC">           0 :         error(&quot;&quot;&quot;</span></span>
+<span id="L116"><span class="lineNum">     116</span>              : function require_map_key()</span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaGNC">           7 :     key = get_map_key()</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaGNC">          14 :     if isnothing(key)</span></span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;&quot;&quot;</span></span>
 <span id="L120"><span class="lineNum">     120</span>              :             FIRMS MAP_KEY not configured.</span>
 <span id="L121"><span class="lineNum">     121</span>              : </span>
 <span id="L122"><span class="lineNum">     122</span>              :             To use the FIRMS API, you need a free MAP_KEY:</span>
@@ -187,7 +187,7 @@
 <span id="L125"><span class="lineNum">     125</span>              :                Or set the FIRMS_MAP_KEY environment variable</span>
 <span id="L126"><span class="lineNum">     126</span>              :             &quot;&quot;&quot;)</span>
 <span id="L127"><span class="lineNum">     127</span>              :     end</span>
-<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :     return key</span></span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC tlaBgGNC">           7 :     return key</span></span>
 <span id="L129"><span class="lineNum">     129</span>              : end</span>
 <span id="L130"><span class="lineNum">     130</span>              : </span>
 <span id="L131"><span class="lineNum">     131</span>              : #-----------------------------------------------------------------------------# Info Functions</span>
@@ -197,7 +197,7 @@
 <span id="L135"><span class="lineNum">     135</span>              : </span>
 <span id="L136"><span class="lineNum">     136</span>              : Print information about the FIRMS API and available data sources.</span>
 <span id="L137"><span class="lineNum">     137</span>              : &quot;&quot;&quot;</span>
-<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC tlaBgGNC">           1 : function info()</span></span>
+<span id="L138"><span class="lineNum">     138</span> <span class="tlaGNC">           1 : function info()</span></span>
 <span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">           1 :     println(&quot;NASA FIRMS: Fire Information for Resource Management System&quot;)</span></span>
 <span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">           1 :     println(&quot;=&quot; ^ 60)</span></span>
 <span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">           1 :     println(&quot;API: $API_BASE&quot;)</span></span>
@@ -210,14 +210,14 @@
 <span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">           1 :     println()</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
 <span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">           1 :     key = get_map_key()</span></span>
-<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           1 :     if isnothing(key)</span></span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           1 :         println(&quot;Status: MAP_KEY not configured&quot;)</span></span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">           1 :         println(&quot;Register for free at: https://firms.modaps.eosdis.nasa.gov/api/map_key/&quot;)</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           2 :     if isnothing(key)</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaUNC tlaBgUNC">           0 :         println(&quot;Status: MAP_KEY not configured&quot;)</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaUNC">           0 :         println(&quot;Register for free at: https://firms.modaps.eosdis.nasa.gov/api/map_key/&quot;)</span></span>
 <span id="L154"><span class="lineNum">     154</span>              :     else</span>
-<span id="L155"><span class="lineNum">     155</span> <span class="tlaUNC tlaBgUNC">           0 :         println(&quot;Status: MAP_KEY configured&quot;)</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaGNC tlaBgGNC">           1 :         println(&quot;Status: MAP_KEY configured&quot;)</span></span>
 <span id="L156"><span class="lineNum">     156</span>              :     end</span>
 <span id="L157"><span class="lineNum">     157</span>              : </span>
-<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC tlaBgGNC">           1 :     return nothing</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaGNC">           1 :     return nothing</span></span>
 <span id="L159"><span class="lineNum">     159</span>              : end</span>
 <span id="L160"><span class="lineNum">     160</span>              : </span>
 <span id="L161"><span class="lineNum">     161</span>              : &quot;&quot;&quot;</span>
@@ -267,21 +267,21 @@
 <span id="L205"><span class="lineNum">     205</span>              : - `days::Int`: Number of days (1-10)</span>
 <span id="L206"><span class="lineNum">     206</span>              : - `date`: Optional date (Date or &quot;YYYY-MM-DD&quot; string) for historical queries</span>
 <span id="L207"><span class="lineNum">     207</span>              : &quot;&quot;&quot;</span>
-<span id="L208"><span class="lineNum">     208</span> <span class="tlaUNC tlaBgUNC">           0 : function query_url(source::Symbol, area::String, days::Int; date::Union{Date, String, Nothing}=nothing)</span></span>
-<span id="L209"><span class="lineNum">     209</span> <span class="tlaUNC">           0 :     haskey(SOURCES, source) || error(&quot;Unknown source: $source. Use `FIRMS.sources()` to list available sources.&quot;)</span></span>
-<span id="L210"><span class="lineNum">     210</span> <span class="tlaUNC">           0 :     1 &lt;= days &lt;= 10 || error(&quot;days must be between 1 and 10&quot;)</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">          18 : function query_url(source::Symbol, area::String, days::Int; date::Union{Date, String, Nothing}=nothing)</span></span>
+<span id="L209"><span class="lineNum">     209</span> <span class="tlaGNC">          11 :     haskey(SOURCES, source) || error(&quot;Unknown source: $source. Use `FIRMS.sources()` to list available sources.&quot;)</span></span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">           8 :     1 &lt;= days &lt;= 10 || error(&quot;days must be between 1 and 10&quot;)</span></span>
 <span id="L211"><span class="lineNum">     211</span>              : </span>
-<span id="L212"><span class="lineNum">     212</span> <span class="tlaUNC">           0 :     key = require_map_key()</span></span>
-<span id="L213"><span class="lineNum">     213</span> <span class="tlaUNC">           0 :     source_name = SOURCES[source].name</span></span>
+<span id="L212"><span class="lineNum">     212</span> <span class="tlaGNC">          12 :     key = require_map_key()</span></span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">           6 :     source_name = SOURCES[source].name</span></span>
 <span id="L214"><span class="lineNum">     214</span>              : </span>
-<span id="L215"><span class="lineNum">     215</span> <span class="tlaUNC">           0 :     url = &quot;$API_BASE/area/csv/$key/$source_name/$area/$days&quot;</span></span>
+<span id="L215"><span class="lineNum">     215</span> <span class="tlaGNC">           6 :     url = &quot;$API_BASE/area/csv/$key/$source_name/$area/$days&quot;</span></span>
 <span id="L216"><span class="lineNum">     216</span>              : </span>
-<span id="L217"><span class="lineNum">     217</span> <span class="tlaUNC">           0 :     if !isnothing(date)</span></span>
-<span id="L218"><span class="lineNum">     218</span> <span class="tlaUNC">           0 :         date_str = date isa Date ? Dates.format(date, &quot;yyyy-mm-dd&quot;) : date</span></span>
-<span id="L219"><span class="lineNum">     219</span> <span class="tlaUNC">           0 :         url *= &quot;/$date_str&quot;</span></span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           6 :     if !isnothing(date)</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">           1 :         date_str = date isa Date ? Dates.format(date, &quot;yyyy-mm-dd&quot;) : date</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">           1 :         url *= &quot;/$date_str&quot;</span></span>
 <span id="L220"><span class="lineNum">     220</span>              :     end</span>
 <span id="L221"><span class="lineNum">     221</span>              : </span>
-<span id="L222"><span class="lineNum">     222</span> <span class="tlaUNC">           0 :     return url</span></span>
+<span id="L222"><span class="lineNum">     222</span> <span class="tlaGNC">           6 :     return url</span></span>
 <span id="L223"><span class="lineNum">     223</span>              : end</span>
 <span id="L224"><span class="lineNum">     224</span>              : </span>
 <span id="L225"><span class="lineNum">     225</span>              : &quot;&quot;&quot;</span>
@@ -315,43 +315,43 @@
 <span id="L253"><span class="lineNum">     253</span>              : df = FIRMS.download(:VIIRS_SNPP_SP, region=:western_us, days=1, date=&quot;2023-08-15&quot;)</span>
 <span id="L254"><span class="lineNum">     254</span>              : ```</span>
 <span id="L255"><span class="lineNum">     255</span>              : &quot;&quot;&quot;</span>
-<span id="L256"><span class="lineNum">     256</span> <span class="tlaUNC">           0 : function download(source::Symbol; area::String=&quot;world&quot;, region::Union{Symbol, Nothing}=nothing,</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">          10 : function download(source::Symbol; area::String=&quot;world&quot;, region::Union{Symbol, Nothing}=nothing,</span></span>
 <span id="L257"><span class="lineNum">     257</span>              :                   days::Int=1, date::Union{Date, String, Nothing}=nothing, verbose::Bool=true)</span>
 <span id="L258"><span class="lineNum">     258</span>              : </span>
 <span id="L259"><span class="lineNum">     259</span>              :     # Handle region shortcut</span>
-<span id="L260"><span class="lineNum">     260</span> <span class="tlaUNC">           0 :     if !isnothing(region)</span></span>
-<span id="L261"><span class="lineNum">     261</span> <span class="tlaUNC">           0 :         haskey(REGIONS, region) || error(&quot;Unknown region: $region. Use `FIRMS.regions()` to list available regions.&quot;)</span></span>
-<span id="L262"><span class="lineNum">     262</span> <span class="tlaUNC">           0 :         area = REGIONS[region]</span></span>
+<span id="L260"><span class="lineNum">     260</span> <span class="tlaGNC">           5 :     if !isnothing(region)</span></span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">           3 :         haskey(REGIONS, region) || error(&quot;Unknown region: $region. Use `FIRMS.regions()` to list available regions.&quot;)</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">           3 :         area = REGIONS[region]</span></span>
 <span id="L263"><span class="lineNum">     263</span>              :     end</span>
 <span id="L264"><span class="lineNum">     264</span>              : </span>
-<span id="L265"><span class="lineNum">     265</span> <span class="tlaUNC">           0 :     url = query_url(source, area, days; date=date)</span></span>
+<span id="L265"><span class="lineNum">     265</span> <span class="tlaGNC">           5 :     url = query_url(source, area, days; date=date)</span></span>
 <span id="L266"><span class="lineNum">     266</span>              : </span>
-<span id="L267"><span class="lineNum">     267</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Downloading: $(SOURCES[source].description)&quot;)</span></span>
-<span id="L268"><span class="lineNum">     268</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Area: $area&quot;)</span></span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Days: $days&quot;)</span></span>
-<span id="L270"><span class="lineNum">     270</span> <span class="tlaUNC">           0 :     !isnothing(date) &amp;&amp; verbose &amp;&amp; println(&quot;Date: $date&quot;)</span></span>
-<span id="L271"><span class="lineNum">     271</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;URL: $(replace(url, get_map_key() =&gt; &quot;[MAP_KEY]&quot;))&quot;)</span></span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;Downloading: $(SOURCES[source].description)&quot;)</span></span>
+<span id="L268"><span class="lineNum">     268</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;Area: $area&quot;)</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;Days: $days&quot;)</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">           4 :     !isnothing(date) &amp;&amp; verbose &amp;&amp; println(&quot;Date: $date&quot;)</span></span>
+<span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;URL: $(replace(url, get_map_key() =&gt; &quot;[MAP_KEY]&quot;))&quot;)</span></span>
 <span id="L272"><span class="lineNum">     272</span>              : </span>
-<span id="L273"><span class="lineNum">     273</span> <span class="tlaUNC">           0 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           4 :     response = HTTP.get(url; status_exception=false)</span></span>
 <span id="L274"><span class="lineNum">     274</span>              : </span>
-<span id="L275"><span class="lineNum">     275</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
-<span id="L276"><span class="lineNum">     276</span> <span class="tlaUNC">           0 :         error(&quot;Failed to download data. HTTP status: $(response.status)\nResponse: $(String(response.body))&quot;)</span></span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">           4 :     if response.status != 200</span></span>
+<span id="L276"><span class="lineNum">     276</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to download data. HTTP status: $(response.status)\nResponse: $(String(response.body))&quot;)</span></span>
 <span id="L277"><span class="lineNum">     277</span>              :     end</span>
 <span id="L278"><span class="lineNum">     278</span>              : </span>
-<span id="L279"><span class="lineNum">     279</span> <span class="tlaUNC">           0 :     body = String(response.body)</span></span>
+<span id="L279"><span class="lineNum">     279</span> <span class="tlaGNC tlaBgGNC">           4 :     body = String(response.body)</span></span>
 <span id="L280"><span class="lineNum">     280</span>              : </span>
 <span id="L281"><span class="lineNum">     281</span>              :     # Check for error messages</span>
-<span id="L282"><span class="lineNum">     282</span> <span class="tlaUNC">           0 :     if startswith(body, &quot;Invalid&quot;) || startswith(body, &quot;Error&quot;) || contains(body, &quot;exceeded&quot;)</span></span>
-<span id="L283"><span class="lineNum">     283</span> <span class="tlaUNC">           0 :         error(&quot;FIRMS API error: $body&quot;)</span></span>
+<span id="L282"><span class="lineNum">     282</span> <span class="tlaGNC">           8 :     if startswith(body, &quot;Invalid&quot;) || startswith(body, &quot;Error&quot;) || contains(body, &quot;exceeded&quot;)</span></span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;FIRMS API error: $body&quot;)</span></span>
 <span id="L284"><span class="lineNum">     284</span>              :     end</span>
 <span id="L285"><span class="lineNum">     285</span>              : </span>
 <span id="L286"><span class="lineNum">     286</span>              :     # Parse CSV</span>
-<span id="L287"><span class="lineNum">     287</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Parsing CSV...&quot;)</span></span>
-<span id="L288"><span class="lineNum">     288</span> <span class="tlaUNC">           0 :     df = CSV.read(IOBuffer(body), DataFrame)</span></span>
+<span id="L287"><span class="lineNum">     287</span> <span class="tlaGNC tlaBgGNC">           4 :     verbose &amp;&amp; println(&quot;Parsing CSV...&quot;)</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaGNC">           4 :     df = CSV.read(IOBuffer(body), DataFrame)</span></span>
 <span id="L289"><span class="lineNum">     289</span>              : </span>
-<span id="L290"><span class="lineNum">     290</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Downloaded $(nrow(df)) fire detections&quot;)</span></span>
+<span id="L290"><span class="lineNum">     290</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;Downloaded $(nrow(df)) fire detections&quot;)</span></span>
 <span id="L291"><span class="lineNum">     291</span>              : </span>
-<span id="L292"><span class="lineNum">     292</span> <span class="tlaUNC">           0 :     return df</span></span>
+<span id="L292"><span class="lineNum">     292</span> <span class="tlaGNC">           4 :     return df</span></span>
 <span id="L293"><span class="lineNum">     293</span>              : end</span>
 <span id="L294"><span class="lineNum">     294</span>              : </span>
 <span id="L295"><span class="lineNum">     295</span>              : &quot;&quot;&quot;</span>
@@ -374,28 +374,28 @@
 <span id="L312"><span class="lineNum">     312</span>              : path = FIRMS.download_file(:VIIRS_NOAA20_NRT, region=:california, days=3)</span>
 <span id="L313"><span class="lineNum">     313</span>              : ```</span>
 <span id="L314"><span class="lineNum">     314</span>              : &quot;&quot;&quot;</span>
-<span id="L315"><span class="lineNum">     315</span> <span class="tlaUNC">           0 : function download_file(source::Symbol; filename::Union{String, Nothing}=nothing,</span></span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">           2 : function download_file(source::Symbol; filename::Union{String, Nothing}=nothing,</span></span>
 <span id="L316"><span class="lineNum">     316</span>              :                        force::Bool=false, verbose::Bool=true, kwargs...)</span>
-<span id="L317"><span class="lineNum">     317</span> <span class="tlaUNC">           0 :     mkpath(dir())</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">           1 :     mkpath(dir())</span></span>
 <span id="L318"><span class="lineNum">     318</span>              : </span>
-<span id="L319"><span class="lineNum">     319</span> <span class="tlaUNC">           0 :     if isnothing(filename)</span></span>
-<span id="L320"><span class="lineNum">     320</span> <span class="tlaUNC">           0 :         date_str = Dates.format(today(), &quot;yyyymmdd&quot;)</span></span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaGNC">           1 :     if isnothing(filename)</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaUNC tlaBgUNC">           0 :         date_str = Dates.format(today(), &quot;yyyymmdd&quot;)</span></span>
 <span id="L321"><span class="lineNum">     321</span> <span class="tlaUNC">           0 :         filename = &quot;$(SOURCES[source].name)_$date_str.csv&quot;</span></span>
 <span id="L322"><span class="lineNum">     322</span>              :     end</span>
-<span id="L323"><span class="lineNum">     323</span> <span class="tlaUNC">           0 :     filepath = joinpath(dir(), filename)</span></span>
+<span id="L323"><span class="lineNum">     323</span> <span class="tlaGNC tlaBgGNC">           1 :     filepath = joinpath(dir(), filename)</span></span>
 <span id="L324"><span class="lineNum">     324</span>              : </span>
-<span id="L325"><span class="lineNum">     325</span> <span class="tlaUNC">           0 :     if isfile(filepath) &amp;&amp; !force</span></span>
-<span id="L326"><span class="lineNum">     326</span> <span class="tlaUNC">           0 :         verbose &amp;&amp; println(&quot;File already exists: $filepath&quot;)</span></span>
+<span id="L325"><span class="lineNum">     325</span> <span class="tlaGNC">           1 :     if isfile(filepath) &amp;&amp; !force</span></span>
+<span id="L326"><span class="lineNum">     326</span> <span class="tlaUNC tlaBgUNC">           0 :         verbose &amp;&amp; println(&quot;File already exists: $filepath&quot;)</span></span>
 <span id="L327"><span class="lineNum">     327</span> <span class="tlaUNC">           0 :         verbose &amp;&amp; println(&quot;Use `force=true` to overwrite.&quot;)</span></span>
 <span id="L328"><span class="lineNum">     328</span> <span class="tlaUNC">           0 :         return filepath</span></span>
 <span id="L329"><span class="lineNum">     329</span>              :     end</span>
 <span id="L330"><span class="lineNum">     330</span>              : </span>
-<span id="L331"><span class="lineNum">     331</span> <span class="tlaUNC">           0 :     df = download(source; verbose=verbose, kwargs...)</span></span>
+<span id="L331"><span class="lineNum">     331</span> <span class="tlaGNC tlaBgGNC">           1 :     df = download(source; verbose=verbose, kwargs...)</span></span>
 <span id="L332"><span class="lineNum">     332</span>              : </span>
-<span id="L333"><span class="lineNum">     333</span> <span class="tlaUNC">           0 :     CSV.write(filepath, df)</span></span>
-<span id="L334"><span class="lineNum">     334</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Saved to: $filepath&quot;)</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaGNC">           1 :     CSV.write(filepath, df)</span></span>
+<span id="L334"><span class="lineNum">     334</span> <span class="tlaGNC">           1 :     verbose &amp;&amp; println(&quot;Saved to: $filepath&quot;)</span></span>
 <span id="L335"><span class="lineNum">     335</span>              : </span>
-<span id="L336"><span class="lineNum">     336</span> <span class="tlaUNC">           0 :     return filepath</span></span>
+<span id="L336"><span class="lineNum">     336</span> <span class="tlaGNC">           1 :     return filepath</span></span>
 <span id="L337"><span class="lineNum">     337</span>              : end</span>
 <span id="L338"><span class="lineNum">     338</span>              : </span>
 <span id="L339"><span class="lineNum">     339</span>              : &quot;&quot;&quot;</span>
@@ -408,12 +408,12 @@
 <span id="L346"><span class="lineNum">     346</span>              : df = FIRMS.load_file(&quot;VIIRS_NOAA20_NRT_20240115.csv&quot;)</span>
 <span id="L347"><span class="lineNum">     347</span>              : ```</span>
 <span id="L348"><span class="lineNum">     348</span>              : &quot;&quot;&quot;</span>
-<span id="L349"><span class="lineNum">     349</span> <span class="tlaUNC">           0 : function load_file(filename::String)</span></span>
-<span id="L350"><span class="lineNum">     350</span> <span class="tlaUNC">           0 :     filepath = joinpath(dir(), filename)</span></span>
-<span id="L351"><span class="lineNum">     351</span> <span class="tlaUNC">           0 :     if !isfile(filepath)</span></span>
-<span id="L352"><span class="lineNum">     352</span> <span class="tlaUNC">           0 :         error(&quot;File not found: $filepath&quot;)</span></span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaGNC">           2 : function load_file(filename::String)</span></span>
+<span id="L350"><span class="lineNum">     350</span> <span class="tlaGNC">           2 :     filepath = joinpath(dir(), filename)</span></span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">           2 :     if !isfile(filepath)</span></span>
+<span id="L352"><span class="lineNum">     352</span> <span class="tlaGNC">           1 :         error(&quot;File not found: $filepath&quot;)</span></span>
 <span id="L353"><span class="lineNum">     353</span>              :     end</span>
-<span id="L354"><span class="lineNum">     354</span> <span class="tlaUNC">           0 :     return CSV.read(filepath, DataFrame)</span></span>
+<span id="L354"><span class="lineNum">     354</span> <span class="tlaGNC">           1 :     return CSV.read(filepath, DataFrame)</span></span>
 <span id="L355"><span class="lineNum">     355</span>              : end</span>
 <span id="L356"><span class="lineNum">     356</span>              : </span>
 <span id="L357"><span class="lineNum">     357</span>              : #-----------------------------------------------------------------------------# Data Availability</span>
@@ -430,19 +430,19 @@
 <span id="L368"><span class="lineNum">     368</span>              : FIRMS.data_availability(:VIIRS_NOAA20_NRT)</span>
 <span id="L369"><span class="lineNum">     369</span>              : ```</span>
 <span id="L370"><span class="lineNum">     370</span>              : &quot;&quot;&quot;</span>
-<span id="L371"><span class="lineNum">     371</span> <span class="tlaUNC">           0 : function data_availability(source::Symbol=:VIIRS_NOAA20_NRT)</span></span>
-<span id="L372"><span class="lineNum">     372</span> <span class="tlaUNC">           0 :     haskey(SOURCES, source) || error(&quot;Unknown source: $source&quot;)</span></span>
+<span id="L371"><span class="lineNum">     371</span> <span class="tlaGNC">           2 : function data_availability(source::Symbol=:VIIRS_NOAA20_NRT)</span></span>
+<span id="L372"><span class="lineNum">     372</span> <span class="tlaGNC">           3 :     haskey(SOURCES, source) || error(&quot;Unknown source: $source&quot;)</span></span>
 <span id="L373"><span class="lineNum">     373</span>              : </span>
-<span id="L374"><span class="lineNum">     374</span> <span class="tlaUNC">           0 :     key = require_map_key()</span></span>
-<span id="L375"><span class="lineNum">     375</span> <span class="tlaUNC">           0 :     source_name = SOURCES[source].name</span></span>
-<span id="L376"><span class="lineNum">     376</span> <span class="tlaUNC">           0 :     url = &quot;$API_BASE/data_availability/csv/$key/$source_name&quot;</span></span>
+<span id="L374"><span class="lineNum">     374</span> <span class="tlaGNC">           2 :     key = require_map_key()</span></span>
+<span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">           1 :     source_name = SOURCES[source].name</span></span>
+<span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">           1 :     url = &quot;$API_BASE/data_availability/csv/$key/$source_name&quot;</span></span>
 <span id="L377"><span class="lineNum">     377</span>              : </span>
-<span id="L378"><span class="lineNum">     378</span> <span class="tlaUNC">           0 :     response = HTTP.get(url; status_exception=false)</span></span>
-<span id="L379"><span class="lineNum">     379</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
-<span id="L380"><span class="lineNum">     380</span> <span class="tlaUNC">           0 :         error(&quot;Failed to get data availability. HTTP status: $(response.status)&quot;)</span></span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           1 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">           1 :     if response.status != 200</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to get data availability. HTTP status: $(response.status)&quot;)</span></span>
 <span id="L381"><span class="lineNum">     381</span>              :     end</span>
 <span id="L382"><span class="lineNum">     382</span>              : </span>
-<span id="L383"><span class="lineNum">     383</span> <span class="tlaUNC">           0 :     return CSV.read(IOBuffer(String(response.body)), DataFrame)</span></span>
+<span id="L383"><span class="lineNum">     383</span> <span class="tlaGNC tlaBgGNC">           1 :     return CSV.read(IOBuffer(String(response.body)), DataFrame)</span></span>
 <span id="L384"><span class="lineNum">     384</span>              : end</span>
 <span id="L385"><span class="lineNum">     385</span>              : </span>
 <span id="L386"><span class="lineNum">     386</span>              : #-----------------------------------------------------------------------------# Convenience Functions</span>
@@ -463,19 +463,19 @@
 <span id="L401"><span class="lineNum">     401</span>              : df = FIRMS.recent_fires(region=:california, days=2)</span>
 <span id="L402"><span class="lineNum">     402</span>              : ```</span>
 <span id="L403"><span class="lineNum">     403</span>              : &quot;&quot;&quot;</span>
-<span id="L404"><span class="lineNum">     404</span> <span class="tlaUNC">           0 : function recent_fires(; source::Symbol=:VIIRS_NOAA20_NRT, region::Symbol=:conus,</span></span>
+<span id="L404"><span class="lineNum">     404</span> <span class="tlaGNC">           1 : function recent_fires(; source::Symbol=:VIIRS_NOAA20_NRT, region::Symbol=:conus,</span></span>
 <span id="L405"><span class="lineNum">     405</span>              :                       days::Int=1, min_confidence::Union{Real, Nothing}=nothing)</span>
-<span id="L406"><span class="lineNum">     406</span> <span class="tlaUNC">           0 :     df = download(source; region=region, days=days, verbose=false)</span></span>
+<span id="L406"><span class="lineNum">     406</span> <span class="tlaGNC">           1 :     df = download(source; region=region, days=days, verbose=false)</span></span>
 <span id="L407"><span class="lineNum">     407</span>              : </span>
-<span id="L408"><span class="lineNum">     408</span> <span class="tlaUNC">           0 :     if !isnothing(min_confidence) &amp;&amp; &quot;confidence&quot; in names(df)</span></span>
+<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">           1 :     if !isnothing(min_confidence) &amp;&amp; &quot;confidence&quot; in names(df)</span></span>
 <span id="L409"><span class="lineNum">     409</span>              :         # VIIRS confidence can be &quot;l&quot;, &quot;n&quot;, &quot;h&quot; (low, nominal, high) or numeric</span>
 <span id="L410"><span class="lineNum">     410</span>              :         # MODIS confidence is 0-100</span>
-<span id="L411"><span class="lineNum">     411</span> <span class="tlaUNC">           0 :         if eltype(df.confidence) &lt;: Number</span></span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaUNC tlaBgUNC">           0 :         if eltype(df.confidence) &lt;: Number</span></span>
 <span id="L412"><span class="lineNum">     412</span> <span class="tlaUNC">           0 :             df = filter(row -&gt; row.confidence &gt;= min_confidence, df)</span></span>
 <span id="L413"><span class="lineNum">     413</span>              :         end</span>
 <span id="L414"><span class="lineNum">     414</span>              :     end</span>
 <span id="L415"><span class="lineNum">     415</span>              : </span>
-<span id="L416"><span class="lineNum">     416</span> <span class="tlaUNC">           0 :     return df</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC tlaBgGNC">           1 :     return df</span></span>
 <span id="L417"><span class="lineNum">     417</span>              : end</span>
 <span id="L418"><span class="lineNum">     418</span>              : </span>
 <span id="L419"><span class="lineNum">     419</span>              : &quot;&quot;&quot;</span>
@@ -491,7 +491,7 @@
 <span id="L429"><span class="lineNum">     429</span>              : by_date = FIRMS.hotspots_by_date(region=:western_us, days=5)</span>
 <span id="L430"><span class="lineNum">     430</span>              : ```</span>
 <span id="L431"><span class="lineNum">     431</span>              : &quot;&quot;&quot;</span>
-<span id="L432"><span class="lineNum">     432</span> <span class="tlaUNC">           0 : function hotspots_by_date(; source::Symbol=:VIIRS_NOAA20_NRT, region::Symbol=:conus, days::Int=7)</span></span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaUNC tlaBgUNC">           0 : function hotspots_by_date(; source::Symbol=:VIIRS_NOAA20_NRT, region::Symbol=:conus, days::Int=7)</span></span>
 <span id="L433"><span class="lineNum">     433</span> <span class="tlaUNC">           0 :     df = download(source; region=region, days=days, verbose=false)</span></span>
 <span id="L434"><span class="lineNum">     434</span>              : </span>
 <span id="L435"><span class="lineNum">     435</span> <span class="tlaUNC">           0 :     if &quot;acq_date&quot; in names(df)</span></span>
