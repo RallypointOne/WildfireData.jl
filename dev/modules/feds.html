@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>FEDS – WildfireData.jl</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../api.html" rel="next">
+<link href="../modules/landfire.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-c58f986be3ff872790ab570c6d9e49f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-7c8ba9dac8feea6a77ed63b2e2898d0e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-c58f986be3ff872790ab570c6d9e49f2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "/"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "Search  (/)",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">WildfireData.jl</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl/stargazers"> <i class="bi bi-star" role="img">
+</i> 
+<span class="menu-text">Star</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/feds.html"><span class="chapter-title">FEDS</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Docs</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">WildfireData.jl</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../getting-started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Getting Started</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/wfigs.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">WFIGS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/irwin.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">IRWIN</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/fpa-fod.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">FPA-FOD</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/mtbs.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">MTBS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/firms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">FIRMS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/landfire.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">LANDFIRE</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/feds.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">FEDS</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">API</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../changelog.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Changelog</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#available-collections" id="toc-available-collections" class="nav-link" data-scroll-target="#available-collections">Available Collections</a></li>
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage">Basic Usage</a></li>
+  <li><a href="#downloading-data" id="toc-downloading-data" class="nav-link" data-scroll-target="#downloading-data">Downloading Data</a>
+  <ul class="collapse">
+  <li><a href="#basic-download" id="toc-basic-download" class="nav-link" data-scroll-target="#basic-download">Basic Download</a></li>
+  <li><a href="#spatial-filtering-bounding-box" id="toc-spatial-filtering-bounding-box" class="nav-link" data-scroll-target="#spatial-filtering-bounding-box">Spatial Filtering (Bounding Box)</a></li>
+  <li><a href="#temporal-filtering" id="toc-temporal-filtering" class="nav-link" data-scroll-target="#temporal-filtering">Temporal Filtering</a></li>
+  <li><a href="#cql-filtering" id="toc-cql-filtering" class="nav-link" data-scroll-target="#cql-filtering">CQL Filtering</a></li>
+  <li><a href="#sorting-and-pagination" id="toc-sorting-and-pagination" class="nav-link" data-scroll-target="#sorting-and-pagination">Sorting and Pagination</a></li>
+  </ul></li>
+  <li><a href="#working-with-results" id="toc-working-with-results" class="nav-link" data-scroll-target="#working-with-results">Working with Results</a></li>
+  <li><a href="#saving-and-loading-files" id="toc-saving-and-loading-files" class="nav-link" data-scroll-target="#saving-and-loading-files">Saving and Loading Files</a></li>
+  <li><a href="#plot-example" id="toc-plot-example" class="nav-link" data-scroll-target="#plot-example">Plot Example</a></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API Reference</a>
+  <ul class="collapse">
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/feds.html"><span class="chapter-title">FEDS</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">FEDS</span></h1>
+<p class="subtitle lead">Fire Events Data Suite</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The FEDS module provides access to NASA’s Fire Events Data Suite from the <a href="https://earth-information-system.github.io/fireatlas/">Wildfire Tracking Lab</a>. FEDS provides satellite-derived fire event tracking with perimeters, active fire lines, and new fire pixels via a public OGC API.</p>
+<p><strong>Data Source:</strong> <a href="https://openveda.cloud/api/features">OpenVEDA Features API</a></p>
+<p>No API key is required.</p>
+</section>
+<section id="available-collections" class="level2">
+<h2 class="anchored" data-anchor-id="available-collections">Available Collections</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 28%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Collection</th>
+<th>Description</th>
+<th>Category</th>
+<th>Geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>:snapshot_perimeters</code></td>
+<td>Rolling ~20-day fire perimeters (NRT)</td>
+<td>snapshot</td>
+<td>polygon</td>
+</tr>
+<tr class="even">
+<td><code>:snapshot_firelines</code></td>
+<td>Rolling ~20-day active fire lines (NRT)</td>
+<td>snapshot</td>
+<td>line</td>
+</tr>
+<tr class="odd">
+<td><code>:snapshot_newfirepix</code></td>
+<td>Rolling ~20-day new fire pixels (NRT)</td>
+<td>snapshot</td>
+<td>point</td>
+</tr>
+<tr class="even">
+<td><code>:lf_perimeters</code></td>
+<td>Current-year large fire perimeters (&gt;5 km²)</td>
+<td>large_fire</td>
+<td>polygon</td>
+</tr>
+<tr class="odd">
+<td><code>:lf_firelines</code></td>
+<td>Current-year large fire lines (&gt;5 km²)</td>
+<td>large_fire</td>
+<td>line</td>
+</tr>
+<tr class="even">
+<td><code>:lf_newfirepix</code></td>
+<td>Current-year large fire new pixels (&gt;5 km²)</td>
+<td>large_fire</td>
+<td>point</td>
+</tr>
+<tr class="odd">
+<td><code>:archive_perimeters</code></td>
+<td>Archived perimeters, Western US (2018-2021)</td>
+<td>archive</td>
+<td>polygon</td>
+</tr>
+<tr class="even">
+<td><code>:archive_firelines</code></td>
+<td>Archived fire lines, Western US (2018-2021)</td>
+<td>archive</td>
+<td>line</td>
+</tr>
+<tr class="odd">
+<td><code>:archive_newfirepix</code></td>
+<td>Archived new fire pixels, Western US (2018-2021)</td>
+<td>archive</td>
+<td>point</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="basic-usage" class="level2">
+<h2 class="anchored" data-anchor-id="basic-usage">Basic Usage</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.FEDS</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List all collections</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>FEDS.<span class="fu">collections</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter by category</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>FEDS.<span class="fu">collections</span>(category<span class="op">=:</span>snapshot)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>FEDS.<span class="fu">collections</span>(category<span class="op">=:</span>large_fire)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>FEDS.<span class="fu">collections</span>(category<span class="op">=:</span>archive)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Get collection info</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>FEDS.<span class="fu">info</span>(<span class="op">:</span>snapshot_perimeters)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="downloading-data" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-data">Downloading Data</h2>
+<section id="basic-download" class="level3">
+<h3 class="anchored" data-anchor-id="basic-download">Basic Download</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download first 10 snapshot perimeters</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="spatial-filtering-bounding-box" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-filtering-bounding-box">Spatial Filtering (Bounding Box)</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download large fire perimeters in California</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>lf_perimeters, bbox<span class="op">=</span>(<span class="op">-</span><span class="fl">125</span>, <span class="fl">32</span>, <span class="op">-</span><span class="fl">114</span>, <span class="fl">42</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Bounding box as string also works</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>lf_perimeters, bbox<span class="op">=</span><span class="st">"-125,32,-114,42"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="temporal-filtering" class="level3">
+<h3 class="anchored" data-anchor-id="temporal-filtering">Temporal Filtering</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download archived perimeters for 2020</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>archive_perimeters,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    datetime<span class="op">=</span><span class="st">"2020-01-01T00:00:00Z/2020-12-31T23:59:59Z"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="cql-filtering" class="level3">
+<h3 class="anchored" data-anchor-id="cql-filtering">CQL Filtering</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use CQL filter expressions</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>lf_perimeters, filter<span class="op">=</span><span class="st">"farea &gt; 100"</span>, limit<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sorting-and-pagination" class="level3">
+<h3 class="anchored" data-anchor-id="sorting-and-pagination">Sorting and Pagination</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort by fire area descending</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, sortby<span class="op">=</span><span class="st">"-farea"</span>, limit<span class="op">=</span><span class="fl">10</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pagination</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>page1 <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">10</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>page2 <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">10</span>, offset<span class="op">=</span><span class="fl">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="working-with-results" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-results">Working with Results</h2>
+<p>The download function returns a <code>GeoJSON.FeatureCollection</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over features</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> data</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    geom <span class="op">=</span> GeoJSON.<span class="fu">geometry</span>(feature)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">println</span>(<span class="st">"Geometry type: </span><span class="sc">$</span>(<span class="fu">typeof</span>(geom))<span class="st">"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="saving-and-loading-files" class="level2">
+<h2 class="anchored" data-anchor-id="saving-and-loading-files">Saving and Loading Files</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download and save to local file</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> FEDS.<span class="fu">download_file</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">100</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load previously downloaded file</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">load_file</span>(<span class="op">:</span>snapshot_perimeters)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom filename</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> FEDS.<span class="fu">download_file</span>(<span class="op">:</span>lf_perimeters, filename<span class="op">=</span><span class="st">"ca_fires.geojson"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    bbox<span class="op">=</span>(<span class="op">-</span><span class="fl">125</span>, <span class="fl">32</span>, <span class="op">-</span><span class="fl">114</span>, <span class="fl">42</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="plot-example" class="level2">
+<h2 class="anchored" data-anchor-id="plot-example">Plot Example</h2>
+<div id="2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.FEDS</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">GeoJSON</span>, <span class="bu">CairoMakie</span>, <span class="bu">GeoMakie</span>, <span class="bu">Tyler</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Extents</span>, <span class="bu">TileProviders</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">JSON3</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>CairoMakie.<span class="fu">activate!</span>()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> FEDS.<span class="fu">download</span>(<span class="op">:</span>snapshot_perimeters, limit<span class="op">=</span><span class="fl">100</span>, verbose<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> GeoJSON.<span class="fu">read</span>(JSON3.<span class="fu">write</span>(data))</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>ext <span class="op">=</span> <span class="fu">Extent</span>(; X<span class="op">=</span>(<span class="op">-</span><span class="fl">130.0</span>, <span class="op">-</span><span class="fl">65.0</span>), Y<span class="op">=</span>(<span class="fl">24.0</span>, <span class="fl">50.0</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> Tyler.<span class="fu">Map</span>(ext;</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> (<span class="fl">900</span>, <span class="fl">600</span>),</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    axis <span class="op">=</span> (; <span class="kw">type</span> <span class="op">=</span> GeoMakie.GeoAxis, dest <span class="op">=</span> <span class="st">"+proj=merc"</span>),</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    provider <span class="op">=</span> TileProviders.<span class="fu">OpenStreetMap</span>(<span class="op">:</span>Mapnik),</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> fc</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    geom <span class="op">=</span> GeoJSON.<span class="fu">geometry</span>(feature)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">isnothing</span>(geom) <span class="op">&amp;&amp;</span> <span class="cf">continue</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">poly!</span>(m.axis, geom, color<span class="op">=</span>(<span class="op">:</span>orange, <span class="fl">0.4</span>), strokecolor<span class="op">=:</span>red, strokewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>m.figure</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<img width="900" height="600" style="object-fit: contain; height: auto;" src="data:image/png;base64, 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LnDw4EHGjx9PbW0ts2bNYtmyZSQlJSEiIiIiIiItl8ENeu211xg6dCh79+4lKCiIb7/9lqSkJB555BF++uknLl26xNNPP80zzzxDc+vXr+fBBx9EREREREREWgaDG5SQkMDJkyf58ssvqays5MUXX6R3797YhYSE8M033/BroqOjERERERERkZbD4F/Qvn17xowZw/W8vb1JTExEREREREREWj4DERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSWDG3Tt2jWWL1/O+vXruXz5Mt27d+fVV1/l1ltvpcmaNWtYs2YNf//733nwwQeZP38+jo6O2G3evJlNmzbh6urKkiVLCA4ORkRERERERP79DG7Qu+++y6JFi1ixYgW+vr688cYbDBo0iJMnT+Lu7s7GjRt58cUXeeedd/D19WXixInU19fzxz/+kaKiIt577z22b99OTk4O06ZNY+PGjYiIiIiIiMi/n8EN+uCDD5gwYQIPP/wwdl27diUkJISjR49y5513snz5cqZPn87o0aOxe+ONNxg3bhzz58+npKSEiIgIDMMgPDycK1euICIiIiIiIr8PgxuUlpZGSEgITWpra7ELDQ2lsbGRAwcOsGTJEpr079+f0tJSTpw4Qbdu3Th37hxpaWkcPXqU1NRURERERERE5PdhcIN69+6N3ZdffsnSpUv529/+xpo1awgICKCoqIhr165htVpp0rZtW1xdXblw4QLdu3dn8+bNHD16lIkTJxIUFMSvWb9+Pb+Vq6srNTU13CyOHDnChg0bcHJywmzy8vKorKyktLQUMzp48CAeHh64u7tjNufPn6eoqIiamhrM6MCBAzQ0NNCuXTvMpqSkhJMnT+Lo6IgZ7d27l0uXLmG1WjGb8vJyDh06RJs2bTCjAwcOcOrUKbKysjCbqqoqDh48yPr16zGjrKws2rRpw8mTJzGbxsZGjhw5wvr16zGj48ePk5iYSEtj8C/q2LEj9913H4ZhsGbNGu677z7q6uqws1gsNGcYBtXV1dg5OjrSvXt3/pm4uDh+KwcHB2w2GzeLQ4cOceedd2IYBmbj7u5OaWkpcXFxmNHx48fp2bMnnp6emI23tzeenp7ExcVhRmfOnOGOO+7A398fszl37hyNjY3ExcVhRkVFRfTo0YOQkBDM5uLFi5SVlREXF4cZlZeX07lzZyIiIjCbq1evkp+fT1xcHGZUU1ODj48Pt912G2bT0NBAVlYWcXFxmJGDgwMtkcG/KDIyksjISCZNmkR0dDQfffQRqamp2JWVldGkoaGByspKAgMD+a3Cw8MxK19fX8LCwrBYLJhNaWkprq6uhIeHY0Z+fn506dIFLy8vzKa6uprq6mrCw8MxI39/f0JDQwkKCsJsHBwcKCgoIDw8HDMKCAigU6dOhIWFYTYeHh74+/sTHh6OGQUGBhISEkJ4eDhmU1FRgZ+fH+Hh4ZjRyZMn8fPzIzw8HLOpr6/H19eX8PBwzKigoICWyOAGXLt2DR8fH7Zu3Uq/fv2wc3BwwGq1UlRUhKurK6GhoRw+fJg77rgDu8OHD2MYBmFhYYiIiIiIiEjLYXADHB0dSUhIYOnSpfTq1QsPDw92797N3r17WbhwIXZjxozhz3/+MykpKbi5ubF06VLuu+8+/Pz8EBERERERkZbD4Aa9+eabPPTQQ/j6+uLp6Ul1dTV/+tOfuPvuu7GbOXMmR44coX379ri4uBAcHMzOnTsRERERERGRlsXgBnXq1InMzEzOnTtHZWUl4eHhuLi40MTV1ZVt27ZRUlJCVVUVoaGhiIiIiIiISMtj8C9wcHCgU6dO/DNWqxURERERERFpuQxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAxERERERETElAz+RdXV1RQXF9OxY0cMw+B6ly9fpra2lvbt23O96upqXF1dcXBwQERERERERH4fBjeosbGR5557jtWrV+Pu7k5jYyNz5sxh1qxZ2F24cIFHH32Ub7/9FicnJ7p27cpf//pXevTogd20adMoKCigpKSEhQsX0rt3b0REREREROTfz+AGrV69mi1btpCdnU1kZCTffPMNQ4YMISoqimHDhjFlyhQqKio4c+YMbdq0YeLEiTz22GNkZ2dz4sQJrly5wqZNm6ioqOCxxx7jk08+QURERERERP79DG7Qrl27eOKJJ4iMjMSuX79+DBkyhM8//5xhw4aRlZXFY489RmhoKHZPPvkkycnJ1NXVYbFYqK6uxq6urg4nJydERERERETk92Fwg2bPnk1AQABNbDYb2dnZPPLII9jde++9bNy4kYceeggvLy9WrVpFQkICzs7OhIWFERUVxf333091dTVLly5FREREREREfh8GN6hnz540uXr1KuPGjaOiooKJEydit2TJEnr06EFUVBQODg54eXmRk5NDk9mzZ/PfWbVqFb+Vu7s7VVVV3Cx+/PFH1qxZg5OTE2Zz9uxZKisrKSgowIz27duHo6Mjbm5umE1hYSEXLlygtLQUM/rhhx+4evUqXl5emM3FixfJy8ujpqYGM9q/fz/nz5/H398fs6moqCArKwtHR0fM6NChQxw9epR9+/ZhNtXV1ezbtw8PDw/M6Oeff6ZNmzYcOXIEs2lsbOTHH39k1apVmNHJkydJTEykpTH4F6Wnp/PSSy/xH//xH/zwww+0b98eu5SUFIKDg3n//ffx8PBg6dKl3HPPPfztb3/D1dWV32Lo0KH8Vg4ODthsNm4WeXl5DBkyBMMwMJsjR45QWlpKUlISZvTLL79w77334unpidmcOHGCvLw8hg4dihmVlpYyYMAArFYrZpOfn0+bNm0YOnQoZlRdXU3Pnj3p1KkTZlNSUkJjYyNDhw7FrMLCwoiMjMRsrl69SllZGUOHDsWM3Nzc8PHxoUePHphNQ0MDZ8+eZejQoZiRj48PLZHBDWpsbCQlJYUDBw6wevVq7r//fpr88ssvfPDBB5w7d46OHTti9/bbbxMQEMA333zD4MGD+S2Cg4Mxq7Zt29K+fXssFgtmU1hYiIODA8HBwZiRl5cXQUFBeHl5YTalpaWUlZURHByMGbVr147AwECCgoIwm5qaGry9vQkODsaMvL29CQgIIDg4GLNxdHSkXbt2BAcHY0Y+Pj5YrVaCg4Mxm4qKCry8vAgODsaMfH198fPzIzg4GLOpr6+nbdu2BAcHY0Z+fn60RAY3aMmSJWRlZXHkyBG8vLxorq6uDrvGxkaaXLt2jcbGRurq6hAREREREZGWw+AGpaen06VLF1avXk1zMTEx9O/fn759+5Kamsof/vAHXF1def3112nTpg2JiYmIiIiIiIhIy2Fwg0JCQqiuruaTTz6hOYvFQv/+/fnoo4+YPXs2o0aNora2lrvuuovdu3fj5eWFiIiIiIiItBwGN+jLL7/kn/H19eWdd95BREREREREWjYDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSUDERERERERMSWDFigzM5PfyjAMGhoauFkUFhZy8OBBDFhby/cAACAASURBVMPAbI4fP055eTmZmZmY0fnz5zl8+DBt2rTBbHJzc8nPzyczMxMzys/PJysri8LCQsymoKCAM2fOkJmZiRmdOXOGtm3bUlZWhtlcunSJ/Px8MjMzMaO8vDwaGhqora3FbCorKzl//jyZmZmY0alTp7h48SKOjo6YTUNDA4WFhWRmZmJGOTk5JCYm0tIYtEBFRUX8Vi4uLtTW1nKzuHr1KsXFxTg5OWE2ly5d4sqVKxQVFWFGV65c4cKFC1y9ehWzuXTpEmVlZRQVFWFGFRUVlJSUUF9fj9lcvHiR8vJyioqKMKPy8nIuXryIk5MTZlNWVkZFRQVFRUWYUVlZGR4eHnh4eGA2VVVVXLlyhaKiIsyotLSUhoYGioqKMJvGxkauXr1KUVERZnT58mVaIoMWKDk5GbP66aefGDp0KBaLBbM5cOAAly5dYsiQIZhRbm4ugwYNwsvLC7M5evQoOTk5JCcnY0aFhYXcc889BAUFYTZ5eXm4uLiQnJyMGZWVldG7d2/CwsIwm6KiIqqqqkhOTsaMamtriYiIoFu3bphNRUUFv/zyC8nJyZiRk5MTfn5+9OrVC7Opr68nOzub5ORkzMjT05OWyEBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBERERERERMyUBaFC8vL8zKyckJi8WCWbVp0wazcnJywtXVFbNyd3fHwcEBM3JwcMDNzQ2zcnNzw8HBATNycHDA3d0ds3J1dcXJyQmzatOmDWZlsVhwcnLCrLy8vDArwzBoiQykRamoqMCsGhsbqa+vx6wqKysxq8bGRmpqajCrqqoqbDYbZmSz2aiursasqqursdlsmJHNZqOqqgqzqqmpobGxEbOqrKzErOrr62lsbMSsKioqMKuGhgZaIgMRERERERExJQMRERERERExJQMRERERERExJQMRERERERExJQMRERERERExJQMRERERERExJQNpUWbPno1Z9erVCzObMmUKZtWtWze6deuGWU2YMAGzCgsLIywsDLN64oknMKugoCAmTJiAWT388MOYlZeXF1OmTMGshgwZgllZLBZmz56NWSUmJtISGYiIiIiIiIgpGYiIiIiIiIgpGYiIiIiIiIgpGfybbd68mX379vHGG2/Q3Oeff86iRYs4e/YsISEhTJ8+nQceeIAmGRkZzJ8/nzNnzhAXF8fy5cvx8fHBLisriwULFmCz2Zg6dSq9e/empXrhhRfo06cPDz/8ME3q6ur4wx/+wNatW7l69SpxcXEsXLiQzp07Y5eens7GjRtpLjExkZkzZ2Kz2Zg7dy7Hjh0jJCSExYsXY7FYaIkKCgp46KGHOHDgAM1lZmaSlpbGsWPHCAgIYOzYsTz99NM4ODhgl5GRwfz58zlz5gxxcXEsX74cHx8f7LKysliwYAE2m42pU6fSu3dvWqoXXniBPn368PDDD/NrYmNj+fjjjwkKCqJJeno6GzdupLnExERmzpyJzWZj7ty5HDt2jJCQEBYvXozFYqElKigo4KGHHuLAgQP8ms2bN7Nv3z7eeOMNmsvIyGD+/PmcOXOGuLg4li9fjo+PD3ZZWVksWLAAm83G1KlT6d27Ny3VCy+8QJ8+fXj44Ydpbs2aNaxZs4a///3vPPjgg8yfPx9HR0fs0tPT2bhxI80lJiYyc+ZM7DZv3symTZtwdXVlyZIlBAcH0xIVFBTw0EMPceDAAZorLi7mxRdfJDMzk65du7Jo0SJiYmJoUlxczIsvvkhmZiZdu3Zl0aJFxMTEYFdaWsq0adO4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Fy4QFhaGu7s7TXx9ffnhhx84d+4clZWVdO3aFYvFws3ijjvu4NixY+Tn51NbW0tYWBiGYdAkNDSU48ePc/r0adq1a4ePjw83k+7du2Oz2fg1vr6+/PDDD5w7d47Kykq6du2KxWLhZrJ161b+kdDQUI4fP87p06dp164dPj4+3EyGDRtGcnIyp06dIjAwEG9vb5r4+vryww8/cO7cOSorK+natSsWi4Xfk0EL4u/vj7+/P/+Ih4cHkZGRmJGHhwfdunXDrDw8PIiMjMSMPDw86NatG2bl4eFBZGQkNyur1co/4uHhQbdu3bhZGYZBVFQU/4hhGERFRXGzCA0N5R8xDIOIiAhuVh4eHkRHR/OPGIZBVFQUNyur1YrVauUfCQkJ4Wbl4OBAaGgo/0yXLl0wq5CQEMysS5cu3KwMwyAqKop/JCQkhJbCQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQEREREREREzJQERERERERP5/e3BIAAAAgADI4P/NDhG41AAAAHCpAQAA4FIDAADApQYAAIBLDQAAAJcaAAAALjUAAABcagAAALjUAAAAcKkBAADgUgMAAMClBgAAgEsNAAAAlxoAAAAuNQAAAFxqAAAAuNQAAABwqQEAAOBSAwAAwKUGAACASw0AAACXGgAAAC41AAAAXGoAAAC41AAAAHCpAQAA4FIDAADApQYAAIBLDQAAAJcaAAAALjUAAABcagAAALjUAAAAcKkBAADg0gAQCtRLb828tgAAAABJRU5ErkJggg==">
+</div>
+</div>
+</section>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API Reference</h2>
+<section id="functions" class="level3">
+<h3 class="anchored" data-anchor-id="functions">Functions</h3>
+<ul>
+<li><code>collections(; category=nothing)</code> - List available collections</li>
+<li><code>info(collection)</code> - Print collection information</li>
+<li><code>download(collection; limit, offset, bbox, datetime, filter, sortby, verbose)</code> - Download data</li>
+<li><code>download_file(collection; filename, force, verbose, ...)</code> - Download and save to file</li>
+<li><code>load_file(collection; filename)</code> - Load previously downloaded file</li>
+<li><code>query_url(collection; limit, offset, bbox, datetime, filter, sortby)</code> - Build query URL</li>
+<li><code>dir()</code> - Get local data directory path</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../modules/landfire.html" class="pagination-link" aria-label="LANDFIRE">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">LANDFIRE</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../api.html" class="pagination-link" aria-label="API">
+        <span class="nav-page-text"><span class="chapter-title">API</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Built on 2026-02-19</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>
+(function() {
+    // Detect repo name and current version from URL path
+    // Deployed: /{repoName}/{version}/...
+    // Local preview: /page.html (no repo/version segments)
+    var pathParts = window.location.pathname.split('/').filter(Boolean);
+    var isLocal = pathParts.length < 2 || !pathParts[0].includes('.');
+    var currentVersion, basePath;
+
+    if (pathParts.length >= 2 && pathParts[1].match(/^(dev|stable|v\d)/)) {
+        currentVersion = pathParts[1];
+        basePath = '/' + pathParts[0] + '/';
+    } else {
+        currentVersion = 'dev';
+        basePath = '/';
+    }
+
+    // Build dropdown HTML
+    function buildDropdown(versions) {
+        var navbar = document.querySelector('.navbar-nav.navbar-nav-scroll.ms-auto');
+        if (!navbar) return;
+
+        var li = document.createElement('li');
+        li.className = 'nav-item dropdown';
+        li.innerHTML =
+            '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' +
+                currentVersion +
+            '</a>' +
+            '<ul class="dropdown-menu dropdown-menu-end"></ul>';
+
+        var menu = li.querySelector('.dropdown-menu');
+
+        // Always add dev and stable
+        var fixed = ['stable', 'dev'];
+        fixed.forEach(function(v) {
+            var a = document.createElement('a');
+            a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
+            a.href = basePath + v + '/';
+            a.textContent = v;
+            var item = document.createElement('li');
+            item.appendChild(a);
+            menu.appendChild(item);
+        });
+
+        // Add release versions from versions.json
+        if (versions && versions.length > 0) {
+            var divider = document.createElement('li');
+            divider.innerHTML = '<hr class="dropdown-divider">';
+            menu.appendChild(divider);
+
+            versions.forEach(function(v) {
+                var a = document.createElement('a');
+                a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
+                a.href = basePath + v + '/';
+                a.textContent = v;
+                var item = document.createElement('li');
+                item.appendChild(a);
+                menu.appendChild(item);
+            });
+        }
+
+        navbar.prepend(li);
+
+        // Show outdated version banner
+        if (versions && versions.length > 0 && currentVersion !== 'stable' && currentVersion !== 'dev') {
+            var latest = versions[0]; // versions.json is sorted descending
+            if (currentVersion !== latest) {
+                var banner = document.createElement('div');
+                banner.className = 'alert alert-warning text-center mb-0 rounded-0';
+                banner.setAttribute('role', 'alert');
+                banner.innerHTML = 'You are viewing docs for <strong>' + currentVersion + '</strong>. ' +
+                    'The latest stable release is <a href="' + basePath + 'stable/" class="alert-link">' + latest + '</a>.';
+                document.body.prepend(banner);
+            }
+        }
+    }
+
+    // Fetch versions.json, then build dropdown
+    fetch(basePath + 'versions.json')
+        .then(function(res) { return res.ok ? res.json() : []; })
+        .catch(function() { return []; })
+        .then(buildDropdown);
+
+    // Fetch star count from GitHub API
+    var starLink = document.querySelector('a.nav-link[href*="/stargazers"]');
+    if (starLink) {
+        var match = starLink.href.match(/github\.com\/([^/]+\/[^/]+)\/stargazers/);
+        if (match) {
+            fetch('https://api.github.com/repos/' + match[1])
+                .then(function(res) { return res.ok ? res.json() : null; })
+                .then(function(data) {
+                    if (!data) return;
+                    var text = starLink.querySelector('.menu-text');
+                    if (text) text.textContent = data.stargazers_count;
+                })
+                .catch(function() {});
+        }
+    }
+})();
+</script>
+
+
+
+
+</body></html>
