@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-20 13:55:38</td>
+            <td class="headerValue">2026-02-20 14:20:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -353,7 +353,7 @@
 <span id="L291"><span class="lineNum">     291</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;Downloading: $(LAYERS[layer].name)&quot;)</span></span>
 <span id="L292"><span class="lineNum">     292</span> <span class="tlaUNC">           0 :     verbose &amp;&amp; println(&quot;URL: $url&quot;)</span></span>
 <span id="L293"><span class="lineNum">     293</span>              : </span>
-<span id="L294"><span class="lineNum">     294</span> <span class="tlaUNC">           0 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L294"><span class="lineNum">     294</span> <span class="tlaUNC">           0 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L295"><span class="lineNum">     295</span>              : </span>
 <span id="L296"><span class="lineNum">     296</span> <span class="tlaUNC">           0 :     if response.status != 200</span></span>
 <span id="L297"><span class="lineNum">     297</span> <span class="tlaUNC">           0 :         error(&quot;Failed to download tile. HTTP status: $(response.status)&quot;)</span></span>

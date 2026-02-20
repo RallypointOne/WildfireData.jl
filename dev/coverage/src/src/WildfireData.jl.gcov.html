@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-20 13:55:38</td>
+            <td class="headerValue">2026-02-20 14:20:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -207,7 +207,7 @@
 <span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">          16 :     verbose &amp;&amp; println(&quot;Downloading: $(d.name)&quot;)</span></span>
 <span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">          16 :     verbose &amp;&amp; println(&quot;URL: $url&quot;)</span></span>
 <span id="L147"><span class="lineNum">     147</span>              : </span>
-<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          16 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">          16 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L149"><span class="lineNum">     149</span>              : </span>
 <span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">          16 :     if response.status != 200</span></span>
 <span id="L151"><span class="lineNum">     151</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to download dataset. HTTP status: $(response.status)\nResponse: $(String(response.body))&quot;)</span></span>
@@ -306,7 +306,7 @@
 <span id="L244"><span class="lineNum">     244</span>              :     ]</span>
 <span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">          16 :     full_url = base_query_url(d) * &quot;?&quot; * join([&quot;$k=$v&quot; for (k, v) in params], &quot;&amp;&quot;)</span></span>
 <span id="L246"><span class="lineNum">     246</span>              : </span>
-<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">           8 :     response = HTTP.get(full_url; status_exception=false)</span></span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaGNC">           8 :     response = HTTP.get(full_url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L248"><span class="lineNum">     248</span> <span class="tlaGNC">           8 :     if response.status != 200</span></span>
 <span id="L249"><span class="lineNum">     249</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to get count. HTTP status: $(response.status)&quot;)</span></span>
 <span id="L250"><span class="lineNum">     250</span>              :     end</span>
@@ -328,7 +328,7 @@
 <span id="L266"><span class="lineNum">     266</span> <span class="tlaGNC">           5 :     d = all_datasets[dataset]</span></span>
 <span id="L267"><span class="lineNum">     267</span> <span class="tlaGNC">           5 :     url = base_layer_url(d) * &quot;?f=json&quot;</span></span>
 <span id="L268"><span class="lineNum">     268</span>              : </span>
-<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           5 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaGNC">           5 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">           5 :     if response.status != 200</span></span>
 <span id="L271"><span class="lineNum">     271</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to get field info. HTTP status: $(response.status)&quot;)</span></span>
 <span id="L272"><span class="lineNum">     272</span>              :     end</span>

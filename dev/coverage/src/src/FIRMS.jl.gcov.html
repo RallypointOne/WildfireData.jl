@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-20 13:55:38</td>
+            <td class="headerValue">2026-02-20 14:20:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -332,7 +332,7 @@
 <span id="L270"><span class="lineNum">     270</span> <span class="tlaGNC">           4 :     !isnothing(date) &amp;&amp; verbose &amp;&amp; println(&quot;Date: $date&quot;)</span></span>
 <span id="L271"><span class="lineNum">     271</span> <span class="tlaGNC">           4 :     verbose &amp;&amp; println(&quot;URL: $(replace(url, get_map_key() =&gt; &quot;[MAP_KEY]&quot;))&quot;)</span></span>
 <span id="L272"><span class="lineNum">     272</span>              : </span>
-<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           4 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L273"><span class="lineNum">     273</span> <span class="tlaGNC">           4 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L274"><span class="lineNum">     274</span>              : </span>
 <span id="L275"><span class="lineNum">     275</span> <span class="tlaGNC">           4 :     if response.status != 200</span></span>
 <span id="L276"><span class="lineNum">     276</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to download data. HTTP status: $(response.status)\nResponse: $(String(response.body))&quot;)</span></span>
@@ -437,7 +437,7 @@
 <span id="L375"><span class="lineNum">     375</span> <span class="tlaGNC">           1 :     source_name = SOURCES[source].name</span></span>
 <span id="L376"><span class="lineNum">     376</span> <span class="tlaGNC">           1 :     url = &quot;$API_BASE/data_availability/csv/$key/$source_name&quot;</span></span>
 <span id="L377"><span class="lineNum">     377</span>              : </span>
-<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           1 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           1 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">           1 :     if response.status != 200</span></span>
 <span id="L380"><span class="lineNum">     380</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to get data availability. HTTP status: $(response.status)&quot;)</span></span>
 <span id="L381"><span class="lineNum">     381</span>              :     end</span>

@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-02-20 13:55:38</td>
+            <td class="headerValue">2026-02-20 14:20:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">-</td>
@@ -303,7 +303,7 @@
 <span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">           2 :     verbose &amp;&amp; println(&quot;Downloading: $(c.name)&quot;)</span></span>
 <span id="L242"><span class="lineNum">     242</span> <span class="tlaGNC">           2 :     verbose &amp;&amp; println(&quot;URL: $url&quot;)</span></span>
 <span id="L243"><span class="lineNum">     243</span>              : </span>
-<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           2 :     response = HTTP.get(url; status_exception=false)</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaGNC">           2 :     response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)</span></span>
 <span id="L245"><span class="lineNum">     245</span>              : </span>
 <span id="L246"><span class="lineNum">     246</span> <span class="tlaGNC">           2 :     if response.status != 200</span></span>
 <span id="L247"><span class="lineNum">     247</span> <span class="tlaUNC tlaBgUNC">           0 :         error(&quot;Failed to download collection. HTTP status: $(response.status)\nResponse: $(String(response.body))&quot;)</span></span>
