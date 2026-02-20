@@ -1,6 +1,8 @@
 # Package Setup
 
-- This is the WildfireData.jl package for accessing wildfire and fire-related geospatial data
+- This package was generated from https://github.com/RallypointOne/JuliaPackageTemplate.jl
+- Replace all instances of `JuliaPackageTemplate` to the name set by the user
+- Use Julia to create a new UUID
 
 # Development
 
@@ -10,7 +12,6 @@
 - Each .qmd file in the docs should have `engine: julia` in the YAML frontmatter
 - Quarto YAML reference: https://quarto.org/docs/reference/
 - Never edit Project.toml or Manifest.toml manually — use Pkg
-- Only use top-level .gitignore file
 
 # Docs Sidebar
 
@@ -27,6 +28,7 @@
 
 # Releases
 
+- First released version should be v0.1.0
 - Preflight: tests must pass and git status must be clean
 - If current version has no git tag, release it as-is (don't bump)
 - If current version is already tagged, bump based on commit log:
