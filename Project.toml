@@ -1,6 +1,6 @@
 name = "WildfireData"
 uuid = "c50625c8-1a95-45e7-9f30-e55dbed7e5b4"
-version = "0.0.2"
+version = "0.1.0"
 authors = ["Josh Day <emailjoshday@gmail.com> and contributors"]
 
 [deps]

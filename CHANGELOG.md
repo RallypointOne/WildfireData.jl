@@ -1,5 +1,27 @@
 ## Unreleased
 
+## v0.1.0
+
+### Breaking
+- **New exports**: `FEDS`, `CWFIS`, `HMS`, `GWIS`, `EGP` are now exported from `WildfireData`
+
+### Features
+- Add **FEDS** module: NASA Fire Events Data Suite — satellite-derived fire event tracking with perimeters, fire lines, and new fire pixels via OGC API
+- Add **CWFIS** module: Canadian Wildland Fire Information System — active fires, hotspots, fire perimeters, fire danger, and weather stations via WFS
+- Add **HMS** module: NOAA Hazard Mapping System — daily fire point detections and smoke plume polygons
+- Add **GWIS** module: Global Wildfire Information System / EFFIS — WMS map tiles for fire danger, active fires, burnt areas, and severity (global coverage)
+- Add **EGP** module: NIFC Enterprise Geospatial Portal — GACC boundaries, dispatch boundaries, PSA boundaries, PODs, and IA frequency zones via ArcGIS REST
+- Increase HTTP connect and read timeouts from 30s to 60s across all modules to improve CI reliability
+
+### Documentation
+- Add documentation pages for all 5 new modules
+- Update index page and README with new data source table
+- Update API page with card header styling from package template
+
+### Infrastructure
+- Sync CI workflows with JuliaPackageTemplate (TagBot runner, Docs triggers)
+- Update CLAUDE.md from package template
+
 ## v0.0.2
 
 ### Documentation
