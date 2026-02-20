@@ -1628,6 +1628,17 @@
     ]
   },
   {
+    "objectID": "changelog.html#v0.1.0",
+    "href": "changelog.html#v0.1.0",
+    "title": "Changelog",
+    "section": "v0.1.0",
+    "text": "v0.1.0\n\nBreaking\n\nNew exports: FEDS, CWFIS, HMS, GWIS, EGP are now exported from WildfireData\n\n\n\nFeatures\n\nAdd FEDS module: NASA Fire Events Data Suite — satellite-derived fire event tracking with perimeters, fire lines, and new fire pixels via OGC API\nAdd CWFIS module: Canadian Wildland Fire Information System — active fires, hotspots, fire perimeters, fire danger, and weather stations via WFS\nAdd HMS module: NOAA Hazard Mapping System — daily fire point detections and smoke plume polygons\nAdd GWIS module: Global Wildfire Information System / EFFIS — WMS map tiles for fire danger, active fires, burnt areas, and severity (global coverage)\nAdd EGP module: NIFC Enterprise Geospatial Portal — GACC boundaries, dispatch boundaries, PSA boundaries, PODs, and IA frequency zones via ArcGIS REST\nIncrease HTTP connect and read timeouts from 30s to 60s across all modules to improve CI reliability\n\n\n\nDocumentation\n\nAdd documentation pages for all 5 new modules\nUpdate index page and README with new data source table\nUpdate API page with card header styling from package template\n\n\n\nInfrastructure\n\nSync CI workflows with JuliaPackageTemplate (TagBot runner, Docs triggers)\nUpdate CLAUDE.md from package template",
+    "crumbs": [
+      "Reference",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
+    ]
+  },
+  {
     "objectID": "changelog.html#v0.0.2",
     "href": "changelog.html#v0.0.2",
     "title": "Changelog",

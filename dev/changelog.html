@@ -429,15 +429,22 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#unreleased" id="toc-unreleased" class="nav-link active" data-scroll-target="#unreleased">Unreleased</a></li>
+  <li><a href="#v0.1.0" id="toc-v0.1.0" class="nav-link" data-scroll-target="#v0.1.0">v0.1.0</a>
+  <ul class="collapse">
+  <li><a href="#breaking" id="toc-breaking" class="nav-link" data-scroll-target="#breaking">Breaking</a></li>
+  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features</a></li>
+  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#infrastructure" id="toc-infrastructure" class="nav-link" data-scroll-target="#infrastructure">Infrastructure</a></li>
+  </ul></li>
   <li><a href="#v0.0.2" id="toc-v0.0.2" class="nav-link" data-scroll-target="#v0.0.2">v0.0.2</a>
   <ul class="collapse">
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
   <li><a href="#fixes" id="toc-fixes" class="nav-link" data-scroll-target="#fixes">Fixes</a></li>
   </ul></li>
   <li><a href="#v0.0.1" id="toc-v0.0.1" class="nav-link" data-scroll-target="#v0.0.1">v0.0.1</a>
   <ul class="collapse">
-  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features</a></li>
-  <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
+  <li><a href="#features-1" id="toc-features-1" class="nav-link" data-scroll-target="#features-1">Features</a></li>
+  <li><a href="#documentation-2" id="toc-documentation-2" class="nav-link" data-scroll-target="#documentation-2">Documentation</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -468,10 +475,45 @@ ul.task-list li input[type="checkbox"] {
 <section id="unreleased" class="level2">
 <h2 class="anchored" data-anchor-id="unreleased">Unreleased</h2>
 </section>
-<section id="v0.0.2" class="level2">
-<h2 class="anchored" data-anchor-id="v0.0.2">v0.0.2</h2>
+<section id="v0.1.0" class="level2">
+<h2 class="anchored" data-anchor-id="v0.1.0">v0.1.0</h2>
+<section id="breaking" class="level3">
+<h3 class="anchored" data-anchor-id="breaking">Breaking</h3>
+<ul>
+<li><strong>New exports</strong>: <code>FEDS</code>, <code>CWFIS</code>, <code>HMS</code>, <code>GWIS</code>, <code>EGP</code> are now exported from <code>WildfireData</code></li>
+</ul>
+</section>
+<section id="features" class="level3">
+<h3 class="anchored" data-anchor-id="features">Features</h3>
+<ul>
+<li>Add <strong>FEDS</strong> module: NASA Fire Events Data Suite — satellite-derived fire event tracking with perimeters, fire lines, and new fire pixels via OGC API</li>
+<li>Add <strong>CWFIS</strong> module: Canadian Wildland Fire Information System — active fires, hotspots, fire perimeters, fire danger, and weather stations via WFS</li>
+<li>Add <strong>HMS</strong> module: NOAA Hazard Mapping System — daily fire point detections and smoke plume polygons</li>
+<li>Add <strong>GWIS</strong> module: Global Wildfire Information System / EFFIS — WMS map tiles for fire danger, active fires, burnt areas, and severity (global coverage)</li>
+<li>Add <strong>EGP</strong> module: NIFC Enterprise Geospatial Portal — GACC boundaries, dispatch boundaries, PSA boundaries, PODs, and IA frequency zones via ArcGIS REST</li>
+<li>Increase HTTP connect and read timeouts from 30s to 60s across all modules to improve CI reliability</li>
+</ul>
+</section>
 <section id="documentation" class="level3">
 <h3 class="anchored" data-anchor-id="documentation">Documentation</h3>
+<ul>
+<li>Add documentation pages for all 5 new modules</li>
+<li>Update index page and README with new data source table</li>
+<li>Update API page with card header styling from package template</li>
+</ul>
+</section>
+<section id="infrastructure" class="level3">
+<h3 class="anchored" data-anchor-id="infrastructure">Infrastructure</h3>
+<ul>
+<li>Sync CI workflows with JuliaPackageTemplate (TagBot runner, Docs triggers)</li>
+<li>Update CLAUDE.md from package template</li>
+</ul>
+</section>
+</section>
+<section id="v0.0.2" class="level2">
+<h2 class="anchored" data-anchor-id="v0.0.2">v0.0.2</h2>
+<section id="documentation-1" class="level3">
+<h3 class="anchored" data-anchor-id="documentation-1">Documentation</h3>
 <ul>
 <li>Add interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules</li>
 <li>Improve docstrings and module exports</li>
@@ -490,8 +532,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="v0.0.1" class="level2">
 <h2 class="anchored" data-anchor-id="v0.0.1">v0.0.1</h2>
 <p>Initial release of WildfireData.jl.</p>
-<section id="features" class="level3">
-<h3 class="anchored" data-anchor-id="features">Features</h3>
+<section id="features-1" class="level3">
+<h3 class="anchored" data-anchor-id="features-1">Features</h3>
 <ul>
 <li><strong>WFIGS</strong> module: Access USGS Wildland Fire Interagency Geospatial Services data (historic perimeters, current perimeters, etc.)</li>
 <li><strong>IRWIN</strong> module: Access Integrated Reporting of Wildland-Fire Information (fire occurrence data)</li>
@@ -501,8 +543,8 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>LANDFIRE</strong> module: Access LANDFIRE geospatial data products (fuel models, vegetation, topography)</li>
 </ul>
 </section>
-<section id="documentation-1" class="level3">
-<h3 class="anchored" data-anchor-id="documentation-1">Documentation</h3>
+<section id="documentation-2" class="level3">
+<h3 class="anchored" data-anchor-id="documentation-2">Documentation</h3>
 <ul>
 <li>Quarto-based documentation site with versioned deployment</li>
 <li>Interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules</li>
