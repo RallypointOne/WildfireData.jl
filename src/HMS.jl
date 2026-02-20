@@ -126,7 +126,7 @@ function download(date::Union{Date, String}; verbose::Bool=true)
     verbose && println("Date: $date")
     verbose && println("URL: $url")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download fire points. HTTP status: $(response.status). Data may not be available for this date.")
@@ -184,7 +184,7 @@ function download_smoke(date::Union{Date, String}; force::Bool=false, verbose::B
     verbose && println("Date: $date")
     verbose && println("URL: $url")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download smoke polygons. HTTP status: $(response.status). Data may not be available for this date.")

@@ -145,7 +145,7 @@ function _download(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol
     verbose && println("Downloading: $(d.name)")
     verbose && println("URL: $url")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download dataset. HTTP status: $(response.status)\nResponse: $(String(response.body))")
@@ -244,7 +244,7 @@ function _count(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, m
     ]
     full_url = base_query_url(d) * "?" * join(["$k=$v" for (k, v) in params], "&")
 
-    response = HTTP.get(full_url; status_exception=false)
+    response = HTTP.get(full_url; status_exception=false, connect_timeout=60, readtimeout=60)
     if response.status != 200
         error("Failed to get count. HTTP status: $(response.status)")
     end
@@ -266,7 +266,7 @@ function _fields(all_datasets::Dict{Symbol,<:AbstractDataset}, dataset::Symbol, 
     d = all_datasets[dataset]
     url = base_layer_url(d) * "?f=json"
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
     if response.status != 200
         error("Failed to get field info. HTTP status: $(response.status)")
     end

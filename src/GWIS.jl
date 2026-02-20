@@ -291,7 +291,7 @@ function download_tile(layer::Symbol; filename::Union{String, Nothing}=nothing,
     verbose && println("Downloading: $(LAYERS[layer].name)")
     verbose && println("URL: $url")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download tile. HTTP status: $(response.status)")

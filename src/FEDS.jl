@@ -241,7 +241,7 @@ function download(collection::Symbol;
     verbose && println("Downloading: $(c.name)")
     verbose && println("URL: $url")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download collection. HTTP status: $(response.status)\nResponse: $(String(response.body))")

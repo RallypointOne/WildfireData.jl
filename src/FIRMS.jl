@@ -270,7 +270,7 @@ function download(source::Symbol; area::String="world", region::Union{Symbol, No
     !isnothing(date) && verbose && println("Date: $date")
     verbose && println("URL: $(replace(url, get_map_key() => "[MAP_KEY]"))")
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
 
     if response.status != 200
         error("Failed to download data. HTTP status: $(response.status)\nResponse: $(String(response.body))")
@@ -375,7 +375,7 @@ function data_availability(source::Symbol=:VIIRS_NOAA20_NRT)
     source_name = SOURCES[source].name
     url = "$API_BASE/data_availability/csv/$key/$source_name"
 
-    response = HTTP.get(url; status_exception=false)
+    response = HTTP.get(url; status_exception=false, connect_timeout=60, readtimeout=60)
     if response.status != 200
         error("Failed to get data availability. HTTP status: $(response.status)")
     end
