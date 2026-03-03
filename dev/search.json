@@ -235,7 +235,7 @@
     "href": "modules/wfigs.html#plot-example",
     "title": "WFIGS",
     "section": "Plot Example",
-    "text": "Plot Example\n\nusing WildfireData.WFIGS\nusing GeoJSON, CairoMakie, GeoMakie, Tyler\nusing Extents, TileProviders\nimport JSON3\nCairoMakie.activate!()\n\ndata = WFIGS.download(:historic_geomac_2018, limit=100, verbose=false)\nfc = GeoJSON.read(JSON3.write(data))\n\next = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))\nm = Tyler.Map(ext;\n    size = (900, 600),\n    axis = (; type = GeoMakie.GeoAxis, dest = \"+proj=merc\"),\n    provider = TileProviders.OpenStreetMap(:Mapnik),\n)\n\nfor feature in fc\n    geom = GeoJSON.geometry(feature)\n    isnothing(geom) && continue\n    poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)\nend\n\nm.figure",
+    "text": "Plot Example\n\nusing WildfireData.WFIGS\nusing GeoJSON, CairoMakie, GeoMakie, Tyler\nusing Extents, TileProviders\nimport JSON3\nCairoMakie.activate!()\n\ndata = WFIGS.download(:historic_geomac_2018, limit=100, verbose=false)\nfc = GeoJSON.read(JSON3.write(data))\n\next = Extent(; X=(-130.0, -65.0), Y=(24.0, 50.0))\nm = Tyler.Map(ext;\n    size = (900, 600),\n    axis = (; type = GeoMakie.GeoAxis, dest = \"+proj=merc\"),\n    provider = TileProviders.OpenStreetMap(:Mapnik),\n)\n\nfor feature in fc\n    geom = GeoJSON.geometry(feature)\n    isnothing(geom) && continue\n    poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)\nend\n\nm.figure\n\n\nPrecompiling packages...\n   2215.5 ms  ✓ QuartoNotebookWorkerJSON3Ext (serial)\n  1 dependency successfully precompiled in 2 seconds\nPrecompiling packages...\n    989.7 ms  ✓ QuartoNotebookWorkerTablesExt (serial)\n  1 dependency successfully precompiled in 1 seconds\nPrecompiling packages...\n    962.8 ms  ✓ QuartoNotebookWorkerLaTeXStringsExt (serial)\n  1 dependency successfully precompiled in 1 seconds\nPrecompiling packages...\n   1206.6 ms  ✓ QuartoNotebookWorkerJSONExt (serial)\n  1 dependency successfully precompiled in 1 seconds\nPrecompiling packages...\n   6661.8 ms  ✓ QuartoNotebookWorkerMakieExt (serial)\n  1 dependency successfully precompiled in 7 seconds\nPrecompiling packages...\n   5737.0 ms  ✓ QuartoNotebookWorkerCairoMakieExt (serial)\n  1 dependency successfully precompiled in 6 seconds",
     "crumbs": [
       "Docs",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>WFIGS</span>"
@@ -1617,46 +1617,46 @@
     ]
   },
   {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
+    "objectID": "resources/changelog.html",
+    "href": "resources/changelog.html",
     "title": "Changelog",
     "section": "",
     "text": "Unreleased",
     "crumbs": [
-      "Reference",
+      "Resources",
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   },
   {
-    "objectID": "changelog.html#v0.1.0",
-    "href": "changelog.html#v0.1.0",
+    "objectID": "resources/changelog.html#v0.1.0",
+    "href": "resources/changelog.html#v0.1.0",
     "title": "Changelog",
     "section": "v0.1.0",
     "text": "v0.1.0\n\nBreaking\n\nNew exports: FEDS, CWFIS, HMS, GWIS, EGP are now exported from WildfireData\n\n\n\nFeatures\n\nAdd FEDS module: NASA Fire Events Data Suite — satellite-derived fire event tracking with perimeters, fire lines, and new fire pixels via OGC API\nAdd CWFIS module: Canadian Wildland Fire Information System — active fires, hotspots, fire perimeters, fire danger, and weather stations via WFS\nAdd HMS module: NOAA Hazard Mapping System — daily fire point detections and smoke plume polygons\nAdd GWIS module: Global Wildfire Information System / EFFIS — WMS map tiles for fire danger, active fires, burnt areas, and severity (global coverage)\nAdd EGP module: NIFC Enterprise Geospatial Portal — GACC boundaries, dispatch boundaries, PSA boundaries, PODs, and IA frequency zones via ArcGIS REST\nIncrease HTTP connect and read timeouts from 30s to 60s across all modules to improve CI reliability\n\n\n\nDocumentation\n\nAdd documentation pages for all 5 new modules\nUpdate index page and README with new data source table\nUpdate API page with card header styling from package template\n\n\n\nInfrastructure\n\nSync CI workflows with JuliaPackageTemplate (TagBot runner, Docs triggers)\nUpdate CLAUDE.md from package template",
     "crumbs": [
-      "Reference",
+      "Resources",
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   },
   {
-    "objectID": "changelog.html#v0.0.2",
-    "href": "changelog.html#v0.0.2",
+    "objectID": "resources/changelog.html#v0.0.2",
+    "href": "resources/changelog.html#v0.0.2",
     "title": "Changelog",
     "section": "v0.0.2",
     "text": "v0.0.2\n\nDocumentation\n\nAdd interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules\nImprove docstrings and module exports\nUpdate CI workflows and docs configuration from package template\nAdd versioned docs deployment with backfill workflow\nAdd dark mode support and search improvements to docs site\n\n\n\nFixes\n\nFix GeoJSON.read to pass file contents as string",
     "crumbs": [
-      "Reference",
+      "Resources",
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   },
   {
-    "objectID": "changelog.html#v0.0.1",
-    "href": "changelog.html#v0.0.1",
+    "objectID": "resources/changelog.html#v0.0.1",
+    "href": "resources/changelog.html#v0.0.1",
     "title": "Changelog",
     "section": "v0.0.1",
     "text": "v0.0.1\nInitial release of WildfireData.jl.\n\nFeatures\n\nWFIGS module: Access USGS Wildland Fire Interagency Geospatial Services data (historic perimeters, current perimeters, etc.)\nIRWIN module: Access Integrated Reporting of Wildland-Fire Information (fire occurrence data)\nMTBS module: Access Monitoring Trends in Burn Severity data (burned area boundaries, largest fires)\nFIRMS module: Access NASA FIRMS active fire/hotspot data (MODIS, VIIRS sensors)\nFPA_FOD module: Access Fire Program Analysis Fire-Occurrence Database (SQLite-based)\nLANDFIRE module: Access LANDFIRE geospatial data products (fuel models, vegetation, topography)\n\n\n\nDocumentation\n\nQuarto-based documentation site with versioned deployment\nInteractive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules\nFull API reference with expandable docstrings\nGetting started guide and per-module documentation",
     "crumbs": [
-      "Reference",
+      "Resources",
       "<span class='chapter-number'>15</span>  <span class='chapter-title'>Changelog</span>"
     ]
   }
