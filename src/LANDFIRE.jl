@@ -449,14 +449,14 @@ function download_product(product::Symbol, region::Symbol, version::Symbol;
     verbose && println("Version: LF $(v.year)")
     verbose && println("URL: $url")
     # Check if URL is valid first and get file size
-    response = HTTP.head(url; status_exception=false)
+    response = HTTP.head(url; status_exception=false, connect_timeout=60, readtimeout=60)
     if response.status != 200
         error("Download not available for this product/region/version combination. HTTP status: $(response.status)")
     end
 
-    cl = HTTP.header(response, "Content-Length", "")
-    if verbose && !isempty(cl)
-        size_mb = round(parse(Int, cl) / 1024^2, digits=1)
+    cl = tryparse(Int, HTTP.header(response, "Content-Length", ""))
+    if verbose && !isnothing(cl)
+        size_mb = round(cl / 1024^2, digits=1)
         println("File size: ~$(size_mb) MB")
     end
 

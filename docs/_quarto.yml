@@ -13,6 +13,8 @@ book:
     keyboard-shortcut:
       - "/"
   navbar:
+    logo: https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638
+    logo-href: https://rallypoint1.com
     right:
       - icon: star
         href: https://github.com/RallypointOne/WildfireData.jl/stargazers
@@ -38,10 +40,10 @@ book:
     - part: "API"
       chapters:
         - api.qmd
-    - part: "Reference"
+    - part: "Resources"
       chapters:
-        - changelog.qmd
-        - coverage.qmd
+        - resources/changelog.qmd
+        - resources/coverage.qmd
 
   page-footer:
     center: "Built on __BUILD_DATE__"
@@ -54,8 +56,7 @@ format:
     css: styles.css
     number-sections: false
     theme:
-      light: flatly
-      dark: darkly
-    respect-user-color-scheme: true
+      - flatly
+      - theme.scss
     include-after-body:
       - file: _version-selector.html
