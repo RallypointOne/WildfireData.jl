@@ -24,6 +24,7 @@ The package includes modules for accessing data from:
 | [HMS](modules/hms.qmd) | NOAA Hazard Mapping System | Fire detections & smoke plumes |
 | [GWIS](modules/gwis.qmd) | Global Wildfire Information System | Global fire danger & burnt areas |
 | [EGP](modules/egp.qmd) | Enterprise Geospatial Portal | Operational & jurisdictional boundaries |
+| [RxCADRE](modules/rxcadre.qmd) | RxCADRE (USFS) | Prescribed fire research datasets |
 
 ## Features
 

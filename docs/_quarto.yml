@@ -37,6 +37,7 @@ book:
         - modules/hms.qmd
         - modules/gwis.qmd
         - modules/egp.qmd
+        - modules/rxcadre.qmd
     - part: "API"
       chapters:
         - api.qmd

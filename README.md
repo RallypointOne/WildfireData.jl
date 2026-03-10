@@ -22,6 +22,7 @@ A Julia package for accessing wildfire and fire-related geospatial data from U.S
 | **HMS** | NOAA | Hazard Mapping System (fire detections & smoke plumes) |
 | **GWIS** | Copernicus | Global Wildfire Information System (fire danger & burnt areas) |
 | **EGP** | NIFC | Enterprise Geospatial Portal (operational boundaries) |
+| **RxCADRE** | USFS | Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment |
 
 ## Installation
 

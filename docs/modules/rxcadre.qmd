@@ -1,0 +1,133 @@
+---
+title: "RxCADRE"
+subtitle: "Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment"
+engine: julia
+---
+
+## Overview
+
+The RxCADRE module provides access to datasets from the **Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment** (RxCADRE). This multi-disciplinary project involved 90 scientists collecting fire behavior, fuels, meteorology, energy, smoke emissions, and fire effects data from prescribed fires at **Eglin Air Force Base** (Florida) and the **Joseph W. Jones Ecological Research Center** (Georgia) during 2008, 2011, and 2012.
+
+**Data Source:** [USFS Research Data Archive](https://www.fs.usda.gov/rds/archive/)
+
+**Reference:** Ottmar, R.D. et al. (2016). "Measurements, datasets and preliminary results from the RxCADRE project — 2008, 2011 and 2012." *International Journal of Wildland Fire*, 25(1), 1-14.
+
+No API key is required.
+
+## Available Datasets
+
+| Dataset | Category | Description | Size | Years |
+|---------|----------|-------------|------|-------|
+| `:fuel_loading` | fuels | Ground fuel loading, consumption, and fuel moisture | 61 KB | 2008-2012 |
+| `:ground_cover` | fuels | Pre/post-burn percent cover (green, NPV, char, ash, soil) | 0.6 MB | 2008-2012 |
+| `:fire_behavior` | fire_behavior | In-situ flame temperature, mass flow, intensity, rate of spread | 3.6 GB | 2012 |
+| `:weather` | meteorology | Wind, temperature, RH, pressure at multiple heights (2-sec) | 54 MB | 2012 |
+| `:wind_lidar` | meteorology | Doppler wind LiDAR and microwave profiler data | 238 MB | 2012 |
+| `:radiometer_locations` | energy | Radiometer deployment locations | 0.65 MB | 2008-2012 |
+| `:radiometer_data` | energy | Fire radiative power (FRP) and energy (FRE) measurements | 107 MB | 2012 |
+| `:smoke_emissions` | emissions | Airborne CO2, CO, CH4 concentrations in smoke plumes | 0.82 MB | 2012 |
+
+## Basic Usage
+
+```julia
+using WildfireData.RxCADRE
+
+# List all datasets
+RxCADRE.datasets()
+
+# Filter by category
+RxCADRE.datasets(category=:fuels)
+
+# Get info about a dataset
+RxCADRE.info(:fuel_loading)
+
+# Get the USFS catalog URL
+RxCADRE.catalog_url(:fuel_loading)
+```
+
+## Downloading Data
+
+Data is downloaded as ZIP archives from the USFS Research Data Archive, then CSV files are automatically extracted.
+
+```julia
+# Download a dataset (extracts CSVs to local storage)
+path = RxCADRE.download(:fuel_loading)
+
+# List the extracted files
+RxCADRE.list_files(:fuel_loading)
+
+# Force re-download
+path = RxCADRE.download(:fuel_loading, force=true)
+```
+
+## Loading Data
+
+Extracted CSV files are loaded as `DataFrame`s.
+
+```julia
+using DataFrames
+
+# Single-file datasets load directly
+df = RxCADRE.load(:ground_cover)
+
+# Multi-file datasets: specify which file
+RxCADRE.list_files(:fuel_loading)
+df = RxCADRE.load(:fuel_loading, file="CADRE_2008_2011_2012_Fuel_moistures.csv")
+
+# Load all files at once as a Dict
+all_data = RxCADRE.load_all(:smoke_emissions)
+```
+
+## Working with Fuel Moisture Data
+
+```julia
+RxCADRE.download(:fuel_loading, verbose=false)
+df = RxCADRE.load(:fuel_loading, file="CADRE_2008_2011_2012_Fuel_moistures.csv")
+
+# Filter by year
+df_2012 = filter(r -> r.Year == 2012, df)
+```
+
+## Working with Ground Cover Data
+
+```julia
+RxCADRE.download(:ground_cover, verbose=false)
+df = RxCADRE.load(:ground_cover)
+
+# Examine pre/post-burn changes
+select(df, :Unit, :PlotNum, :Pre_Green_perc, :Post_Green_perc)
+```
+
+## Working with Smoke Emissions
+
+```julia
+RxCADRE.download(:smoke_emissions, verbose=false)
+
+# Load all emission and dispersion files
+all_data = RxCADRE.load_all(:smoke_emissions)
+
+# Work with a specific burn
+emissions = RxCADRE.load(:smoke_emissions, file="Emissions_L2F_20121111.csv")
+dispersion = RxCADRE.load(:smoke_emissions, file="SmokeDispersion_L2F_20121111.csv")
+```
+
+## API Reference
+
+### Functions
+
+- `datasets(; category)` - List available RxCADRE datasets, optionally filtered by category
+- `info(dataset)` - Print dataset metadata (RDS ID, description, size, DOI)
+- `catalog_url(dataset)` - Get the USFS Research Data Archive catalog URL
+- `download(dataset; force, verbose)` - Download and extract dataset ZIP files
+- `list_files(dataset)` - List extracted data files
+- `load(dataset; file, skipto)` - Load a CSV file as a DataFrame
+- `load_all(dataset; skipto)` - Load all CSV files as a Dict of DataFrames
+- `dir()` - Get local data directory path
+
+### Categories
+
+- `:fuels` - Fuel loading, consumption, moisture, ground cover
+- `:fire_behavior` - In-situ fire behavior measurements
+- `:meteorology` - Weather and wind profiler data
+- `:energy` - Radiometer locations and fire radiative power/energy
+- `:emissions` - Airborne smoke emission and dispersion

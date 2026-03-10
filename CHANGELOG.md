@@ -1,5 +1,8 @@
 ## Unreleased
 
+### Features
+- Add **RxCADRE** module: Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment — fuel loading, ground cover, fire behavior, weather, radiometer, and smoke emission datasets from prescribed fires at Eglin AFB and Joseph Jones Ecological Research Center (2008-2012)
+
 ## v0.1.0
 
 ### Breaking

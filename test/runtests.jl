@@ -10,6 +10,7 @@ using WildfireData.CWFIS
 using WildfireData.HMS
 using WildfireData.GWIS
 using WildfireData.EGP
+using WildfireData.RxCADRE
 using Test
 using DataFrames
 using Dates
@@ -1565,6 +1566,134 @@ using GeoJSON
                 @test_throws ErrorException EGP.fields(:nonexistent_dataset)
                 @test_throws ErrorException EGP.load_file(:nonexistent_dataset)
             end
+        end
+
+    end
+
+    @testset "RxCADRE Module" begin
+
+        @testset "datasets()" begin
+            ds = RxCADRE.datasets()
+            @test ds isa Dict{Symbol, RxCADRE.RxCADREDataset}
+            @test length(ds) == 8
+
+            # Test expected datasets exist
+            @test haskey(ds, :fuel_loading)
+            @test haskey(ds, :ground_cover)
+            @test haskey(ds, :fire_behavior)
+            @test haskey(ds, :weather)
+            @test haskey(ds, :wind_lidar)
+            @test haskey(ds, :radiometer_locations)
+            @test haskey(ds, :radiometer_data)
+            @test haskey(ds, :smoke_emissions)
+
+            # Test category filtering
+            fuels = RxCADRE.datasets(category=:fuels)
+            @test all(d.category == :fuels for d in values(fuels))
+            @test haskey(fuels, :fuel_loading)
+            @test haskey(fuels, :ground_cover)
+            @test !haskey(fuels, :smoke_emissions)
+
+            energy = RxCADRE.datasets(category=:energy)
+            @test all(d.category == :energy for d in values(energy))
+            @test haskey(energy, :radiometer_locations)
+            @test haskey(energy, :radiometer_data)
+
+            met = RxCADRE.datasets(category=:meteorology)
+            @test all(d.category == :meteorology for d in values(met))
+            @test haskey(met, :weather)
+            @test haskey(met, :wind_lidar)
+        end
+
+        @testset "Dataset struct" begin
+            d = RxCADRE.datasets()[:fuel_loading]
+            @test d.rds_id == "RDS-2014-0028"
+            @test d.name == "Ground Fuel Measurements"
+            @test d.category == :fuels
+            @test 2008 in d.years
+            @test 2012 in d.years
+            @test !isempty(d.description)
+            @test !isempty(d.doi)
+            @test length(d.zip_files) == 1
+        end
+
+        @testset "catalog_url()" begin
+            url = RxCADRE.catalog_url(:fuel_loading)
+            @test occursin("fs.usda.gov/rds/archive", url)
+            @test occursin("RDS-2014-0028", url)
+
+            url2 = RxCADRE.catalog_url(:fire_behavior)
+            @test occursin("RDS-2016-0038", url2)
+
+            @test_throws ErrorException RxCADRE.catalog_url(:nonexistent)
+        end
+
+        @testset "info() output" begin
+            result = @test_nowarn RxCADRE.info(:fuel_loading)
+            @test isnothing(result)
+        end
+
+        @testset "dir()" begin
+            d = RxCADRE.dir()
+            @test d isa String
+            @test occursin("RxCADRE", d)
+        end
+
+        # Network-dependent tests
+        @testset "Network API Tests" begin
+            @testset "download() fuel_loading" begin
+                path = RxCADRE.download(:fuel_loading, verbose=false, force=true)
+                @test isdir(path)
+
+                files = RxCADRE.list_files(:fuel_loading)
+                @test length(files) > 0
+                @test "CADRE_2008_2011_2012_Fuel_moistures.csv" in files
+            end
+
+            @testset "load() fuel moistures" begin
+                df = RxCADRE.load(:fuel_loading, file="CADRE_2008_2011_2012_Fuel_moistures.csv")
+                @test df isa DataFrame
+                @test nrow(df) > 0
+                @test "Year" in names(df)
+                @test "Site" in names(df)
+                @test "Mean_FM" in names(df)
+            end
+
+            @testset "download() and load() ground_cover" begin
+                path = RxCADRE.download(:ground_cover, verbose=false, force=true)
+                @test isdir(path)
+
+                df = RxCADRE.load(:ground_cover)
+                @test df isa DataFrame
+                @test nrow(df) > 0
+                @test "Unit" in names(df)
+                @test "Easting" in names(df)
+            end
+
+            @testset "download() and load_all() smoke_emissions" begin
+                path = RxCADRE.download(:smoke_emissions, verbose=false, force=true)
+                @test isdir(path)
+
+                all_data = RxCADRE.load_all(:smoke_emissions)
+                @test all_data isa Dict{String, DataFrame}
+                @test length(all_data) == 6
+                @test haskey(all_data, "Emissions_L1G_20121104.csv")
+                @test haskey(all_data, "SmokeDispersion_L2F_20121111.csv")
+            end
+
+            @testset "download() idempotent" begin
+                # Should not re-download
+                path = RxCADRE.download(:fuel_loading, verbose=false)
+                @test isdir(path)
+            end
+        end
+
+        @testset "Error handling" begin
+            @test_throws ErrorException RxCADRE.info(:nonexistent)
+            @test_throws ErrorException RxCADRE.download(:nonexistent)
+            @test_throws ErrorException RxCADRE.list_files(:nonexistent)
+            @test_throws ErrorException RxCADRE.load(:nonexistent)
+            @test_throws ErrorException RxCADRE.catalog_url(:nonexistent)
         end
 
     end
