@@ -157,8 +157,9 @@ Download an MTBS dataset and return it as parsed GeoJSON.
 - `verbose::Bool`: Print progress information
 
 # Common Fields
-- `:fire_occurrence`: `FIRE_NAME`, `YEAR`, `ACRES`, `FIRE_TYPE`, `IG_DATE`, `MTBS_ID`
-- `:burn_boundaries`: `FIRE_NAME`, `YEAR`, `ACRES`, `IG_DATE`, `MTBS_ID`
+- `:fire_occurrence`: `fire_id`, `fire_name`, `fire_type`, `ig_date`, `acres`, `latitude`, `longitude`
+- `:burn_boundaries`: `fire_id`, `fire_name`, `fire_type`, `year`, `ig_date`, `acres`
+- `fire_id` begins with the two-letter state code. `ig_date` is epoch milliseconds.
 
 # Returns
 A `GeoJSON.FeatureCollection`.
@@ -169,13 +170,13 @@ A `GeoJSON.FeatureCollection`.
 data = MTBS.download(:fire_occurrence, limit=100)
 
 # Download fires in California
-data = MTBS.download(:fire_occurrence, where="FIRE_NAME LIKE '%CA%'", limit=100)
+data = MTBS.download(:fire_occurrence, where="fire_id LIKE 'CA%'", limit=100)
 
 # Download large fires (over 10,000 acres)
-data = MTBS.download(:burn_boundaries, where="ACRES > 10000", limit=50)
+data = MTBS.download(:burn_boundaries, where="acres > 10000", limit=50)
 
 # Download fires from a specific year
-data = MTBS.download(:fire_occurrence, where="YEAR = 2020", limit=100)
+data = MTBS.download(:burn_boundaries, where="year = 2020", limit=100)
 
 # Download fires within a bounding box (Colorado)
 data = MTBS.download(:fire_occurrence, bbox=(-109, 37, -102, 41), limit=500)
@@ -226,8 +227,8 @@ Get the count of features in a dataset matching the where clause.
 # Example
 ```julia
 MTBS.count(:fire_occurrence)  # total count
-MTBS.count(:burn_boundaries, where="YEAR = 2020")  # 2020 fires
-MTBS.count(:fire_occurrence, where="ACRES > 10000")  # large fires
+MTBS.count(:burn_boundaries, where="year = 2020")  # 2020 fires
+MTBS.count(:fire_occurrence, where="acres > 10000")  # large fires
 ```
 """
 count(dataset::Symbol; kwargs...) = _count(DATASETS, dataset, "MTBS"; kwargs...)
@@ -351,10 +352,11 @@ function fires(; year::Union{Int,Nothing}=nothing,
                limit::Int=1000)
     conditions = String[]
 
-    !isnothing(year) && push!(conditions, "YEAR = $year")
-    !isnothing(min_acres) && push!(conditions, "ACRES >= $min_acres")
-    !isnothing(max_acres) && push!(conditions, "ACRES <= $max_acres")
-    !isnothing(fire_type) && push!(conditions, "FIRE_TYPE = '$(replace(fire_type, "'" => "''"))'")
+    # The fire occurrence layer has no year field
+    !isnothing(year) && push!(conditions, "EXTRACT(YEAR FROM ig_date) = $year")
+    !isnothing(min_acres) && push!(conditions, "acres >= $min_acres")
+    !isnothing(max_acres) && push!(conditions, "acres <= $max_acres")
+    !isnothing(fire_type) && push!(conditions, "fire_type = '$(replace(fire_type, "'" => "''"))'")
 
 
     where_clause = isempty(conditions) ? "1=1" : join(conditions, " AND ")
@@ -393,9 +395,9 @@ function boundaries(; year::Union{Int,Nothing}=nothing,
                     limit::Int=100)
     conditions = String[]
 
-    !isnothing(year) && push!(conditions, "YEAR = $year")
-    !isnothing(min_acres) && push!(conditions, "ACRES >= $min_acres")
-    !isnothing(max_acres) && push!(conditions, "ACRES <= $max_acres")
+    !isnothing(year) && push!(conditions, "year = $year")
+    !isnothing(min_acres) && push!(conditions, "acres >= $min_acres")
+    !isnothing(max_acres) && push!(conditions, "acres <= $max_acres")
 
     where_clause = isempty(conditions) ? "1=1" : join(conditions, " AND ")
 
@@ -414,15 +416,15 @@ MTBS.largest_fires(10, year=2020)  # top 10 in 2020
 ```
 """
 function largest_fires(n::Int=100; year::Union{Int,Nothing}=nothing)
-    where_clause = isnothing(year) ? "1=1" : "YEAR = $year"
+    where_clause = isnothing(year) ? "1=1" : "EXTRACT(YEAR FROM ig_date) = $year"
 
     # Note: MapServer doesn't support ORDER BY in the same way, so we get more records
     # and sort client-side
     data = download(:fire_occurrence; where=where_clause, limit=min(n * 2, 2000), verbose=false)
 
     if length(data) > 0
-        # Sort by ACRES descending and take top n
-        sorted_features = sort(collect(data), by=f -> -something(f.ACRES, 0))
+        # Sort by acres descending and take top n
+        sorted_features = sort(collect(data), by=f -> -something(f.acres, 0))
         return sorted_features[1:min(n, length(sorted_features))]
     end
 

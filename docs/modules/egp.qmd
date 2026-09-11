@@ -1,7 +1,6 @@
 ---
 title: "EGP"
 subtitle: "Enterprise Geospatial Portal"
-engine: julia
 ---
 
 ## Overview

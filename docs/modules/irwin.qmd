@@ -1,7 +1,6 @@
 ---
 title: "IRWIN"
 subtitle: "Integrated Reporting of Wildland Fire Information"
-engine: julia
 ---
 
 ## Overview

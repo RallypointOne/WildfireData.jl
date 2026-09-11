@@ -1,7 +1,6 @@
 ---
 title: "GWIS"
 subtitle: "Global Wildfire Information System"
-engine: julia
 ---
 
 ## Overview

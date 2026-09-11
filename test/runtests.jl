@@ -635,7 +635,7 @@ using GeoJSON
                 @test n2 > 0
 
                 # Test with where clause
-                n_large = MTBS.count(:fire_occurrence, where="ACRES > 10000")
+                n_large = MTBS.count(:fire_occurrence, where="acres > 10000")
                 @test n_large >= 0
                 @test n_large < n
             end
@@ -653,9 +653,9 @@ using GeoJSON
 
                 # Check some expected fields exist
                 field_names = [field.name for field in f]
-                @test "FIRE_NAME" in field_names
-                @test "ACRES" in field_names
-                @test "FIRE_ID" in field_names
+                @test "fire_name" in field_names
+                @test "acres" in field_names
+                @test "fire_id" in field_names
 
                 # Test burn boundaries fields
                 f2 = MTBS.fields(:burn_boundaries)
@@ -682,13 +682,13 @@ using GeoJSON
             end
 
             @testset "download() with where clause" begin
-                data = MTBS.download(:fire_occurrence, where="ACRES > 50000", limit=5, verbose=false)
+                data = MTBS.download(:fire_occurrence, where="acres > 50000", limit=5, verbose=false)
                 @test data isa GeoJSON.FeatureCollection
 
                 # Check that returned fires are actually large
                 if length(data) > 0
                     for feature in data
-                        @test feature.ACRES > 50000
+                        @test feature.acres > 50000
                     end
                 end
             end
@@ -715,12 +715,21 @@ using GeoJSON
                 # Test with min_acres filter (more reliable than year filter)
                 data_large = MTBS.fires(min_acres=100000, limit=5)
                 @test data_large isa GeoJSON.FeatureCollection
+                @test all(f.acres >= 100000 for f in data_large)
+
+                data_2020 = MTBS.fires(year=2020, limit=5)
+                @test length(data_2020) > 0
+                @test all(Dates.year(unix2datetime(f.ig_date / 1000)) == 2020 for f in data_2020)
             end
 
             @testset "boundaries() convenience function" begin
                 data = MTBS.boundaries(limit=3)
                 @test data isa GeoJSON.FeatureCollection
                 @test length(data) <= 3
+
+                data_2020 = MTBS.boundaries(year=2020, limit=3)
+                @test length(data_2020) > 0
+                @test all(f.year == 2020 for f in data_2020)
             end
 
             @testset "largest_fires()" begin
@@ -730,7 +739,7 @@ using GeoJSON
 
                 if length(lf) > 1
                     # Check sorted by size descending
-                    sizes = [f.ACRES for f in lf]
+                    sizes = [f.acres for f in lf]
                     @test issorted(sizes, rev=true)
                 end
             end

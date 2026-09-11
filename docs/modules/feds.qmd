@@ -1,7 +1,6 @@
 ---
 title: "FEDS"
 subtitle: "Fire Events Data Suite"
-engine: julia
 ---
 
 ## Overview

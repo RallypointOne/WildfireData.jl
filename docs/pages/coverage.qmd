@@ -1,0 +1,44 @@
+---
+title: "Coverage"
+resources:
+  - coverage/
+---
+
+```{julia}
+#| echo: false
+#| output: false
+using LocalCoverage
+covdir = joinpath(@__DIR__, "coverage")
+placeholder(msg) = (mkpath(covdir); write(joinpath(covdir, "index.html"),
+    "<!doctype html><html><body style=\"font-family:sans-serif;color:#555\"><p>$msg</p></body></html>"))
+try
+    coverage = generate_coverage("WildfireData"; run_test=true)
+    if coverage.lines_tracked == 0
+        # `genhtml` (lcov 2.x) treats an empty tracefile as a fatal error.
+        placeholder("No coverage data yet &mdash; add code and tests to generate a report.")
+    else
+        html_coverage(coverage; dir=covdir, open=false)
+    end
+catch e
+    @warn "Coverage generation failed" exception=(e, catch_backtrace())
+    placeholder("Coverage generation failed during the doc build. See the CI logs for details.")
+end
+cov_dir = joinpath(dirname(dirname(@__DIR__)), "coverage")
+isfile(joinpath(cov_dir, "lcov.info")) && mv(joinpath(cov_dir, "lcov.info"), joinpath(@__DIR__, "lcov.info"); force=true)
+rm(cov_dir; recursive=true, force=true)
+```
+
+<iframe id="coverage-iframe" src="coverage/index.html" width="100%" style="border:none; overflow:hidden;" scrolling="no"></iframe>
+
+<script>
+(function() {
+    var iframe = document.getElementById('coverage-iframe');
+    function resize() {
+        try {
+            iframe.style.height = iframe.contentDocument.documentElement.scrollHeight + 'px';
+        } catch(e) {}
+    }
+    iframe.addEventListener('load', resize);
+    window.addEventListener('resize', resize);
+})();
+</script>

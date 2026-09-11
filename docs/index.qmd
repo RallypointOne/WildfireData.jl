@@ -7,6 +7,27 @@ subtitle: "Access wildfire and fire-related geospatial data from Julia"
 
 **WildfireData.jl** is a Julia package that provides unified access to multiple wildfire and fire-related geospatial datasets. It simplifies the process of downloading, querying, and working with fire data from U.S., Canadian, and global sources.
 
+## Quickstart
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/RallypointOne/WildfireData.jl")
+```
+
+```julia
+using WildfireData
+
+# Get current fire perimeters
+data = WFIGS.download(:current_perimeters, limit=10)
+
+# Access features
+for feature in data
+    println(feature.IncidentName)
+end
+```
+
+See the [Getting Started](getting-started.qmd) guide for more details.
+
 ## Data Sources
 
 The package includes modules for accessing data from:
@@ -33,29 +54,6 @@ The package includes modules for accessing data from:
 - **Query capabilities**: Filter data by location, time, and attributes
 - **Local caching**: Downloaded data is stored locally for reuse
 - **Web services**: Access WCS/WMS endpoints for streaming data
-
-## Quick Example
-
-```julia
-using WildfireData
-
-# Get current fire perimeters
-data = WFIGS.download(:current_perimeters, limit=10)
-
-# Access features
-for feature in data
-    println(feature.IncidentName)
-end
-```
-
-## Installation
-
-```julia
-using Pkg
-Pkg.add(url="https://github.com/RallypointOne/WildfireData.jl")
-```
-
-See the [Getting Started](getting-started.qmd) guide for more details.
 
 ## License
 
