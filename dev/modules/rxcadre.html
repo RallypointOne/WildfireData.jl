@@ -2,23 +2,64 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Changelog – WildfireData.jl</title>
+<title>RxCADRE – WildfireData.jl</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -30,19 +71,18 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../resources/coverage.html" rel="next">
-<link href="../api.html" rel="prev">
+<link href="../pages/api.html" rel="next">
+<link href="../modules/egp.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c35b4686a6fabbef78126217f9bf200b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-73b0ff3878a4e6fc3716dc69a6aaefa3.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-e9512225fbbb2050a673b742e2d1457e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-7f48b52cfed0612b99a5f135dc6cfa1a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -69,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -80,8 +120,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="https://rallypoint1.com" class="navbar-brand navbar-brand-logo">
-    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo light-content">
-    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo dark-content">
+    <img src="../assets/logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../assets/logo.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="https://rallypoint1.com">
     <span class="navbar-title">WildfireData.jl</span>
@@ -93,12 +133,12 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl/stargazers"> <i class="bi bi-star" role="img">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl/stargazers" target="_blank"> <i class="bi bi-star" role="img">
 </i> 
 <span class="menu-text">Star</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl" target="_blank"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -113,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../resources/changelog.html">Resources</a></li><li class="breadcrumb-item"><a href="../resources/changelog.html"><span class="chapter-title">Changelog</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/rxcadre.html"><span class="chapter-title">RxCADRE</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -207,6 +247,11 @@ ul.task-list li input[type="checkbox"] {
   <a href="../modules/egp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">EGP</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/rxcadre.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">RxCADRE</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -220,7 +265,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
+  <a href="../pages/api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
   </div>
 </li>
       </ul>
@@ -236,12 +281,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../resources/changelog.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Changelog</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../resources/coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
+  <a href="../pages/coverage.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Coverage</span></a>
   </div>
 </li>
       </ul>
@@ -256,23 +296,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#unreleased" id="toc-unreleased" class="nav-link active" data-scroll-target="#unreleased">Unreleased</a></li>
-  <li><a href="#v0.1.0" id="toc-v0.1.0" class="nav-link" data-scroll-target="#v0.1.0">v0.1.0</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#available-datasets" id="toc-available-datasets" class="nav-link" data-scroll-target="#available-datasets">Available Datasets</a></li>
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage">Basic Usage</a></li>
+  <li><a href="#downloading-data" id="toc-downloading-data" class="nav-link" data-scroll-target="#downloading-data">Downloading Data</a></li>
+  <li><a href="#loading-data" id="toc-loading-data" class="nav-link" data-scroll-target="#loading-data">Loading Data</a></li>
+  <li><a href="#working-with-fuel-moisture-data" id="toc-working-with-fuel-moisture-data" class="nav-link" data-scroll-target="#working-with-fuel-moisture-data">Working with Fuel Moisture Data</a></li>
+  <li><a href="#working-with-ground-cover-data" id="toc-working-with-ground-cover-data" class="nav-link" data-scroll-target="#working-with-ground-cover-data">Working with Ground Cover Data</a></li>
+  <li><a href="#working-with-smoke-emissions" id="toc-working-with-smoke-emissions" class="nav-link" data-scroll-target="#working-with-smoke-emissions">Working with Smoke Emissions</a></li>
+  <li><a href="#api-reference" id="toc-api-reference" class="nav-link" data-scroll-target="#api-reference">API Reference</a>
   <ul class="collapse">
-  <li><a href="#breaking" id="toc-breaking" class="nav-link" data-scroll-target="#breaking">Breaking</a></li>
-  <li><a href="#features" id="toc-features" class="nav-link" data-scroll-target="#features">Features</a></li>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
-  <li><a href="#infrastructure" id="toc-infrastructure" class="nav-link" data-scroll-target="#infrastructure">Infrastructure</a></li>
-  </ul></li>
-  <li><a href="#v0.0.2" id="toc-v0.0.2" class="nav-link" data-scroll-target="#v0.0.2">v0.0.2</a>
-  <ul class="collapse">
-  <li><a href="#documentation-1" id="toc-documentation-1" class="nav-link" data-scroll-target="#documentation-1">Documentation</a></li>
-  <li><a href="#fixes" id="toc-fixes" class="nav-link" data-scroll-target="#fixes">Fixes</a></li>
-  </ul></li>
-  <li><a href="#v0.0.1" id="toc-v0.0.1" class="nav-link" data-scroll-target="#v0.0.1">v0.0.1</a>
-  <ul class="collapse">
-  <li><a href="#features-1" id="toc-features-1" class="nav-link" data-scroll-target="#features-1">Features</a></li>
-  <li><a href="#documentation-2" id="toc-documentation-2" class="nav-link" data-scroll-target="#documentation-2">Documentation</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
+  <li><a href="#categories" id="toc-categories" class="nav-link" data-scroll-target="#categories">Categories</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -280,9 +315,10 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../resources/changelog.html">Resources</a></li><li class="breadcrumb-item"><a href="../resources/changelog.html"><span class="chapter-title">Changelog</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">Docs</a></li><li class="breadcrumb-item"><a href="../modules/rxcadre.html"><span class="chapter-title">RxCADRE</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Changelog</span></h1>
+<h1 class="title"><span class="chapter-title">RxCADRE</span></h1>
+<p class="subtitle lead">Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment</p>
 </div>
 
 
@@ -299,84 +335,185 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="unreleased" class="level2">
-<h2 class="anchored" data-anchor-id="unreleased">Unreleased</h2>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The RxCADRE module provides access to datasets from the <strong>Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment</strong> (RxCADRE). This multi-disciplinary project involved 90 scientists collecting fire behavior, fuels, meteorology, energy, smoke emissions, and fire effects data from prescribed fires at <strong>Eglin Air Force Base</strong> (Florida) and the <strong>Joseph W. Jones Ecological Research Center</strong> (Georgia) during 2008, 2011, and 2012.</p>
+<p><strong>Data Source:</strong> <a href="https://www.fs.usda.gov/rds/archive/">USFS Research Data Archive</a></p>
+<p><strong>Reference:</strong> Ottmar, R.D. et al.&nbsp;(2016). “Measurements, datasets and preliminary results from the RxCADRE project — 2008, 2011 and 2012.” <em>International Journal of Wildland Fire</em>, 25(1), 1-14.</p>
+<p>No API key is required.</p>
 </section>
-<section id="v0.1.0" class="level2">
-<h2 class="anchored" data-anchor-id="v0.1.0">v0.1.0</h2>
-<section id="breaking" class="level3">
-<h3 class="anchored" data-anchor-id="breaking">Breaking</h3>
+<section id="available-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="available-datasets">Available Datasets</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 22%">
+<col style="width: 28%">
+<col style="width: 13%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Category</th>
+<th>Description</th>
+<th>Size</th>
+<th>Years</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>:fuel_loading</code></td>
+<td>fuels</td>
+<td>Ground fuel loading, consumption, and fuel moisture</td>
+<td>61 KB</td>
+<td>2008-2012</td>
+</tr>
+<tr class="even">
+<td><code>:ground_cover</code></td>
+<td>fuels</td>
+<td>Pre/post-burn percent cover (green, NPV, char, ash, soil)</td>
+<td>0.6 MB</td>
+<td>2008-2012</td>
+</tr>
+<tr class="odd">
+<td><code>:fire_behavior</code></td>
+<td>fire_behavior</td>
+<td>In-situ flame temperature, mass flow, intensity, rate of spread</td>
+<td>3.6 GB</td>
+<td>2012</td>
+</tr>
+<tr class="even">
+<td><code>:weather</code></td>
+<td>meteorology</td>
+<td>Wind, temperature, RH, pressure at multiple heights (2-sec)</td>
+<td>54 MB</td>
+<td>2012</td>
+</tr>
+<tr class="odd">
+<td><code>:wind_lidar</code></td>
+<td>meteorology</td>
+<td>Doppler wind LiDAR and microwave profiler data</td>
+<td>238 MB</td>
+<td>2012</td>
+</tr>
+<tr class="even">
+<td><code>:radiometer_locations</code></td>
+<td>energy</td>
+<td>Radiometer deployment locations</td>
+<td>0.65 MB</td>
+<td>2008-2012</td>
+</tr>
+<tr class="odd">
+<td><code>:radiometer_data</code></td>
+<td>energy</td>
+<td>Fire radiative power (FRP) and energy (FRE) measurements</td>
+<td>107 MB</td>
+<td>2012</td>
+</tr>
+<tr class="even">
+<td><code>:smoke_emissions</code></td>
+<td>emissions</td>
+<td>Airborne CO2, CO, CH4 concentrations in smoke plumes</td>
+<td>0.82 MB</td>
+<td>2012</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="basic-usage" class="level2">
+<h2 class="anchored" data-anchor-id="basic-usage">Basic Usage</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">WildfireData.RxCADRE</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># List all datasets</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">datasets</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter by category</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">datasets</span>(category<span class="op">=:</span>fuels)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Get info about a dataset</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">info</span>(<span class="op">:</span>fuel_loading)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the USFS catalog URL</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">catalog_url</span>(<span class="op">:</span>fuel_loading)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="downloading-data" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-data">Downloading Data</h2>
+<p>Data is downloaded as ZIP archives from the USFS Research Data Archive, then CSV files are automatically extracted.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Download a dataset (extracts CSVs to local storage)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> RxCADRE.<span class="fu">download</span>(<span class="op">:</span>fuel_loading)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># List the extracted files</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">list_files</span>(<span class="op">:</span>fuel_loading)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Force re-download</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>path <span class="op">=</span> RxCADRE.<span class="fu">download</span>(<span class="op">:</span>fuel_loading, force<span class="op">=</span><span class="cn">true</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data">Loading Data</h2>
+<p>Extracted CSV files are loaded as <code>DataFrame</code>s.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Single-file datasets load directly</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>ground_cover)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Multi-file datasets: specify which file</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">list_files</span>(<span class="op">:</span>fuel_loading)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>fuel_loading, file<span class="op">=</span><span class="st">"CADRE_2008_2011_2012_Fuel_moistures.csv"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all files at once as a Dict</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>all_data <span class="op">=</span> RxCADRE.<span class="fu">load_all</span>(<span class="op">:</span>smoke_emissions)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="working-with-fuel-moisture-data" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-fuel-moisture-data">Working with Fuel Moisture Data</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">download</span>(<span class="op">:</span>fuel_loading, verbose<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>fuel_loading, file<span class="op">=</span><span class="st">"CADRE_2008_2011_2012_Fuel_moistures.csv"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter by year</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_2012 <span class="op">=</span> <span class="fu">filter</span>(r <span class="op">-&gt;</span> r.Year <span class="op">==</span> <span class="fl">2012</span>, df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="working-with-ground-cover-data" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-ground-cover-data">Working with Ground Cover Data</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">download</span>(<span class="op">:</span>ground_cover, verbose<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>ground_cover)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Examine pre/post-burn changes</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(df, <span class="op">:</span>Unit, <span class="op">:</span>PlotNum, <span class="op">:</span>Pre_Green_perc, <span class="op">:</span>Post_Green_perc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="working-with-smoke-emissions" class="level2">
+<h2 class="anchored" data-anchor-id="working-with-smoke-emissions">Working with Smoke Emissions</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>RxCADRE.<span class="fu">download</span>(<span class="op">:</span>smoke_emissions, verbose<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load all emission and dispersion files</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>all_data <span class="op">=</span> RxCADRE.<span class="fu">load_all</span>(<span class="op">:</span>smoke_emissions)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Work with a specific burn</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>emissions <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>smoke_emissions, file<span class="op">=</span><span class="st">"Emissions_L2F_20121111.csv"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>dispersion <span class="op">=</span> RxCADRE.<span class="fu">load</span>(<span class="op">:</span>smoke_emissions, file<span class="op">=</span><span class="st">"SmokeDispersion_L2F_20121111.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="api-reference" class="level2">
+<h2 class="anchored" data-anchor-id="api-reference">API Reference</h2>
+<section id="functions" class="level3">
+<h3 class="anchored" data-anchor-id="functions">Functions</h3>
 <ul>
-<li><strong>New exports</strong>: <code>FEDS</code>, <code>CWFIS</code>, <code>HMS</code>, <code>GWIS</code>, <code>EGP</code> are now exported from <code>WildfireData</code></li>
+<li><code>datasets(; category)</code> - List available RxCADRE datasets, optionally filtered by category</li>
+<li><code>info(dataset)</code> - Print dataset metadata (RDS ID, description, size, DOI)</li>
+<li><code>catalog_url(dataset)</code> - Get the USFS Research Data Archive catalog URL</li>
+<li><code>download(dataset; force, verbose)</code> - Download and extract dataset ZIP files</li>
+<li><code>list_files(dataset)</code> - List extracted data files</li>
+<li><code>load(dataset; file, skipto)</code> - Load a CSV file as a DataFrame</li>
+<li><code>load_all(dataset; skipto)</code> - Load all CSV files as a Dict of DataFrames</li>
+<li><code>dir()</code> - Get local data directory path</li>
 </ul>
 </section>
-<section id="features" class="level3">
-<h3 class="anchored" data-anchor-id="features">Features</h3>
+<section id="categories" class="level3">
+<h3 class="anchored" data-anchor-id="categories">Categories</h3>
 <ul>
-<li>Add <strong>FEDS</strong> module: NASA Fire Events Data Suite — satellite-derived fire event tracking with perimeters, fire lines, and new fire pixels via OGC API</li>
-<li>Add <strong>CWFIS</strong> module: Canadian Wildland Fire Information System — active fires, hotspots, fire perimeters, fire danger, and weather stations via WFS</li>
-<li>Add <strong>HMS</strong> module: NOAA Hazard Mapping System — daily fire point detections and smoke plume polygons</li>
-<li>Add <strong>GWIS</strong> module: Global Wildfire Information System / EFFIS — WMS map tiles for fire danger, active fires, burnt areas, and severity (global coverage)</li>
-<li>Add <strong>EGP</strong> module: NIFC Enterprise Geospatial Portal — GACC boundaries, dispatch boundaries, PSA boundaries, PODs, and IA frequency zones via ArcGIS REST</li>
-<li>Increase HTTP connect and read timeouts from 30s to 60s across all modules to improve CI reliability</li>
-</ul>
-</section>
-<section id="documentation" class="level3">
-<h3 class="anchored" data-anchor-id="documentation">Documentation</h3>
-<ul>
-<li>Add documentation pages for all 5 new modules</li>
-<li>Update index page and README with new data source table</li>
-<li>Update API page with card header styling from package template</li>
-</ul>
-</section>
-<section id="infrastructure" class="level3">
-<h3 class="anchored" data-anchor-id="infrastructure">Infrastructure</h3>
-<ul>
-<li>Sync CI workflows with JuliaPackageTemplate (TagBot runner, Docs triggers)</li>
-<li>Update CLAUDE.md from package template</li>
-</ul>
-</section>
-</section>
-<section id="v0.0.2" class="level2">
-<h2 class="anchored" data-anchor-id="v0.0.2">v0.0.2</h2>
-<section id="documentation-1" class="level3">
-<h3 class="anchored" data-anchor-id="documentation-1">Documentation</h3>
-<ul>
-<li>Add interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules</li>
-<li>Improve docstrings and module exports</li>
-<li>Update CI workflows and docs configuration from package template</li>
-<li>Add versioned docs deployment with backfill workflow</li>
-<li>Add dark mode support and search improvements to docs site</li>
-</ul>
-</section>
-<section id="fixes" class="level3">
-<h3 class="anchored" data-anchor-id="fixes">Fixes</h3>
-<ul>
-<li>Fix GeoJSON.read to pass file contents as string</li>
-</ul>
-</section>
-</section>
-<section id="v0.0.1" class="level2">
-<h2 class="anchored" data-anchor-id="v0.0.1">v0.0.1</h2>
-<p>Initial release of WildfireData.jl.</p>
-<section id="features-1" class="level3">
-<h3 class="anchored" data-anchor-id="features-1">Features</h3>
-<ul>
-<li><strong>WFIGS</strong> module: Access USGS Wildland Fire Interagency Geospatial Services data (historic perimeters, current perimeters, etc.)</li>
-<li><strong>IRWIN</strong> module: Access Integrated Reporting of Wildland-Fire Information (fire occurrence data)</li>
-<li><strong>MTBS</strong> module: Access Monitoring Trends in Burn Severity data (burned area boundaries, largest fires)</li>
-<li><strong>FIRMS</strong> module: Access NASA FIRMS active fire/hotspot data (MODIS, VIIRS sensors)</li>
-<li><strong>FPA_FOD</strong> module: Access Fire Program Analysis Fire-Occurrence Database (SQLite-based)</li>
-<li><strong>LANDFIRE</strong> module: Access LANDFIRE geospatial data products (fuel models, vegetation, topography)</li>
-</ul>
-</section>
-<section id="documentation-2" class="level3">
-<h3 class="anchored" data-anchor-id="documentation-2">Documentation</h3>
-<ul>
-<li>Quarto-based documentation site with versioned deployment</li>
-<li>Interactive map visualizations using GeoMakie and Tyler for WFIGS, IRWIN, MTBS, and FIRMS modules</li>
-<li>Full API reference with expandable docstrings</li>
-<li>Getting started guide and per-module documentation</li>
+<li><code>:fuels</code> - Fuel loading, consumption, moisture, ground cover</li>
+<li><code>:fire_behavior</code> - In-situ fire behavior measurements</li>
+<li><code>:meteorology</code> - Weather and wind profiler data</li>
+<li><code>:energy</code> - Radiometer locations and fire radiative power/energy</li>
+<li><code>:emissions</code> - Airborne smoke emission and dispersion</li>
 </ul>
 
 
@@ -471,6 +608,11 @@ ul.task-list li input[type="checkbox"] {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
@@ -786,13 +928,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../api.html" class="pagination-link" aria-label="API">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">API</span></span>
+      <a href="../modules/egp.html" class="pagination-link" aria-label="EGP">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">EGP</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../resources/coverage.html" class="pagination-link" aria-label="Coverage">
-        <span class="nav-page-text"><span class="chapter-title">Coverage</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../pages/api.html" class="pagination-link" aria-label="API">
+        <span class="nav-page-text"><span class="chapter-title">API</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -803,7 +945,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-03-03</p>
+<p>Built on 2026-09-11</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
@@ -812,22 +954,15 @@ ul.task-list li input[type="checkbox"] {
 </footer>
 <script>
 (function() {
-    // Detect repo name and current version from URL path
-    // Deployed: /{repoName}/{version}/...
-    // Local preview: /page.html (no repo/version segments)
-    var pathParts = window.location.pathname.split('/').filter(Boolean);
-    var isLocal = pathParts.length < 2 || !pathParts[0].includes('.');
-    var currentVersion, basePath;
-
-    if (pathParts.length >= 2 && pathParts[1].match(/^(dev|stable|v\d)/)) {
-        currentVersion = pathParts[1];
-        basePath = '/' + pathParts[0] + '/';
-    } else {
-        currentVersion = 'dev';
-        basePath = '/';
+    // Injected per-version by .github/workflows/Docs.yml at deploy time.
+    // Local preview: placeholders aren't substituted; fall back to sensible defaults.
+    var CURRENT_VERSION = "dev";
+    var BASE_PATH = "/WildfireData.jl/";
+    if (CURRENT_VERSION.indexOf("__") === 0) {
+        CURRENT_VERSION = "dev";
+        BASE_PATH = "/";
     }
 
-    // Build dropdown HTML
     function buildDropdown(versions) {
         var navbar = document.querySelector('.navbar-nav.navbar-nav-scroll.ms-auto');
         if (!navbar) return;
@@ -836,25 +971,22 @@ ul.task-list li input[type="checkbox"] {
         li.className = 'nav-item dropdown';
         li.innerHTML =
             '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' +
-                currentVersion +
+                CURRENT_VERSION +
             '</a>' +
             '<ul class="dropdown-menu dropdown-menu-end"></ul>';
 
         var menu = li.querySelector('.dropdown-menu');
 
-        // Always add dev and stable
-        var fixed = ['stable', 'dev'];
-        fixed.forEach(function(v) {
+        ['stable', 'dev'].forEach(function(v) {
             var a = document.createElement('a');
-            a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-            a.href = basePath + v + '/';
+            a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+            a.href = BASE_PATH + v + '/';
             a.textContent = v;
             var item = document.createElement('li');
             item.appendChild(a);
             menu.appendChild(item);
         });
 
-        // Add release versions from versions.json
         if (versions && versions.length > 0) {
             var divider = document.createElement('li');
             divider.innerHTML = '<hr class="dropdown-divider">';
@@ -862,8 +994,8 @@ ul.task-list li input[type="checkbox"] {
 
             versions.forEach(function(v) {
                 var a = document.createElement('a');
-                a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-                a.href = basePath + v + '/';
+                a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+                a.href = BASE_PATH + v + '/';
                 a.textContent = v;
                 var item = document.createElement('li');
                 item.appendChild(a);
@@ -873,45 +1005,38 @@ ul.task-list li input[type="checkbox"] {
 
         navbar.prepend(li);
 
-        // Show outdated version banner
-        if (versions && versions.length > 0 && currentVersion !== 'stable' && currentVersion !== 'dev') {
-            var latest = versions[0]; // versions.json is sorted descending
-            if (currentVersion !== latest) {
+        if (versions && versions.length > 0 && CURRENT_VERSION !== 'stable' && CURRENT_VERSION !== 'dev') {
+            var latest = versions[0];
+            if (CURRENT_VERSION !== latest) {
                 var banner = document.createElement('div');
                 banner.className = 'alert alert-warning text-center mb-0 rounded-0';
                 banner.setAttribute('role', 'alert');
-                banner.innerHTML = 'You are viewing docs for <strong>' + currentVersion + '</strong>. ' +
-                    'The latest stable release is <a href="' + basePath + 'stable/" class="alert-link">' + latest + '</a>.';
+                banner.innerHTML = 'You are viewing docs for <strong>' + CURRENT_VERSION + '</strong>. ' +
+                    'The latest stable release is <a href="' + BASE_PATH + 'stable/" class="alert-link">' + latest + '</a>.';
                 document.body.prepend(banner);
             }
         }
     }
 
-    // Fetch versions.json, then build dropdown
-    fetch(basePath + 'versions.json')
+    fetch(BASE_PATH + 'versions.json')
         .then(function(res) { return res.ok ? res.json() : []; })
         .catch(function() { return []; })
         .then(buildDropdown);
 
-    // Fix navbar-brand title link to point to docs home (logo stays external)
     var titleLink = document.querySelector('a.navbar-brand:not(.navbar-brand-logo)');
     if (titleLink) {
-        titleLink.href = basePath + currentVersion + '/';
+        titleLink.href = BASE_PATH + CURRENT_VERSION + '/';
     }
 
-    // Fetch star count from GitHub API
     var starLink = document.querySelector('a.nav-link[href*="/stargazers"]');
     if (starLink) {
         var match = starLink.href.match(/github\.com\/([^/]+\/[^/]+)\/stargazers/);
         if (match) {
-            fetch('https://api.github.com/repos/' + match[1])
-                .then(function(res) { return res.ok ? res.json() : null; })
-                .then(function(data) {
-                    if (!data) return;
-                    var text = starLink.querySelector('.menu-text');
-                    if (text) text.textContent = data.stargazers_count;
-                })
-                .catch(function() {});
+            var img = document.createElement('img');
+            img.src = 'https://img.shields.io/github/stars/' + match[1] + '?style=social';
+            img.alt = 'GitHub stars';
+            img.style.verticalAlign = 'middle';
+            starLink.replaceChildren(img);
         }
     }
 })();

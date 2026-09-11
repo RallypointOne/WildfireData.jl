@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Coverage – WildfireData.jl</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -30,18 +36,17 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../resources/changelog.html" rel="prev">
+<link href="../pages/api.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c35b4686a6fabbef78126217f9bf200b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-73b0ff3878a4e6fc3716dc69a6aaefa3.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-e9512225fbbb2050a673b742e2d1457e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-7f48b52cfed0612b99a5f135dc6cfa1a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -68,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -79,8 +84,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="https://rallypoint1.com" class="navbar-brand navbar-brand-logo">
-    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo light-content">
-    <img src="https://github.com/user-attachments/assets/f7216152-0d6e-4459-8e65-b9ed59421638" alt="" class="navbar-logo dark-content">
+    <img src="../assets/logo.svg" alt="" class="navbar-logo light-content">
+    <img src="../assets/logo.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="https://rallypoint1.com">
     <span class="navbar-title">WildfireData.jl</span>
@@ -92,12 +97,12 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl/stargazers"> <i class="bi bi-star" role="img">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl/stargazers" target="_blank"> <i class="bi bi-star" role="img">
 </i> 
 <span class="menu-text">Star</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/RallypointOne/WildfireData.jl" target="_blank"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -112,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../resources/changelog.html">Resources</a></li><li class="breadcrumb-item"><a href="../resources/coverage.html"><span class="chapter-title">Coverage</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pages/coverage.html">Resources</a></li><li class="breadcrumb-item"><a href="../pages/coverage.html"><span class="chapter-title">Coverage</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -206,6 +211,11 @@ ul.task-list li input[type="checkbox"] {
   <a href="../modules/egp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">EGP</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../modules/rxcadre.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">RxCADRE</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -219,7 +229,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
+  <a href="../pages/api.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">API</span></a>
   </div>
 </li>
       </ul>
@@ -235,12 +245,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../resources/changelog.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Changelog</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../resources/coverage.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Coverage</span></a>
+  <a href="../pages/coverage.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Coverage</span></a>
   </div>
 </li>
       </ul>
@@ -256,7 +261,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../resources/changelog.html">Resources</a></li><li class="breadcrumb-item"><a href="../resources/coverage.html"><span class="chapter-title">Coverage</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../pages/coverage.html">Resources</a></li><li class="breadcrumb-item"><a href="../pages/coverage.html"><span class="chapter-title">Coverage</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-title">Coverage</span></h1>
 </div>
@@ -380,6 +385,11 @@ ul.task-list li input[type="checkbox"] {
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
@@ -695,8 +705,8 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../resources/changelog.html" class="pagination-link" aria-label="Changelog">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Changelog</span></span>
+      <a href="../pages/api.html" class="pagination-link" aria-label="API">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">API</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -709,7 +719,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Built on 2026-03-03</p>
+<p>Built on 2026-09-11</p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
@@ -718,22 +728,15 @@ ul.task-list li input[type="checkbox"] {
 </footer>
 <script>
 (function() {
-    // Detect repo name and current version from URL path
-    // Deployed: /{repoName}/{version}/...
-    // Local preview: /page.html (no repo/version segments)
-    var pathParts = window.location.pathname.split('/').filter(Boolean);
-    var isLocal = pathParts.length < 2 || !pathParts[0].includes('.');
-    var currentVersion, basePath;
-
-    if (pathParts.length >= 2 && pathParts[1].match(/^(dev|stable|v\d)/)) {
-        currentVersion = pathParts[1];
-        basePath = '/' + pathParts[0] + '/';
-    } else {
-        currentVersion = 'dev';
-        basePath = '/';
+    // Injected per-version by .github/workflows/Docs.yml at deploy time.
+    // Local preview: placeholders aren't substituted; fall back to sensible defaults.
+    var CURRENT_VERSION = "dev";
+    var BASE_PATH = "/WildfireData.jl/";
+    if (CURRENT_VERSION.indexOf("__") === 0) {
+        CURRENT_VERSION = "dev";
+        BASE_PATH = "/";
     }
 
-    // Build dropdown HTML
     function buildDropdown(versions) {
         var navbar = document.querySelector('.navbar-nav.navbar-nav-scroll.ms-auto');
         if (!navbar) return;
@@ -742,25 +745,22 @@ ul.task-list li input[type="checkbox"] {
         li.className = 'nav-item dropdown';
         li.innerHTML =
             '<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">' +
-                currentVersion +
+                CURRENT_VERSION +
             '</a>' +
             '<ul class="dropdown-menu dropdown-menu-end"></ul>';
 
         var menu = li.querySelector('.dropdown-menu');
 
-        // Always add dev and stable
-        var fixed = ['stable', 'dev'];
-        fixed.forEach(function(v) {
+        ['stable', 'dev'].forEach(function(v) {
             var a = document.createElement('a');
-            a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-            a.href = basePath + v + '/';
+            a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+            a.href = BASE_PATH + v + '/';
             a.textContent = v;
             var item = document.createElement('li');
             item.appendChild(a);
             menu.appendChild(item);
         });
 
-        // Add release versions from versions.json
         if (versions && versions.length > 0) {
             var divider = document.createElement('li');
             divider.innerHTML = '<hr class="dropdown-divider">';
@@ -768,8 +768,8 @@ ul.task-list li input[type="checkbox"] {
 
             versions.forEach(function(v) {
                 var a = document.createElement('a');
-                a.className = 'dropdown-item' + (v === currentVersion ? ' active' : '');
-                a.href = basePath + v + '/';
+                a.className = 'dropdown-item' + (v === CURRENT_VERSION ? ' active' : '');
+                a.href = BASE_PATH + v + '/';
                 a.textContent = v;
                 var item = document.createElement('li');
                 item.appendChild(a);
@@ -779,45 +779,38 @@ ul.task-list li input[type="checkbox"] {
 
         navbar.prepend(li);
 
-        // Show outdated version banner
-        if (versions && versions.length > 0 && currentVersion !== 'stable' && currentVersion !== 'dev') {
-            var latest = versions[0]; // versions.json is sorted descending
-            if (currentVersion !== latest) {
+        if (versions && versions.length > 0 && CURRENT_VERSION !== 'stable' && CURRENT_VERSION !== 'dev') {
+            var latest = versions[0];
+            if (CURRENT_VERSION !== latest) {
                 var banner = document.createElement('div');
                 banner.className = 'alert alert-warning text-center mb-0 rounded-0';
                 banner.setAttribute('role', 'alert');
-                banner.innerHTML = 'You are viewing docs for <strong>' + currentVersion + '</strong>. ' +
-                    'The latest stable release is <a href="' + basePath + 'stable/" class="alert-link">' + latest + '</a>.';
+                banner.innerHTML = 'You are viewing docs for <strong>' + CURRENT_VERSION + '</strong>. ' +
+                    'The latest stable release is <a href="' + BASE_PATH + 'stable/" class="alert-link">' + latest + '</a>.';
                 document.body.prepend(banner);
             }
         }
     }
 
-    // Fetch versions.json, then build dropdown
-    fetch(basePath + 'versions.json')
+    fetch(BASE_PATH + 'versions.json')
         .then(function(res) { return res.ok ? res.json() : []; })
         .catch(function() { return []; })
         .then(buildDropdown);
 
-    // Fix navbar-brand title link to point to docs home (logo stays external)
     var titleLink = document.querySelector('a.navbar-brand:not(.navbar-brand-logo)');
     if (titleLink) {
-        titleLink.href = basePath + currentVersion + '/';
+        titleLink.href = BASE_PATH + CURRENT_VERSION + '/';
     }
 
-    // Fetch star count from GitHub API
     var starLink = document.querySelector('a.nav-link[href*="/stargazers"]');
     if (starLink) {
         var match = starLink.href.match(/github\.com\/([^/]+\/[^/]+)\/stargazers/);
         if (match) {
-            fetch('https://api.github.com/repos/' + match[1])
-                .then(function(res) { return res.ok ? res.json() : null; })
-                .then(function(data) {
-                    if (!data) return;
-                    var text = starLink.querySelector('.menu-text');
-                    if (text) text.textContent = data.stargazers_count;
-                })
-                .catch(function() {});
+            var img = document.createElement('img');
+            img.src = 'https://img.shields.io/github/stars/' + match[1] + '?style=social';
+            img.alt = 'GitHub stars';
+            img.style.verticalAlign = 'middle';
+            starLink.replaceChildren(img);
         }
     }
 })();
