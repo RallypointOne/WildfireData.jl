@@ -175,6 +175,39 @@ Colorbar(m.figure[1, 2], colormap=:inferno, limits=extrema(t),
 m.figure
 ```
 
+The same perimeters as an animation, one frame per day:
+
+```{julia}
+days = Date.(unix2datetime.(t))
+acres = [f.poly_GISAcres for f in fc]
+
+anim = Tyler.Map(ext;
+    size = (900, 700),
+    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+    provider = TileProviders.OpenStreetMap(:Mapnik),
+)
+
+# Draw latest first so earlier (smaller) perimeters stay visible on top
+n = length(fc)
+perims = Dict{Int, Any}()
+for i in n:-1:1
+    geom = GeoJSON.geometry(fc[i])
+    isnothing(geom) && continue
+    perims[i] = poly!(anim.axis, geom, color=t[i], colormap=:inferno, colorrange=extrema(t),
+        strokecolor=:black, strokewidth=0.3, visible=false)
+end
+
+# Hold the final day for two seconds before looping
+frames = [1:n; fill(n, 6)]
+Record(anim.figure, frames; framerate=3) do i
+    for (j, p) in pairs(perims)
+        p.visible = j <= i
+    end
+    size_label = ismissing(acres[i]) ? "" : ", $(round(Int, acres[i])) acres"
+    anim.axis.title = "Park Fire: $(days[i])$size_label"
+end
+```
+
 ## Plot Example
 
 ```{julia}

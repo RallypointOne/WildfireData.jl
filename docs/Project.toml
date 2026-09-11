@@ -10,3 +10,6 @@ TileProviders = "263fe934-28e1-4ae9-998a-c2629c5fede6"
 Tyler = "e170d443-b9d6-418a-9ee8-061e966341ef"
 WildfireData = "c50625c8-1a95-45e7-9f30-e55dbed7e5b4"
 ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
+
+[sources]
+WildfireData = {path = ".."}
