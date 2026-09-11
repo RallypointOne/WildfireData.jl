@@ -1,7 +1,6 @@
 ---
 title: "RxCADRE"
 subtitle: "Prescribed Fire Combustion and Atmospheric Dynamics Research Experiment"
-engine: julia
 ---
 
 ## Overview

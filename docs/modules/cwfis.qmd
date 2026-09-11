@@ -1,7 +1,6 @@
 ---
 title: "CWFIS"
 subtitle: "Canadian Wildland Fire Information System"
-engine: julia
 ---
 
 ## Overview

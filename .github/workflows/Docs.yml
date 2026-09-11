@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
   release:
     types: [published]
   workflow_dispatch:
@@ -21,12 +23,19 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # Determine deploy target from ref
+      # Determine deploy target from ref.
+      # A tag push is the reliable release signal: TagBot pushes tags over an SSH deploy
+      # key (which does trigger workflows), but creates the GitHub Release with
+      # GITHUB_TOKEN — and token-authored events never start a workflow run.
       - name: Set deploy version
         id: version
         run: |
           if [ "${{ github.event_name }}" = "release" ]; then
             VERSION="${{ github.event.release.tag_name }}"
+          elif [ "${{ github.ref_type }}" = "tag" ]; then
+            VERSION="${{ github.ref_name }}"
+          fi
+          if [ -n "$VERSION" ]; then
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
             echo "is_release=true" >> "$GITHUB_OUTPUT"
           else
@@ -43,13 +52,6 @@ jobs:
         run: julia --project=docs -e 'using Pkg; Pkg.develop(path="."); Pkg.instantiate()'
       - name: Install lcov
         run: sudo apt-get install -y lcov
-      - name: Fetch benchmark results
-        run: git fetch origin benchmark-results || true
-      - name: Add benchmarks page if results exist
-        run: |
-          if git show origin/benchmark-results:results.json >/dev/null 2>&1 && [ -f docs/resources/benchmarks.qmd ]; then
-            sed -i '/- resources\/changelog.qmd/i\        - resources/benchmarks.qmd' docs/_quarto.yml
-          fi
       - uses: quarto-dev/quarto-actions/setup@v2
       - name: Set build date
         run: sed -i "s/__BUILD_DATE__/$(date -u +'%Y-%m-%d')/" docs/_quarto.yml
@@ -84,6 +86,13 @@ jobs:
           # Copy built docs to version directory
           rm -rf "gh-pages-deploy/${VERSION}"
           cp -r docs/_site "gh-pages-deploy/${VERSION}"
+
+          # Inject version + base path into every rendered page so the version
+          # selector doesn't have to guess from the URL.
+          find "gh-pages-deploy/${VERSION}" -name '*.html' -exec sed -i \
+            -e "s|__CURRENT_VERSION__|${VERSION}|g" \
+            -e "s|__BASE_PATH__|/${REPO_NAME}/|g" \
+            {} +
 
           cd gh-pages-deploy
 
@@ -121,8 +130,9 @@ jobs:
           STABLE_EOF
           fi
 
-          # Create stable placeholder if no releases yet
-          if [ ! -d stable ]; then
+          # (Re)write stable placeholder while no releases exist. Once versions.json
+          # is non-empty, the release branch above owns stable/ so we leave it alone.
+          if [ ! -f versions.json ] || [ "$(tr -d ' \n' < versions.json)" = "[]" ]; then
             mkdir -p stable
             cat > stable/index.html << PLACEHOLDER_EOF
           <!DOCTYPE html>

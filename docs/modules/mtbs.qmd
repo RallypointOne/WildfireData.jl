@@ -1,7 +1,6 @@
 ---
 title: "MTBS"
 subtitle: "Monitoring Trends in Burn Severity"
-engine: julia
 ---
 
 ## Overview

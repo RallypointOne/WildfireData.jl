@@ -1,7 +1,6 @@
 ---
 title: "LANDFIRE"
 subtitle: "Landscape Fire and Resource Management Planning Tools"
-engine: julia
 ---
 
 ## Overview

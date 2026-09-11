@@ -1,7 +1,6 @@
 ---
 title: "WFIGS"
 subtitle: "Wildland Fire Interagency Geospatial Services"
-engine: julia
 ---
 
 ## Overview
