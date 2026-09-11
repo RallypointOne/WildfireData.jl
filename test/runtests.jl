@@ -31,6 +31,7 @@ using GeoJSON
             @test haskey(ds, :current_locations)
             @test haskey(ds, :historic_geomac)
             @test haskey(ds, :perimeters_all_years)
+            @test haskey(ds, :daily_perimeters)
 
             # Test category filtering
             perimeters = WFIGS.datasets(category=:perimeters)
@@ -104,6 +105,19 @@ using GeoJSON
             end
         end
 
+        @testset "progression() where clause" begin
+            f = WFIGS._progression_fields(:daily_perimeters)
+            @test WFIGS._progression_where("{b5597100-d6c9-49f9-bc74-6b8fc4432e92}", f) ==
+                "UPPER(poly_IRWINID) IN ('{B5597100-D6C9-49F9-BC74-6B8FC4432E92}','B5597100-D6C9-49F9-BC74-6B8FC4432E92')"
+            @test WFIGS._progression_where("2024-CABTU-013761", f) == "attr_UniqueFireIdentifier='2024-CABTU-013761'"
+            @test WFIGS._progression_where("Park", f) == "UPPER(poly_IncidentName)='PARK'"
+            @test WFIGS._progression_where("O'Neil", f) == "UPPER(poly_IncidentName)='O''NEIL'"
+
+            g = WFIGS._progression_fields(:historic_geomac_2018)
+            @test WFIGS._progression_where("2018-CABTU-016737", g) == "uniquefireidentifier='2018-CABTU-016737'"
+            @test_throws ErrorException WFIGS._progression_fields(:current_perimeters)
+        end
+
         # Network-dependent tests
         @testset "Network API Tests" begin
             @testset "count()" begin
@@ -126,6 +140,41 @@ using GeoJSON
                 @test haskey(first_field, :name)
                 @test haskey(first_field, :type)
                 @test haskey(first_field, :alias)
+            end
+
+            @testset "incidents()" begin
+                df = WFIGS.incidents("park", year=2024)
+                @test df isa DataFrame
+                @test names(df) == ["IncidentName", "IrwinID", "UniqueFireIdentifier", "Perimeters", "MaxAcres", "FirstDate", "LastDate"]
+                @test "2024-CABTU-013761" in df.UniqueFireIdentifier
+                @test all(startswith.(df.UniqueFireIdentifier, "2024-"))
+                @test all(occursin.("PARK", uppercase.(df.IncidentName)))
+                @test issorted(df.Perimeters, rev=true)
+
+                dg = WFIGS.incidents("camp", dataset=:historic_geomac_2018)
+                @test "2018-CABTU-016737" in dg.UniqueFireIdentifier
+            end
+
+            @testset "progression()" begin
+                # 2024 Parks Fire (ID): 8 perimeters
+                fc = WFIGS.progression("2024-IDPAF-005597", verbose=false)
+                @test fc isa GeoJSON.FeatureCollection
+                @test length(fc) == WFIGS.incidents("parks", year=2024).Perimeters[1]
+                @test issorted(f.BurnPeriod for f in fc)
+                @test allunique(f.BurnPeriod for f in fc)
+                @test all(!isnothing(GeoJSON.geometry(f)) for f in fc)
+
+                # One perimeter per UTC day
+                fd = WFIGS.progression("2024-IDPAF-005597", daily=true, tolerance=1e-4, verbose=false)
+                @test 0 < length(fd) <= length(fc)
+                @test allunique(Date(unix2datetime(f.poly_DateCurrent / 1000)) for f in fd)
+
+                # 2018 Georges Fire from GeoMAC
+                fg = WFIGS.progression("2018-CAINF-001071", dataset=:historic_geomac_2018, verbose=false)
+                @test length(fg) > 1
+                @test issorted(f.perimeterdatetime for f in fg)
+
+                @test_throws ErrorException WFIGS.progression("No Such Fire Name", verbose=false)
             end
 
             @testset "download() with limit" begin

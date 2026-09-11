@@ -15,6 +15,7 @@ The WFIGS module provides access to wildland fire data from the [NIFC Open Data]
 |---------|-------------|----------|
 | `:current_perimeters` | Current fire perimeters (updated every 5 min) | perimeters |
 | `:current_locations` | Current fire locations (updated every 5 min) | locations |
+| `:daily_perimeters` | Every perimeter geometry change, 2023-present (sparse 2021-2022) | history |
 | `:historic_geomac` | Historic GeoMAC perimeters (2000-2018) | history |
 | `:perimeters_all_years` | All historical perimeters | history |
 | `:historic_geomac_YYYY` | Year-specific GeoMAC (2000-2018) | history |
@@ -90,6 +91,90 @@ println("Type: $(typeof(geom))")
 ```
 
 
+## Fire Progression
+
+WFIGS keeps only the latest perimeter per incident in `:current_perimeters` and
+`:perimeters_all_years`. Two archives keep every perimeter:
+
+| Years | Dataset | Ordering field | Timestamp field |
+|-------|---------|----------------|-----------------|
+| 2000-2018 | `:historic_geomac_YYYY` | `perimeterdatetime` | `perimeterdatetime` |
+| 2019-2022 | none (final perimeter only) | | |
+| 2023-present | `:daily_perimeters` | `BurnPeriod` | `poly_DateCurrent` |
+
+`:daily_perimeters` writes a new feature each time an incident's perimeter geometry
+changes (attribute-only edits update the latest feature in place). `BurnPeriod` is a
+sequential index per incident, not a fixed interval, and `AcreageChange` is the
+difference from the previous feature. NIFC labels it an automated product, not an
+official progression.
+
+`incidents` finds the identifiers for a fire by name. It returns one row per incident
+with the IRWIN ID, UniqueFireIdentifier, number of archived perimeters, maximum acreage,
+and first/last perimeter dates.
+
+```{julia}
+using WildfireData.WFIGS
+WFIGS.incidents("park", year=2024)
+```
+
+`progression` downloads all perimeters for one fire, sorted in time. Each feature is
+the cumulative footprint at that time. `daily=true` keeps the last perimeter of each
+UTC day.
+
+Perimeters are fetched one per request, several at a time. The NIFC server returns large
+polygons at tens of KB/s, so a large fire at full resolution (tens of MB) takes minutes.
+`tolerance` simplifies perimeters on the server (in degrees; `1e-4` is about 11 m) and cuts
+the download size roughly tenfold.
+
+```julia
+# By UniqueFireIdentifier, IRWIN ID, or incident name
+fc = WFIGS.progression("2024-CABTU-013761")
+fc = WFIGS.progression("{22CAD814-48B1-4460-A368-F50F493F3740}")
+fc = WFIGS.progression("Park")   # warns if several incidents share the name
+
+fd = WFIGS.progression("2024-CABTU-013761", daily=true, tolerance=1e-4)
+for f in fd
+    println(Dates.unix2datetime(f.poly_DateCurrent / 1000), "  ", round(f.poly_GISAcres), " acres")
+end
+
+# Pre-2019 fires come from the GeoMAC archive
+fg = WFIGS.progression("2018-CABTU-016737", dataset=:historic_geomac_2018)
+```
+
+Newly burned area per step is the set difference of consecutive polygons. That needs a
+geometry library (LibGEOS.jl, GeometryOps.jl); this package returns the raw perimeters.
+
+```{julia}
+using WildfireData.WFIGS
+using GeoJSON, CairoMakie, GeoMakie, Tyler
+using Extents, TileProviders
+using Dates
+import JSON3
+CairoMakie.activate!()
+
+fd = WFIGS.progression("2024-CABTU-013761", daily=true, tolerance=1e-4, verbose=false)
+fc = GeoJSON.read(JSON3.write(fd))
+t = [f.poly_DateCurrent / 1000 for f in fc]
+
+ext = Extent(; X=(-122.2, -121.2), Y=(39.6, 40.5))
+m = Tyler.Map(ext;
+    size = (900, 700),
+    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+    provider = TileProviders.OpenStreetMap(:Mapnik),
+)
+
+# Draw latest first so earlier (smaller) perimeters stay visible on top
+for (f, ti) in reverse(collect(zip(fc, t)))
+    geom = GeoJSON.geometry(f)
+    isnothing(geom) && continue
+    poly!(m.axis, geom, color=ti, colormap=:inferno, colorrange=extrema(t), strokecolor=:black, strokewidth=0.3)
+end
+Colorbar(m.figure[1, 2], colormap=:inferno, limits=extrema(t),
+    ticks=(range(extrema(t)..., length=5), string.(Date.(unix2datetime.(range(extrema(t)..., length=5))))),
+    label="Perimeter date")
+m.figure
+```
+
 ## Plot Example
 
 ```{julia}
@@ -129,5 +214,7 @@ m.figure
 - `load_file(dataset; filename)` - Load previously downloaded file
 - `count(dataset; where)` - Get record count
 - `fields(dataset)` - Get field names and types
+- `incidents(name; dataset, year)` - Look up IRWIN ID and UniqueFireIdentifier by incident name
+- `progression(fire; dataset, daily, tolerance, ntasks, verbose)` - All archived perimeters of one fire, in time order
 - `query_url(dataset; where, outfields, limit, format)` - Build query URL
 - `dir()` - Get local data directory path
