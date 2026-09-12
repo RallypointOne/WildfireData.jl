@@ -12,4 +12,5 @@ WildfireData = "c50625c8-1a95-45e7-9f30-e55dbed7e5b4"
 ZipFile = "a5390f91-8eb1-5f08-bee0-b1d1ffed6cea"
 
 [sources]
+Tyler = {rev = "5cd8e1990dc286ed0861e6d92350c98677e108a2", url = "https://github.com/MakieOrg/Tyler.jl"}
 WildfireData = {path = ".."}

@@ -118,7 +118,10 @@ path = MTBS.download_shapefile(:burn_boundaries_gdb)
 using WildfireData
 using CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 data = MTBS.largest_fires(50)
 
@@ -145,12 +148,14 @@ if !isempty(lons)
         size = (900, 600),
         axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
         provider = TileProviders.OpenStreetMap(:Mapnik),
+        fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
     )
+    text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
     scatter!(m.axis, lons, lats,
         markersize=sqrt.(acres) ./ 80,
         color=(:firebrick, 0.6),
         strokecolor=:black, strokewidth=0.5)
-    m.figure
+    m  # show the Map, not m.figure, so rendering waits for tiles
 end
 ```
 

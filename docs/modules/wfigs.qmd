@@ -150,42 +150,38 @@ using GeoJSON, CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
 using Dates
 import JSON3
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 fd = WFIGS.progression("2024-CABTU-013761", daily=true, tolerance=1e-4, verbose=false)
 fc = GeoJSON.read(JSON3.write(fd))
-t = [f.poly_DateCurrent / 1000 for f in fc]
+dates = Date.(unix2datetime.([f.poly_DateCurrent / 1000 for f in fc]))
 
 ext = Extent(; X=(-122.2, -121.2), Y=(39.6, 40.5))
 m = Tyler.Map(ext;
     size = (900, 700),
-    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
+    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc",
+        xticks = -122.2:0.2:-121.2, yticks = 39.6:0.2:40.4,
+        xticklabelsvisible = false, yticklabelsvisible = false),
     provider = TileProviders.OpenStreetMap(:Mapnik),
+    fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
 )
+text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
 
-# Draw latest first so earlier (smaller) perimeters stay visible on top
-for (f, ti) in reverse(collect(zip(fc, t)))
-    geom = GeoJSON.geometry(f)
-    isnothing(geom) && continue
-    poly!(m.axis, geom, color=ti, colormap=:inferno, colorrange=extrema(t), strokecolor=:black, strokewidth=0.3)
+# GeoMakie rounds tick labels to 3 significant digits (-121.8 prints as -122°),
+# so label the grid lines inside the map instead
+for lon in -122.0:0.2:-121.4
+    text!(m.axis, lon, ext.Y[2]; text="$(abs(lon))°W", align=(:center, :top), offset=(0, -4), fontsize=12)
 end
-Colorbar(m.figure[1, 2], colormap=:inferno, limits=extrema(t),
-    ticks=(range(extrema(t)..., length=5), string.(Date.(unix2datetime.(range(extrema(t)..., length=5))))),
-    label="Perimeter date")
-m.figure
-```
+for lat in 39.8:0.2:40.4
+    text!(m.axis, ext.X[1], lat; text="$(lat)°N", align=(:left, :bottom), offset=(4, 2), fontsize=12)
+end
 
-The same perimeters as an animation, one frame per day:
-
-```{julia}
-days = Date.(unix2datetime.(t))
-acres = [f.poly_GISAcres for f in fc]
-
-anim = Tyler.Map(ext;
-    size = (900, 700),
-    axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
-    provider = TileProviders.OpenStreetMap(:Mapnik),
-)
+# Day number of each perimeter (1 = first day). A log color scale spreads the
+# early days, when most of the area burned, across more of the colormap.
+day = Dates.value.(dates .- dates[1]) .+ 1
 
 # Draw latest first so earlier (smaller) perimeters stay visible on top
 n = length(fc)
@@ -193,18 +189,31 @@ perims = Dict{Int, Any}()
 for i in n:-1:1
     geom = GeoJSON.geometry(fc[i])
     isnothing(geom) && continue
-    perims[i] = poly!(anim.axis, geom, color=t[i], colormap=:inferno, colorrange=extrema(t),
-        strokecolor=:black, strokewidth=0.3, visible=false)
+    perims[i] = poly!(m.axis, geom, color=day[i], colormap=:viridis, colorscale=log10, colorrange=extrema(day),
+        strokecolor=:black, strokewidth=0.3)
 end
+ticks = [1, 2, 4, 8, 16, maximum(day)]
+Colorbar(m.figure[1, 2], colormap=:viridis, limits=extrema(day), scale=log10,
+    ticks=(ticks, Dates.format.(dates[1] .+ Day.(ticks .- 1), "u d")),
+    label="Perimeter date ($(year(dates[1])))")
+m  # show the Map, not m.figure, so rendering waits for tiles
+```
+
+The same perimeters as an animation, one frame per day:
+
+```{julia}
+acres = [f.poly_GISAcres for f in fc]
 
 # Hold the final day for two seconds before looping
 frames = [1:n; fill(n, 6)]
-Record(anim.figure, frames; framerate=3) do i
+
+# Animate the map above, whose tiles are already downloaded
+Record(m.figure, frames; framerate=3) do i
     for (j, p) in pairs(perims)
         p.visible = j <= i
     end
     size_label = ismissing(acres[i]) ? "" : ", $(round(Int, acres[i])) acres"
-    anim.axis.title = "Park Fire: $(days[i])$size_label"
+    m.axis.title = "Park Fire: $(dates[i])$size_label"
 end
 ```
 
@@ -215,7 +224,10 @@ using WildfireData.WFIGS
 using GeoJSON, CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
 import JSON3
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 data = WFIGS.download(:historic_geomac_2018, limit=100, verbose=false)
 fc = GeoJSON.read(JSON3.write(data))
@@ -225,7 +237,9 @@ m = Tyler.Map(ext;
     size = (900, 600),
     axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
     provider = TileProviders.OpenStreetMap(:Mapnik),
+    fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
 )
+text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
 
 for feature in fc
     geom = GeoJSON.geometry(feature)
@@ -233,7 +247,7 @@ for feature in fc
     poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
 end
 
-m.figure
+m  # show the Map, not m.figure, so rendering waits for tiles
 ```
 
 ## API Reference

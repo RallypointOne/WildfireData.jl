@@ -122,7 +122,10 @@ using WildfireData.FEDS
 using GeoJSON, CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
 import JSON3
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 data = FEDS.download(:snapshot_perimeters, limit=100, verbose=false)
 fc = GeoJSON.read(JSON3.write(data))
@@ -132,7 +135,9 @@ m = Tyler.Map(ext;
     size = (900, 600),
     axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
     provider = TileProviders.OpenStreetMap(:Mapnik),
+    fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
 )
+text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
 
 for feature in fc
     geom = GeoJSON.geometry(feature)
@@ -140,7 +145,7 @@ for feature in fc
     poly!(m.axis, geom, color=(:orange, 0.4), strokecolor=:red, strokewidth=0.5)
 end
 
-m.figure
+m  # show the Map, not m.figure, so rendering waits for tiles
 ```
 
 ## API Reference

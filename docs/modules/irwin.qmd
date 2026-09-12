@@ -99,7 +99,10 @@ Common fields in the incident data:
 using WildfireData.IRWIN
 using CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 data = IRWIN.download(:fire_occurrence, limit=200, verbose=false)
 
@@ -126,10 +129,12 @@ if !isempty(lons)
         size = (900, 600),
         axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
         provider = TileProviders.OpenStreetMap(:Mapnik),
+        fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
     )
+    text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
     sc = scatter!(m.axis, lons, lats, color=log10.(acres), colormap=:inferno, markersize=6)
     Colorbar(m.figure[1, 2], sc, label="log₁₀(IncidentSize)")
-    m.figure
+    m  # show the Map, not m.figure, so rendering waits for tiles
 end
 ```
 

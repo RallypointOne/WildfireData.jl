@@ -16,3 +16,4 @@ docs/.quarto/
 docs/*_files/
 **/*.quarto_ipynb
 gmt.history
+*.html

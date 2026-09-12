@@ -170,7 +170,10 @@ FIRMS.regions()
 using WildfireData
 using CairoMakie, GeoMakie, Tyler
 using Extents, TileProviders
-CairoMakie.activate!()
+CairoMakie.activate!(visible=false)  # don't open an image viewer when Tyler calls display
+# OpenStreetMap's tile policy requires an identifying User-Agent and attribution:
+# https://operations.osmfoundation.org/policies/tiles/
+Tyler.USER_AGENT[] = "WildfireData.jl-docs (+https://github.com/RallypointOne/WildfireData.jl)"
 
 if !isempty(get(ENV, "FIRMS_MAP_KEY", ""))
     df = FIRMS.download(:VIIRS_NOAA20_NRT, region=:conus, days=1, verbose=false)
@@ -181,11 +184,13 @@ if !isempty(get(ENV, "FIRMS_MAP_KEY", ""))
             size = (900, 600),
             axis = (; type = GeoMakie.GeoAxis, dest = "+proj=merc"),
             provider = TileProviders.OpenStreetMap(:Mapnik),
+            fetching_scheme = Tyler.SimpleTiling(),  # only the tiles in view
         )
+        text!(m.axis, 1, 0; text="© OpenStreetMap contributors", space=:relative, align=(:right, :bottom), offset=(-4, 4), fontsize=10)
         sc = scatter!(m.axis, df.longitude, df.latitude, color=df.frp,
             colormap=:hot, markersize=4)
         Colorbar(m.figure[1, 2], sc, label="Fire Radiative Power (MW)")
-        m.figure
+        m  # show the Map, not m.figure, so rendering waits for tiles
     end
 else
     @info "FIRMS_MAP_KEY not set, skipping plot"
